@@ -15,6 +15,31 @@
 
 int G_SIG = 0;
 
+void red(void)
+{
+	printf("\033[0;31m");
+}
+
+void blue(void)
+{
+	printf("\033[0;34m");
+}
+
+void yellow(void)
+{
+	printf("\033[0;33m");
+}
+
+void green(void)
+{
+	printf("\033[0;32m");
+}
+
+void reset(void)
+{
+	printf("\033[0m");
+}
+
 t_srv *init_srv(void)
 {
 	t_srv *srv;
@@ -79,7 +104,9 @@ int main(void)
 	bzero(buff, 512);
 	if (!srv)
 		return (EXIT_FAILURE);
+	yellow();
 	printf("Launch srv\n");
+	reset();
 	struct timeval timeout;
 	timeout.tv_sec = 2;
 	timeout.tv_usec = 0;
@@ -116,10 +143,14 @@ int main(void)
 				if ((new_socket = accept(srv->master_sck, (struct sockaddr *)&(srv->address),
 										 (socklen_t *)&(srv->addrlen))) < 0)
 				{
+					red();
 					dprintf(STDERR_FILENO, "La secte... socket ne t'accepte pas\n");
+					reset();
 					return (EXIT_FAILURE);
 				}
+				yellow();
 				printf("New connection: fd -> %d\n", new_socket);
+				reset();
 				// if ((int)send(new_socket, msg, strlen(msg), 0) != (int)strlen(msg))
 				// 	dprintf(STDERR_FILENO, "Le client n a pas recu le message. Je vais lui monter ses morts\n");
 				i = -1;
@@ -128,7 +159,9 @@ int main(void)
 					if (srv->client_sck[i] == 0)
 					{
 						srv->client_sck[i] = new_socket;
+						yellow();
 						printf("Add new client\n");
+						reset();
 						break;
 					}
 				}
@@ -142,7 +175,9 @@ int main(void)
 					if ((valread = read(sd, buff, 1024)) == 0)
 					{
 						getpeername(sd, (struct sockaddr *)&(srv->address), (socklen_t *)&(srv->addrlen));
+						red();
 						printf("Un client s'est barre sans payer\n");
+						reset();
 						close(sd);
 						srv->client_sck[i] = 0;
 					}
@@ -150,31 +185,15 @@ int main(void)
 					{
 						// read data
 						buff[valread] = 0;
-						printf("%s\n", buff);
+						green();
+						printf("[%d] ->\033[0;34m %s\n", srv->client_sck[i], buff);
+						reset();
 						send(srv->client_sck[i], msg_receive, strlen(msg_receive), 0);
 					}
 				}
 			}
-			// i = -1;
-			// while (++i < MAX_CLIENT)
-			// {
-			// 	if (srv->client_sck[i] > 0)
-			// 	{
-			// 		bzero(client_msg, 200);
-			// 		printf("i = %d\n", i);
-			// 		// if (recv(srv->client_sck[i], client_msg, 200, 0) > 0)
-			// 		// {
-			// 			// if (sizeof(client_msg) > 1)
-			// 			// {
-			// 				send(srv->client_sck[i], msg, strlen(msg), 0);
-			// 				// printf("Client %d send: %s\n", srv->client_sck[i], client_msg);
-			// 			// }
-			// 		// }
-			// 	}
-			// }
 		}
 	}
-	printf("am here\n");
 	free(srv);
 	return (EXIT_SUCCESS);
 }
