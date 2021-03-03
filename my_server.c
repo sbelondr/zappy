@@ -11,16 +11,18 @@
 /* ************************************************************************** */
 
 #include "server.h"
+#include <signal.h>
 
+int G_SIG = 0;
 
-t_srv	*init_srv(void)
+t_srv *init_srv(void)
 {
-	t_srv	*srv;
-	int		opt;
-	int 	i = -1;
+	t_srv *srv;
+	int opt;
+	int i = -1;
 
 	opt = 0;
-	if (!(srv = (t_srv*)malloc(sizeof(t_srv) * 1)))
+	if (!(srv = (t_srv *)malloc(sizeof(t_srv) * 1)))
 	{
 		dprintf(STDERR_FILENO, "Malloc error\n");
 		exit(EXIT_FAILURE);
@@ -33,7 +35,7 @@ t_srv	*init_srv(void)
 		free(srv);
 		return (NULL);
 	}
-	if (setsockopt(srv->master_sck, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt)) < 0)
+	if (setsockopt(srv->master_sck, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0)
 	{
 		dprintf(STDERR_FILENO, "setsocket not respect you (again)\n");
 		free(srv);
@@ -42,7 +44,7 @@ t_srv	*init_srv(void)
 	srv->address.sin_family = AF_INET;
 	srv->address.sin_addr.s_addr = INADDR_ANY;
 	srv->address.sin_port = htons(PORT);
-	if (bind(srv->master_sck, (struct sockaddr*)&(srv->address), sizeof(srv->address)) < 0)
+	if (bind(srv->master_sck, (struct sockaddr *)&(srv->address), sizeof(srv->address)) < 0)
 	{
 		dprintf(STDERR_FILENO, "Meme le port ne peut pas te bind\n");
 		free(srv);
@@ -58,25 +60,37 @@ t_srv	*init_srv(void)
 	return (srv);
 }
 
-
-int	main(void)
+int main(void)
 {
-	int	max_sd;
-	int	new_socket;
+	int max_sd;
+	int new_socket;
 	int activity, i, valread, sd;
 	char buff[512];
 
-	fd_set	readfds;
-	char	*msg = "Welcome\n";
-	t_srv	*srv = init_srv();
+	fd_set readfds;
+	fd_set writefds;
+	// char *msg = "Welcome\n";
+	char *msg_receive = "Message received";
+	t_srv *srv = init_srv();
+	// char client_msg[200];
+
+	signal(SIGPIPE, SIG_IGN);
 
 	bzero(buff, 512);
 	if (!srv)
 		return (EXIT_FAILURE);
 	printf("Launch srv\n");
+	struct timeval timeout;
+	timeout.tv_sec = 2;
+	timeout.tv_usec = 0;
+
+	// fd_set set;
+
+	// FD_SET(sd, &set);
 	while (1)
 	{
 		FD_ZERO(&readfds);
+		FD_ZERO(&writefds);
 		FD_SET(srv->master_sck, &readfds);
 		max_sd = srv->master_sck;
 		i = -1;
@@ -89,51 +103,75 @@ int	main(void)
 			if (sd > max_sd)
 				max_sd = sd;
 		}
+		// FD_ZERO(&readfds);
 		// ?, timeout, wait
-		activity = select(max_sd + 1, &readfds, 0, 0, 0);
+		activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
 		if (activity < 0)
 			dprintf(STDERR_FILENO, "select error\n");
-		if (FD_ISSET(srv->master_sck, &readfds))
+		if (activity > 0)
 		{
-			if ((new_socket = accept(srv->master_sck, (struct sockaddr*)&(srv->address),
-							(socklen_t*)&(srv->addrlen))) < 0)
+			// printf("%d, %d", srv->master_sck, activity);
+			if (FD_ISSET(srv->master_sck, &readfds))
 			{
-				dprintf(STDERR_FILENO, "La secte... socket ne t'accepte pas\n");
-				return (EXIT_FAILURE);
+				if ((new_socket = accept(srv->master_sck, (struct sockaddr *)&(srv->address),
+										 (socklen_t *)&(srv->addrlen))) < 0)
+				{
+					dprintf(STDERR_FILENO, "La secte... socket ne t'accepte pas\n");
+					return (EXIT_FAILURE);
+				}
+				printf("New connection: fd -> %d\n", new_socket);
+				// if ((int)send(new_socket, msg, strlen(msg), 0) != (int)strlen(msg))
+				// 	dprintf(STDERR_FILENO, "Le client n a pas recu le message. Je vais lui monter ses morts\n");
+				i = -1;
+				while (++i < MAX_CLIENT)
+				{
+					if (srv->client_sck[i] == 0)
+					{
+						srv->client_sck[i] = new_socket;
+						printf("Add new client\n");
+						break;
+					}
+				}
 			}
-			printf("New connection: fd -> %d\n", new_socket);
-			if ((int)send(new_socket, msg, strlen(msg), 0) != (int)strlen(msg))
-				dprintf(STDERR_FILENO, "Le client n a pas recu le message. Je vais lui monter ses morts\n");
 			i = -1;
 			while (++i < MAX_CLIENT)
 			{
-				if (srv->client_sck[i] == 0)
+				sd = srv->client_sck[i];
+				if (FD_ISSET(sd, &readfds))
 				{
-					srv->client_sck[i] = new_socket;
-					printf("Add new client\n");
-					break ;
+					if ((valread = read(sd, buff, 1024)) == 0)
+					{
+						getpeername(sd, (struct sockaddr *)&(srv->address), (socklen_t *)&(srv->addrlen));
+						printf("Un client s'est barre sans payer\n");
+						close(sd);
+						srv->client_sck[i] = 0;
+					}
+					else
+					{
+						// read data
+						buff[valread] = 0;
+						printf("%s\n", buff);
+						send(srv->client_sck[i], msg_receive, strlen(msg_receive), 0);
+					}
 				}
 			}
-		}
-		i = -1;
-		while (++i < MAX_CLIENT)
-		{
-			sd = srv->client_sck[i];
-			if (FD_ISSET(sd, &readfds))
-			{
-				if ((valread = read(sd, buff, 1024)) == 0)
-				{
-					getpeername(sd, (struct sockaddr*)&(srv->address), (socklen_t*)&(srv->addrlen));
-					printf("Un client s'est barre sans payer\n");
-					close(sd);
-					srv->client_sck[i] = 0;
-				}
-				else
-				{
-					buff[valread] = 0;
-					// send(sd, buff, strlen(buff), 0);
-				}
-			}
+			// i = -1;
+			// while (++i < MAX_CLIENT)
+			// {
+			// 	if (srv->client_sck[i] > 0)
+			// 	{
+			// 		bzero(client_msg, 200);
+			// 		printf("i = %d\n", i);
+			// 		// if (recv(srv->client_sck[i], client_msg, 200, 0) > 0)
+			// 		// {
+			// 			// if (sizeof(client_msg) > 1)
+			// 			// {
+			// 				send(srv->client_sck[i], msg, strlen(msg), 0);
+			// 				// printf("Client %d send: %s\n", srv->client_sck[i], client_msg);
+			// 			// }
+			// 		// }
+			// 	}
+			// }
 		}
 	}
 	printf("am here\n");
