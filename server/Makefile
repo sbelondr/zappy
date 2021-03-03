@@ -44,7 +44,13 @@ CPPFLAGS = -I $(INCDIR)
 # --------------- #
 
 NAME = server
-SRCS_NAMES = server.c
+SRCS_NAMES = server.c\
+	color.c\
+	termcaps.c\
+	act_client.c\
+	init_srv.c\
+	act_server.c\
+	listen.c
 HEADERS_NAMES = server.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
