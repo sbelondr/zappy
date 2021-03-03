@@ -10,6 +10,7 @@
 
 #define MAX_CLIENT 10
 #define PORT 8080
+#define BUFF_READ 100
 
 typedef struct	s_srv
 {
