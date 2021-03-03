@@ -13,7 +13,7 @@
 #include "server.h"
 #include <signal.h>
 
-int G_SIG = 0;
+static t_srv	**g_srv = NULL;
 
 void red(void)
 {
@@ -38,6 +38,33 @@ void green(void)
 void reset(void)
 {
 	printf("\033[0m");
+}
+
+void ft_quit(int sig)
+{
+	t_srv *srv = *g_srv;
+	int i = -1;
+	int sd;
+
+	while (srv && ++i < MAX_CLIENT)
+	{
+		sd = srv->client_sck[i];
+		printf("%d - %d\n", srv->client_sck[i], sd);
+		if (sd > 0)
+		{
+			getpeername(sd, (struct sockaddr *)&(srv->address), (socklen_t *)&(srv->addrlen));
+			red();
+			printf("Un client s'est barre sans payer\n");
+			reset();
+			close(sd);
+			close(srv->client_sck[i]);
+			srv->client_sck[i] = 0;
+		}
+	}
+	close(srv->master_sck);
+	free(*g_srv);
+	printf("Quit: %d", sig);
+	exit(sig);
 }
 
 t_srv *init_srv(void)
@@ -97,9 +124,10 @@ int main(void)
 	// char *msg = "Welcome\n";
 	char *msg_receive = "Message received";
 	t_srv *srv = init_srv();
-	// char client_msg[200];
 
+	g_srv = &srv;
 	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, ft_quit);
 
 	bzero(buff, 512);
 	if (!srv)
@@ -111,9 +139,6 @@ int main(void)
 	timeout.tv_sec = 2;
 	timeout.tv_usec = 0;
 
-	// fd_set set;
-
-	// FD_SET(sd, &set);
 	while (1)
 	{
 		FD_ZERO(&readfds);
@@ -137,7 +162,6 @@ int main(void)
 			dprintf(STDERR_FILENO, "select error\n");
 		if (activity > 0)
 		{
-			// printf("%d, %d", srv->master_sck, activity);
 			if (FD_ISSET(srv->master_sck, &readfds))
 			{
 				if ((new_socket = accept(srv->master_sck, (struct sockaddr *)&(srv->address),
