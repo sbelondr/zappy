@@ -30,6 +30,16 @@ enum	e_ressources {
 	FOOD
 };
 
+typedef struct	s_case_map
+{
+	int ress[7];
+}				t_case_map;
+
+typedef struct	s_map
+{
+	t_case_map	**map_case;
+}				t_map;
+
 /*
 -p numero de port
 -x largeur du Monde
@@ -56,17 +66,8 @@ typedef struct	s_srv
 	int						addrlen;
 	int						*client_sck;
 	struct s_settings_srv	*settings_srv;
+	t_map					map;
 }				t_srv;
-
-typedef struct	s_case_map
-{
-	int ress[7];
-}				t_case_map;
-
-typedef struct	s_map
-{
-	t_case_map	**map_case;
-}				t_map;
 
 /*
 ** server.c
@@ -78,7 +79,7 @@ void			ft_quit(int sig);
 ** init_srv.c
 */
 
-t_srv			*init_srv(t_settings_srv *settings_srv);
+t_srv			*init_srv(t_settings_srv *settings_srv, t_map map);
 
 /*
 ** act_client.c

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/04 10:43:39 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/03/04 11:24:29 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int main(int ac, char **av)
 	(void)ac;
 	if (!settings_srv)
 		exit(EXIT_FAILURE);
-	srv = init_srv(settings_srv);
+	t_map	map = generate_map();
+	srv = init_srv(settings_srv, map);
 	g_srv = &srv;
-	generate_map();
 	if (!srv)
 		return (EXIT_FAILURE);
 	reset_term();

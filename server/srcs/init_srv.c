@@ -6,17 +6,17 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/04 10:06:17 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/03/04 11:20:29 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-t_srv *init_srv(t_settings_srv *settings_srv)
+t_srv *init_srv(t_settings_srv *settings_srv, t_map map)
 {
-	t_srv *srv;
-	int opt;
-	int i = -1;
+	t_srv	*srv;
+	int		opt;
+	int		i = -1;
 
 	opt = SO_REUSEADDR | SO_DEBUG;
 	if (!(srv = (t_srv *)malloc(sizeof(t_srv) * 1)))
@@ -60,5 +60,6 @@ t_srv *init_srv(t_settings_srv *settings_srv)
 	}
 	srv->addrlen = sizeof(srv->address);
 	srv->settings_srv = settings_srv;
+	srv->map = map;
 	return (srv);
 }
