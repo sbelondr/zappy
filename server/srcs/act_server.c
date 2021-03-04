@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/03 20:57:55 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/03/04 10:00:58 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void ft_add_new_client(t_srv *srv, fd_set *readfds)
 		printf("New connection: fd -> %d\n", new_socket);
 		reset();
 		i = -1;
-		while (++i < MAX_CLIENT)
+		while (++i < srv->settings_srv->max_client)
 		{
 			if (srv->client_sck[i] == 0)
 			{
@@ -53,7 +53,7 @@ int ft_set_max_sd(t_srv *srv, fd_set *readfds)
 
 	max_sd = srv->master_sck;
 	i = -1;
-	while (++i < MAX_CLIENT)
+	while (++i < srv->settings_srv->max_client)
 	{
 		sd = srv->client_sck[i];
 		if (sd > 0)

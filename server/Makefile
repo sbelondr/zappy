@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/03/03 15:18:59 by sbelondr         ###   ########.fr        #
+#    Updated: 2021/03/04 10:42:22 by sbelondr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,9 @@ SRCS_NAMES = server.c\
 	act_client.c\
 	init_srv.c\
 	act_server.c\
-	listen.c
+	listen.c\
+	parse_opt_server.c\
+	map.c
 HEADERS_NAMES = server.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)

@@ -6,25 +6,27 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/03 20:58:07 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/03/04 10:06:17 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-t_srv *init_srv(void)
+t_srv *init_srv(t_settings_srv *settings_srv)
 {
 	t_srv *srv;
 	int opt;
 	int i = -1;
 
-	opt = 0;
+	opt = SO_REUSEADDR | SO_DEBUG;
 	if (!(srv = (t_srv *)malloc(sizeof(t_srv) * 1)))
 	{
 		dprintf(STDERR_FILENO, "Malloc error\n");
 		exit(EXIT_FAILURE);
 	}
-	while (++i < MAX_CLIENT)
+	if (!(srv->client_sck = (int*)malloc(sizeof(int) * (settings_srv->max_client + 1))))
+		return (NULL);
+	while (++i < settings_srv->max_client)
 		srv->client_sck[i] = 0;
 	if ((srv->master_sck = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 	{
@@ -41,10 +43,11 @@ t_srv *init_srv(void)
 	}
 	srv->address.sin_family = AF_INET;
 	srv->address.sin_addr.s_addr = INADDR_ANY;
-	srv->address.sin_port = htons(PORT);
+	srv->address.sin_port = htons(settings_srv->port);
 	if (bind(srv->master_sck, (struct sockaddr *)&(srv->address),
 			 sizeof(srv->address)) < 0)
 	{
+		perror("bind");
 		dprintf(STDERR_FILENO, "Meme le port ne peut pas te bind\n");
 		free(srv);
 		return (NULL);
@@ -56,5 +59,6 @@ t_srv *init_srv(void)
 		return (NULL);
 	}
 	srv->addrlen = sizeof(srv->address);
+	srv->settings_srv = settings_srv;
 	return (srv);
 }

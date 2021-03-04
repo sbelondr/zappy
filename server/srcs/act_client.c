@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/03 20:57:44 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/03/04 08:53:54 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,21 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 	srv->client_sck[i] = 0;
 }
 
+void	ft_lexer(t_srv *srv, char *buf, int i)
+{
+	(void)srv;
+	(void)buf;
+	(void)i;
+}
+
 void ft_client_send_data(t_srv *srv, char *buff, int valread, int i)
 {
 	char *msg_receive = "Message received";
 
 	buff[valread] = 0;
 	green();
-	printf("[%d] ->\033[0;34m %s\n", srv->client_sck[i], buff);
+	printf("[%d] -> %s\n", srv->client_sck[i], buff);
+	ft_lexer(srv, buff, i);
 	reset();
 	if ((int)send(srv->client_sck[i], msg_receive,
 		 strlen(msg_receive), 0) != (int)strlen(msg_receive))
