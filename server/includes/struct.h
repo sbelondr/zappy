@@ -6,11 +6,30 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/03/04 15:37:57 by selver           ###   ########.fr       */
+/*   Updated: 2021/03/06 09:15:32 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "stdint.h"
+
+typedef enum	e_command_type
+{
+	AVANCE,
+	DROITE,
+	GAUCHE,
+	VOIR
+
+}				t_command_type;
+
+typedef struct	s_command
+{
+	t_command_type command;
+	
+}				t_command;
+typedef struct	s_client
+{
+	
+}				t_client;
 
 typedef struct	s_team_list
 {
