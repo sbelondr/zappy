@@ -10,16 +10,6 @@
 
 #define BUFF_READ 100
 
-/*
-    - linemate
-    - la deraumère
-    - le sibur
-    - lamendiane
-    - le phiras
-    - la thystame.
-	- Nourriture
-*/
-
 enum	e_ressources {
 	LINEMATE,
 	DERAUMERE,
@@ -40,15 +30,6 @@ typedef struct	s_map
 	t_case_map	**map_case;
 }				t_map;
 
-/*
--p numero de port
--x largeur du Monde
--y hauteur du Monde
--n nom\_equipe\_1 nom\_\_equipe_2 ...
--c nombre de client autorises au commencement du jeu
--t diviseur de l'unite de temps (plus t est grand, plus le jeu va vite)
-*/
-
 typedef struct	s_settings_srv
 {
 	int		port;
@@ -68,6 +49,24 @@ typedef struct	s_srv
 	struct s_settings_srv	*settings_srv;
 	t_map					map;
 }				t_srv;
+
+typedef struct	s_player
+{
+	enum e_ressources	*inventory;
+	int					lvl;
+	int					life;
+	int					p_x;
+	int					p_y;
+	int					orientation;
+	struct s_player		nxt;
+}				t_player;
+
+typedef struct	s_team
+{
+	char			*team_name;
+	t_player		*players;
+	struct s_team	*nxt;
+}				t_team;
 
 /*
 ** server.c
