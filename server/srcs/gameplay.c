@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/03/06 10:54:08 by jayache          ###   ########.fr       */
+/*   Updated: 2021/03/07 08:53:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,26 @@ t_world_state	init_world(t_param params)
 			ret.map[y][x] = calloc(7, sizeof(int));
 	generate_ressource(ret);
 	return (ret);
+}
+
+void		broadcast(t_world_state world, t_client *emitter, char *message)
+{
+	t_client	*current;
+	int			diff_x;
+	int			diff_y;
+	int			direcion;
+
+	current = world.client_list;
+	while (current)
+	{
+		diff_x = emitter->p_x - current->p_x;
+		diff_y = emitter->p_y - current->p_y;
+		if (diff_x == 0 && diff_y == 0 && emitter != current) //HACK: tqnt quíl ny a pas de copie de donnees, on peut verifier l \
+																egalite entre deux structs en comparant les pointeurs
+		{
+			direction = 0;
+		}
+		else if (diff_x == 0 && 
+		current = current->next;
+	}
 }
