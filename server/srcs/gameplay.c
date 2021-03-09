@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/03/07 08:53:34 by jayache          ###   ########.fr       */
+/*   Updated: 2021/03/09 09:39:01 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,45 @@ t_world_state	init_world(t_param params)
 	return (ret);
 }
 
-void		broadcast(t_world_state world, t_client *emitter, char *message)
+/*
+ * Donne la direction du broadcast pour une paire de joueur donnée
+ * PARAMS:	t_world_state *world -> world state	
+ *			t_client *emitter -> The client who's speaking
+ *			t_client *recepter -> The client that's listening
+ * RETURNS:	int	-> The num of the case giving the direction of the ray
+ * TODO: Does not take into account the recepter orientation
+ */
+int		broadcast(t_world_state *world, t_client *emitter, t_client *recepter)
 {
-	t_client	*current;
 	int			diff_x;
 	int			diff_y;
-	int			direcion;
+	int			direction;
 
-	current = world.client_list;
-	while (current)
+	diff_x = emitter->p_x - recepter->p_x;
+	if (abs(diff_x) > world->params.world_width / 2)
+		diff_x *= -1;
+	if (abs(diff_y) > world->params.world_height / 2)
+		diff_y *= -1;
+	diff_y = emitter->p_y - recepter->p_y;
+	if (diff_x == 0 && diff_y == 0 && emitter->id != recepter->id) 
 	{
-		diff_x = emitter->p_x - current->p_x;
-		diff_y = emitter->p_y - current->p_y;
-		if (diff_x == 0 && diff_y == 0 && emitter != current) //HACK: tqnt quíl ny a pas de copie de donnees, on peut verifier l \
-																egalite entre deux structs en comparant les pointeurs
-		{
-			direction = 0;
-		}
-		else if (diff_x == 0 && 
-		current = current->next;
+		direction = 0;
 	}
+	else if (diff_x == 0 && diff_y < 0)
+		direction = 1;
+	else if (diff_x == 0 && diff_y > 0)
+		direction = 2;
+	else if (diff_x < 0 && diff_y == 0)
+		direction = 3;
+	else if (diff_x > 0 && diff_y == 0)
+		direction = 4;
+	else if (diff_x > 0 && diff_y > 0)
+		direction = 5;
+	else if (diff_x < 0 && diff_y < 0)
+		direction = 6;
+	else if (diff_x < 0 && diff_y < 0)
+		direction = 7;
+	else if (diff_x < 0 && diff_y > 0)
+		direction = 8;
+	return (direction);
 }

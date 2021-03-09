@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2021/03/06 11:17:27 by jayache          ###   ########.fr       */
+/*   Updated: 2021/03/09 09:53:28 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,18 @@ int		is_input_complete(t_param param)
 	return (0);
 }
 
+t_team	new_team(char *name)
+{
+	t_team	team;
+
+	team.team_name = name;
+	team.team_clients = NULL;
+	return (team);
+}
+
 t_param	parse_input(int ac, char **av)
 {
 	t_param param;
-	t_team_list *current;
 
 	bzero(&param, sizeof(t_param));
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
@@ -99,10 +107,11 @@ t_param	parse_input(int ac, char **av)
 		}
 		else if (!strcmp(av[i], "-n"))
 		{
-			current = param.team_list;
-			param.team_list = malloc(sizeof(t_team_list));
-			param.team_list->team_name = av[++i];
-			param.team_list->next = current;
+			t_team tmp = new_team(av[++i]);
+			ft_lstadd(&param.team_list, ft_lstnew(&tmp, sizeof(t_team)));
+			//param.team_list = malloc(sizeof(t_team_list));
+			//param.team_list->team_name = av[++i];
+			//param.team_list->next = current;
 		}
 	}
 	is_input_complete(param);
@@ -112,12 +121,12 @@ t_param	parse_input(int ac, char **av)
 int main(int ac, char **av)
 {
 	t_param param = parse_input(ac, av);
-	t_team_list *current = param.team_list;
+	t_list *current = param.team_list;
 	printf("x: %d y:: %d t: %d\n", param.world_width, param.world_height, param.time_delta);
 	printf("port: %d allowed clients: %d\n", param.port, param.allowed_clients_amount);
 	while (current)
 	{
-		printf("Team name: %s\n", current->team_name);
+		printf("Team name: %s\n", ((t_team*)current->content)->team_name);
 		current = current->next;
 	}
 	t_world_state st;
