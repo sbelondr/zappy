@@ -6,11 +6,13 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/04 11:24:29 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/06/30 11:22:21 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+#include "struct.h"
+#include "functions.h"
 
 static t_srv **g_srv = NULL;
 
@@ -34,7 +36,7 @@ void ft_quit(int sig)
 	int i = -1;
 	int sd;
 
-	while (srv && ++i < srv->settings_srv->max_client)
+	while (srv && ++i < srv->param->allowed_clients_amount)
 	{
 		sd = srv->client_sck[i];
 		if (sd > 0)
@@ -51,8 +53,6 @@ void ft_quit(int sig)
 	free(srv->client_sck);
 	if (close(srv->master_sck))
 		perror("close");
-	ft_arraydel(&(srv->settings_srv->team));
-	free(srv->settings_srv);
 	free(*g_srv);
 	printf("Quit: %d", sig);
 	exit(sig);
@@ -66,13 +66,11 @@ int main(int ac, char **av)
 	fd_set writefds;
 	t_srv *srv;
 	struct timeval timeout;
-	t_settings_srv *settings_srv = ft_parse_arg_srv(av);
+	t_param param = parse_input(ac, av);
+	t_world_state st;
+	st = init_world(param);
 
-	(void)ac;
-	if (!settings_srv)
-		exit(EXIT_FAILURE);
-	t_map	map = generate_map();
-	srv = init_srv(settings_srv, map);
+	srv = init_srv(&param, &st);
 	g_srv = &srv;
 	if (!srv)
 		return (EXIT_FAILURE);

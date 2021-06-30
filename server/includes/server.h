@@ -7,48 +7,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/time.h>
+#include "struct.h"
 
 #define BUFF_READ 100
-
-enum	e_ressources {
-	LINEMATE,
-	DERAUMERE,
-	SIBUR,
-	LAMENDIANE,
-	PHIRAS,
-	THYSTAME,
-	FOOD
-};
 
 typedef struct	s_case_map
 {
 	int ress[7];
 }				t_case_map;
-
-typedef struct	s_map
-{
-	t_case_map	**map_case;
-}				t_map;
-
-typedef struct	s_settings_srv
-{
-	int		port;
-	int		x;
-	int		y;
-	char	**team;
-	int		max_client;
-	int		time;
-}				t_settings_srv;
-
-typedef struct	s_srv
-{
-	int						master_sck;
-	struct sockaddr_in		address;
-	int						addrlen;
-	int						*client_sck;
-	struct s_settings_srv	*settings_srv;
-	t_map					map;
-}				t_srv;
 
 typedef struct	s_player
 {
@@ -58,15 +24,8 @@ typedef struct	s_player
 	int					p_x;
 	int					p_y;
 	int					orientation;
-	struct s_player		nxt;
+	struct s_player		*nxt;
 }				t_player;
-
-typedef struct	s_team
-{
-	char			*team_name;
-	t_player		*players;
-	struct s_team	*nxt;
-}				t_team;
 
 /*
 ** server.c
@@ -78,7 +37,7 @@ void			ft_quit(int sig);
 ** init_srv.c
 */
 
-t_srv			*init_srv(t_settings_srv *settings_srv, t_map map);
+t_srv			*init_srv(t_param *param, t_world_state *st);
 
 /*
 ** act_client.c
@@ -115,17 +74,3 @@ void			ft_listen_srv(t_srv *srv, fd_set *readfds);
 */
 
 void			reset_term(void);
-
-
-/*
-** parse_opt_server.c
-*/ 
-
-t_settings_srv	*ft_parse_arg_srv(char **av);
-
-/*
-** map.c
-*/
-
-t_map			generate_map(void);
-

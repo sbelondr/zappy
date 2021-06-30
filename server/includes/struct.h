@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/03/09 09:45:54 by selver           ###   ########.fr       */
+/*   Updated: 2021/06/30 11:26:10 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,15 @@ typedef struct	s_world_state
 	t_param		params;
 	t_list		*client_list;
 }				t_world_state;
+
+typedef struct	s_srv
+{
+	int						master_sck;
+	struct sockaddr_in		address;
+	int						addrlen;
+	int						*client_sck;
+	t_param					*param;
+	t_world_state			*world;
+}				t_srv;
 
 #endif

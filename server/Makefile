@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/03/04 10:42:22 by sbelondr         ###   ########.fr        #
+#    Updated: 2021/06/30 11:28:05 by selver           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ ifeq ($(DEBUG), yes)
 else
 	CFLAGS = -Wall -Wextra -Werror
 endif
-CPPFLAGS = -I $(INCDIR)
+CPPFLAGS = -I $(INCDIR) -I libft/ #COUCOU samuel ça c'est un peu moche non ???
 
 # --------------- #
 # Different names #
@@ -50,9 +50,9 @@ SRCS_NAMES = server.c\
 	act_client.c\
 	init_srv.c\
 	act_server.c\
-	listen.c\
-	parse_opt_server.c\
-	map.c
+	parser.c\
+	init_world.c\
+	listen.c
 HEADERS_NAMES = server.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
@@ -84,7 +84,7 @@ else
 endif
 
 $(NAME) : $(OBJS_NAMES)
-	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS)
+	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) libft/libft.a #TU te démerdes moi ça me casse les couilles
 	@$(PRINT) $(REMOVE)"Executable built\n"
 
 %.o : %.c $(HEADERS)

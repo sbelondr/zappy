@@ -6,10 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2021/03/09 09:53:28 by selver           ###   ########.fr       */
+/*   Updated: 2021/06/30 11:26:54 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "struct.h"
 #include <string.h>
 #include <stdio.h>
@@ -117,7 +118,7 @@ t_param	parse_input(int ac, char **av)
 	is_input_complete(param);
 	return (param);
 }
-
+/*
 int main(int ac, char **av)
 {
 	t_param param = parse_input(ac, av);
@@ -145,3 +146,4 @@ int main(int ac, char **av)
 		printf("\n");
 	}
 }
+*/

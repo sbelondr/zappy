@@ -6,13 +6,13 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/03/04 11:20:29 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/06/30 11:23:01 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-t_srv *init_srv(t_settings_srv *settings_srv, t_map map)
+t_srv *init_srv(t_param *param, t_world_state *st)
 {
 	t_srv	*srv;
 	int		opt;
@@ -24,9 +24,9 @@ t_srv *init_srv(t_settings_srv *settings_srv, t_map map)
 		dprintf(STDERR_FILENO, "Malloc error\n");
 		exit(EXIT_FAILURE);
 	}
-	if (!(srv->client_sck = (int*)malloc(sizeof(int) * (settings_srv->max_client + 1))))
+	if (!(srv->client_sck = (int*)malloc(sizeof(int) * (param->allowed_clients_amount+ 1))))
 		return (NULL);
-	while (++i < settings_srv->max_client)
+	while (++i < param->allowed_clients_amount)
 		srv->client_sck[i] = 0;
 	if ((srv->master_sck = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 	{
@@ -43,7 +43,7 @@ t_srv *init_srv(t_settings_srv *settings_srv, t_map map)
 	}
 	srv->address.sin_family = AF_INET;
 	srv->address.sin_addr.s_addr = INADDR_ANY;
-	srv->address.sin_port = htons(settings_srv->port);
+	srv->address.sin_port = htons(param->port);
 	if (bind(srv->master_sck, (struct sockaddr *)&(srv->address),
 			 sizeof(srv->address)) < 0)
 	{
@@ -59,7 +59,7 @@ t_srv *init_srv(t_settings_srv *settings_srv, t_map map)
 		return (NULL);
 	}
 	srv->addrlen = sizeof(srv->address);
-	srv->settings_srv = settings_srv;
-	srv->map = map;
+	srv->param = param;
+	srv->world = st;
 	return (srv);
 }
