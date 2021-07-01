@@ -6,11 +6,12 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/06/30 11:23:47 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/01 11:09:55 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+#include "functions.h"
 
 void ft_add_new_client(t_srv *srv, fd_set *readfds)
 {
@@ -43,6 +44,7 @@ void ft_add_new_client(t_srv *srv, fd_set *readfds)
 				break;
 			}
 		}
+		ft_lst_append(&srv->world->client_list, ft_lstnew_no_copy(new_client(), sizeof(t_client)));
 	}
 }
 

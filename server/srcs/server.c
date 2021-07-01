@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/06/30 11:22:21 by selver           ###   ########.fr       */
+/*   Updated: 2021/06/30 16:29:46 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,14 @@ int main(int ac, char **av)
 	fd_set writefds;
 	t_srv *srv;
 	struct timeval timeout;
-	t_param param = parse_input(ac, av);
 	t_world_state st;
-	st = init_world(param);
+	t_param param = parse_input(ac, av);
 
+	st = init_world(param);
 	srv = init_srv(&param, &st);
-	g_srv = &srv;
 	if (!srv)
 		return (EXIT_FAILURE);
+	g_srv = &srv;
 	reset_term();
 	yellow();
 	printf("Launch srv\n");

@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/03/09 11:32:53 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/01 09:33:50 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
  * TODO: everything
  */
-char	*action_see_string(t_world_state *world, t_player *player)
+char	*action_see_string(t_world_state *world, t_client *player)
 {
 	char	*ret;
 
-	ret = NULL;
+	ret = ft_strdup("{0 0, 0, 0}");
 	return (ret);
 }
 

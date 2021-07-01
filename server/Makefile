@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/06/30 11:28:05 by selver           ###   ########.fr        #
+#    Updated: 2021/07/01 10:57:19 by selver           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ VPATH = objs:\
 
 CC = cc
 ifeq ($(DEBUG), yes)
-	CFLAGS = -Wall -Wextra
+	CFLAGS = -Wall -Wextra -fsanitize=address -g3
 else
 	CFLAGS = -Wall -Wextra -Werror
 endif
@@ -52,6 +52,8 @@ SRCS_NAMES = server.c\
 	act_server.c\
 	parser.c\
 	init_world.c\
+	gameplay.c\
+	client.c\
 	listen.c
 HEADERS_NAMES = server.h
 

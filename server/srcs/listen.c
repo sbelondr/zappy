@@ -6,11 +6,15 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/06/30 11:24:01 by selver           ###   ########.fr       */
+/*   Updated: 2021/06/30 16:33:17 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+/*
+** wtf genre tu lis ou tu écris 
+*/
 
 void ft_listen_srv(t_srv *srv, fd_set *readfds)
 {
@@ -29,7 +33,7 @@ void ft_listen_srv(t_srv *srv, fd_set *readfds)
 			if ((valread = read(sd, buff, BUFF_READ)) == 0)
 				ft_client_exit(srv, sd, i);
 			else
-				ft_client_send_data(srv, buff, valread, i);
+				ft_client_send_data(srv, buff, valread, i); //Genre ça ça veut dire que tu envoies des données du serveur au client non ????
 		}
 	}
 }
