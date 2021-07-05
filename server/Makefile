@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/07/05 10:39:51 by selver           ###   ########.fr        #
+#    Updated: 2021/07/05 15:04:12 by selver           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,8 @@ SRCS_NAMES = server.c\
 	init_world.c\
 	gameplay.c\
 	client.c\
+	client_commands_movement.c\
+	client_commands_vision.c\
 	listen.c
 HEADERS_NAMES = server.h
 
