@@ -53,6 +53,7 @@ int SocketReceive(int hSocket,char* Rsp,short RvcSize)
 	}
 	shortRetval = recv(hSocket, Rsp, RvcSize, 0);
 	printf("Response %s\n",Rsp);
+	memset(Rsp, 0, 200);
 	return shortRetval;
 }
 //main driver program
