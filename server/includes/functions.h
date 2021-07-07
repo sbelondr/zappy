@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2021/07/05 10:27:26 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/07 10:28:06 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,7 @@ char			*turn_right(t_world_state *world, t_client *client);
 char			*turn_left(t_world_state *world, t_client *client);
 char			*see_inventaire(t_world_state *world, t_client *client);
 t_client		*new_client(void);
+int				*get_case(t_world_state *world, int x, int y);
+int				quantity_of_elements(t_world_state *world, int *square);
 
 #endif

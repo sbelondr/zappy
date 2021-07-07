@@ -6,11 +6,12 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/07/05 16:27:54 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/07 10:39:27 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
+#include "functions.h"
 
 char	*see_inventaire(t_world_state *world, t_client *player)
 {
@@ -30,12 +31,12 @@ char	*see_inventaire(t_world_state *world, t_client *player)
 }
 
 /*
-** Construit un élément de la chaîne de caractère de vision
-** PARAMS: char* str -> le string en construction, doit avoir la bonne taille déjà allouée
-**			char *name -> nom de l'élément que l'on ai en train de rajouter
-**			int count -> nombre de l'élément
-** RETURNS:	int -> nombre de caractères ajoutés
-*/
+ ** Construit un élément de la chaîne de caractère de vision
+ ** PARAMS: char* str -> le string en construction, doit avoir la bonne taille déjà allouée
+ **			char *name -> nom de l'élément que l'on ai en train de rajouter
+ **			int count -> nombre de l'élément
+ ** RETURNS:	int -> nombre de caractères ajoutés
+ */
 
 static int	build_see_part(char *str, char *name, int count)
 {
@@ -45,7 +46,7 @@ static int	build_see_part(char *str, char *name, int count)
 	for (int i = 0; i < count; ++i)
 	{
 		ft_memmove(str + offset, name, ft_strlen(name));
-		offset += 9;
+		offset += ft_strlen(name);
 	}
 	return (offset);
 }
@@ -63,27 +64,45 @@ char	*action_see_string(t_world_state *world, t_client *player)
 	char	*ret;
 	int		*items;
 	int		cnt;
+	int		offsetx;
 
-	items = world->map[player->p_y][player->p_x];
-	cnt = 9 * items[0];
-	cnt += 10 * items[1];
-	cnt += 6 * items[2];
-	cnt += 13 * items[3];
-	cnt += 7 * items[4];
-	cnt += 9 * items[5];
-	cnt += 5 * items[6];
-	ret = ft_strnew(cnt + 2 + 7);
+	offsetx = 1;
+	cnt = 0;
+	while (offsetx >= 0)
+	{
+		for (int i = -offsetx; i <= offsetx; ++i)
+		{
+			items = get_case(world, player->p_y + offsetx, player->p_x + i);
+			cnt += quantity_of_elements(world, items);
+			printf("%d ", i);
+		}
+		printf("\n");
+		offsetx -= 1;
+	}
+	printf("Elements: %d\n", cnt);
+	ret = ft_strnew(cnt * 15 + 2);
 	ret[0] = '{';
 	int offset = 1;
-	offset += build_see_part(ret + offset, " LINEMATE", items[0]);
-	offset += build_see_part(ret + offset, " DERAUMERE", items[1]);
-	offset += build_see_part(ret + offset, " SIBUR", items[2]);
-	offset += build_see_part(ret + offset, " LAMENDIANE", items[3]);
-	offset += build_see_part(ret + offset, " PHIRAS", items[4]);
-	offset += build_see_part(ret + offset, " THYSTAME", items[5]);
-	offset += build_see_part(ret + offset, " FOOD", items[6]);
-	offset += build_see_part(ret + offset, " PLAYER", 0);
+	offsetx = 1;
+	while (offsetx >= 0)
+	{
+		for (int i = -offsetx; i <= offsetx; ++i)
+		{
+			items = get_case(world, player->p_y + offsetx, player->p_x + i);
+			offset += build_see_part(ret + offset, " LINEMATE", items[0]);
+			offset += build_see_part(ret + offset, " DERAUMERE", items[1]);
+			offset += build_see_part(ret + offset, " SIBUR", items[2]);
+			offset += build_see_part(ret + offset, " LAMENDIANE", items[3]);
+			offset += build_see_part(ret + offset, " PHIRAS", items[4]);
+			offset += build_see_part(ret + offset, " THYSTAME", items[5]);
+			offset += build_see_part(ret + offset, " FOOD", items[6]);
+			if (offsetx > 0)
+				ret[offset++] = ',';
+		}
+		offsetx -= 1;
+	}
 	ret[offset++] = '}';
+	printf("STRING vision: %s\n", ret);
 	return (ret);
 }
 
