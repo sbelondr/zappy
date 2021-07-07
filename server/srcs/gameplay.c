@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/07/05 15:05:46 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/05 16:57:15 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int		broadcast(t_world_state *world, t_client *emitter, t_client *recepter)
 		direction = 8;
 	return (direction);
 }
-
 
 /*
 ** MOVE A PLAYER IN A DIRECTION, TAKING WORLD LIMITS INTO ACCOUNT

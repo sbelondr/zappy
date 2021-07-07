@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/07/05 15:05:34 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/05 16:27:54 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,9 @@ static int	build_see_part(char *str, char *name, int count)
  * PARAMS: t_world_state *world -> world state
  *			t_client playe -> Observer
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
- * TODO: Remove excess comma + player number + view scales with level
+ * TODO: player number + view scales with level
  */
+
 char	*action_see_string(t_world_state *world, t_client *player)
 {
 	char	*ret;
