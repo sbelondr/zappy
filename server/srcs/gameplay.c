@@ -6,12 +6,13 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/07/05 16:57:15 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/13 15:06:36 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
 #include "constants.h"
+#include "functions.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -85,4 +86,33 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 		if (target->p_x < 0)
 			target->p_x = world->params.world_width - 1;
 	}
+}
+
+int		attempt_take_item(const char *name, int *quant, int *inv, char *arg)
+{
+	if (ft_strequ(arg, name) && *quant > 0)
+	{
+		--*quant;
+		++*inv;
+		return (1);
+	}
+	return (0);
+}
+
+char	*pickup_item(t_world_state *world, t_client *player)
+{
+	char	*arg;
+	int		*square;
+	int		success;
+
+	success = 0;
+	square = get_case(world, player->p_x, player->p_y);
+	printf("Player: %d %d case: %d %d %d %d\n", player->p_x, player->p_y, square[SIBUR], square[LINEMATE], square[LAMENDIANE], square[FOOD]);
+	arg = player->buffer[0].arg;
+	success |= attempt_take_item("SIBUR", &(square[SIBUR]), &player->ressource[SIBUR], arg);
+	success |= attempt_take_item("LAMENDIANE", &square[LAMENDIANE], &player->ressource[LAMENDIANE], arg);
+	success |= attempt_take_item("FOOD", &square[FOOD], &player->ressource[FOOD], arg);
+	success |= attempt_take_item("LINEMATE", &(square[LINEMATE]), &player->ressource[LINEMATE], arg);
+	success |= attempt_take_item("THYSTAME", &square[THYSTAME], &player->ressource[THYSTAME], arg);
+	return (ft_strdup(success ? "OK" : "KO"));
 }

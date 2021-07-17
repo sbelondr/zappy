@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/07/07 10:39:27 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/15 14:15:28 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*see_inventaire(t_world_state *world, t_client *player)
 	res = player->ressource;
 	error = asprintf(&inventory,
 			"{nourriture %d, sibur %d, phiras %d, linemate %d,"
-			"thystame %d, lamendiane %d, deraumere %d}",
+			" thystame %d, lamendiane %d, deraumere %d}",
 			res[6], res[2], res[4], res[0], res[5], res[3], res[1]);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
@@ -56,7 +56,7 @@ static int	build_see_part(char *str, char *name, int count)
  * PARAMS: t_world_state *world -> world state
  *			t_client playe -> Observer
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
- * TODO: player number + view scales with level
+ * TODO: player number + view scale with rank 
  */
 
 char	*action_see_string(t_world_state *world, t_client *player)
@@ -88,14 +88,23 @@ char	*action_see_string(t_world_state *world, t_client *player)
 	{
 		for (int i = -offsetx; i <= offsetx; ++i)
 		{
-			items = get_case(world, player->p_y + offsetx, player->p_x + i);
-			offset += build_see_part(ret + offset, " LINEMATE", items[0]);
-			offset += build_see_part(ret + offset, " DERAUMERE", items[1]);
-			offset += build_see_part(ret + offset, " SIBUR", items[2]);
-			offset += build_see_part(ret + offset, " LAMENDIANE", items[3]);
-			offset += build_see_part(ret + offset, " PHIRAS", items[4]);
-			offset += build_see_part(ret + offset, " THYSTAME", items[5]);
-			offset += build_see_part(ret + offset, " FOOD", items[6]);
+			if (player->orientation == NORTH)
+				items = get_case(world, player->p_x + i, player->p_y - offsetx);
+			else if (player->orientation == EAST)
+				items = get_case(world, player->p_x + offsetx, player->p_y + i);
+			else if (player->orientation == SOUTH)
+				items = get_case(world, player->p_x + i, player->p_y + offsetx);
+			else if (player->orientation == WEST)
+				items = get_case(world, player->p_x - offsetx, player->p_y - i);
+			else
+				printf("ERROR: orientation: %d !E {%d, %d, %d, %d}\n", player->orientation, NORTH, EAST, SOUTH, WEST);
+			offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
+			offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
+			offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
+			offset += build_see_part(ret + offset, " LAMENDIANE", items[LAMENDIANE]);
+			offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
+			offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
+			offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
 			if (offsetx > 0)
 				ret[offset++] = ',';
 		}
@@ -105,4 +114,3 @@ char	*action_see_string(t_world_state *world, t_client *player)
 	printf("STRING vision: %s\n", ret);
 	return (ret);
 }
-
