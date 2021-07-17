@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/07/13 15:06:36 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/17 14:35:57 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,34 @@ char	*pickup_item(t_world_state *world, t_client *player)
 	success |= attempt_take_item("FOOD", &square[FOOD], &player->ressource[FOOD], arg);
 	success |= attempt_take_item("LINEMATE", &(square[LINEMATE]), &player->ressource[LINEMATE], arg);
 	success |= attempt_take_item("THYSTAME", &square[THYSTAME], &player->ressource[THYSTAME], arg);
+	return (ft_strdup(success ? "OK" : "KO"));
+}
+
+int		attempt_put_item(const char *name, int *quant, int *inv, char *arg)
+{
+	if (ft_strequ(arg, name) && *inv > 0)
+	{
+		--*inv;
+		++*quant;
+		return (1);
+	}
+	return (0);
+}
+
+char	*putdown_item(t_world_state *world, t_client *player)
+{
+	char	*arg;
+	int		*square;
+	int		success;
+
+	success = 0;
+	square = get_case(world, player->p_x, player->p_y);
+	printf("Player: %d %d case: %d %d %d %d\n", player->p_x, player->p_y, square[SIBUR], square[LINEMATE], square[LAMENDIANE], square[FOOD]);
+	arg = player->buffer[0].arg;
+	success |= attempt_put_item("SIBUR", &(square[SIBUR]), &player->ressource[SIBUR], arg);
+	success |= attempt_put_item("LAMENDIANE", &square[LAMENDIANE], &player->ressource[LAMENDIANE], arg);
+	success |= attempt_put_item("FOOD", &square[FOOD], &player->ressource[FOOD], arg);
+	success |= attempt_put_item("LINEMATE", &(square[LINEMATE]), &player->ressource[LINEMATE], arg);
+	success |= attempt_put_item("THYSTAME", &square[THYSTAME], &player->ressource[THYSTAME], arg);
 	return (ft_strdup(success ? "OK" : "KO"));
 }

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/07/13 14:54:52 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/17 14:43:08 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,16 @@ char	*ft_lexer(t_srv *srv, char *buf, int i) //HELP: c koi i
 		message = action_see_string(srv->world, c);
 	else if (!ft_strcmp(buf, "inventaire"))
 		message = see_inventaire(srv->world, c);
-	else if(!ft_strncmp(buf, "prendre", 7))
+	else if (!ft_strncmp(buf, "pose", 4))
+	{
+		char **arr = ft_strsplit(buf, ' ');
+		c->buffer[0].arg = arr[1];
+		message = putdown_item(srv->world, c);
+		free(arr[1]);
+		free(arr[0]);
+		free(arr);
+	}
+	else if (!ft_strncmp(buf, "prendre", 7))
 	{
 		char **arr = ft_strsplit(buf, ' ');
 		c->buffer[0].arg = arr[1];

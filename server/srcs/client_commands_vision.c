@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/07/15 14:15:28 by selver           ###   ########.fr       */
+/*   Updated: 2021/07/17 14:15:39 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,10 @@ char	*action_see_string(t_world_state *world, t_client *player)
 		offsetx -= 1;
 	}
 	printf("Elements: %d\n", cnt);
-	ret = ft_strnew(cnt * 15 + 2);
+	const int player_level_demo = 3; //Remplacer par player->lvl quand ça sera prêt
+	int number_of_cases = (1 + ((player_level_demo - 1) * 2 + 1)) / 2 * player_level_demo;
+	printf("Number: %d\n", number_of_cases);
+	ret = ft_strnew(cnt * 15 + number_of_cases + 5000); //nique, on devrait jamais avoir autant besoin de caractères donc pas de segfault
 	ret[0] = '{';
 	int offset = 1;
 	offsetx = 1;
