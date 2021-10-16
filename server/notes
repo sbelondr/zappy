@@ -1,0 +1,5 @@
+act client contient les données quand elles sont reçus
+les stocker dans la structure command a l'air des fonctions helper
+puis les exécuter après
+
+il faut upgrade le binaire client il est plus adapté

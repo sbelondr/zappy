@@ -6,12 +6,12 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/06/30 16:33:17 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/16 09:35:41 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-
+#include <stdio.h>
 /*
 ** wtf genre tu lis ou tu écris 
 */

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/07/17 14:15:39 by selver           ###   ########.fr       */
+/*   Updated: 2021/08/15 16:20:07 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	build_see_part(char *str, char *name, int count)
  * PARAMS: t_world_state *world -> world state
  *			t_client playe -> Observer
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
- * TODO: player number + view scale with rank 
+ * TODO: player number 
  */
 
 char	*action_see_string(t_world_state *world, t_client *player)

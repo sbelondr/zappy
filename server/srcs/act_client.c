@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/07/17 14:43:08 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/16 10:50:44 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ char	*ft_lexer(t_srv *srv, char *buf, int i) //HELP: c koi i
 
 	c = get_current_client(srv, i);
 	if (!ft_strcmp(buf, "droite"))
+	{
 		message = turn_right(srv->world, c);
+		append_command(c, new_command(COMMAND_DROITE, "", 7));
+	}
 	else if (!ft_strcmp(buf, "gauche"))
 		message = turn_left(srv->world, c);
 	else if (!ft_strcmp(buf, "avance"))
@@ -78,8 +81,8 @@ void ft_client_send_data(t_srv *srv, char *buff, int valread, int i)
 	printf("[%d] -> %s\n", srv->client_sck[i], buff); //...
 	msg_receive = ft_lexer(srv, buff, i);
 	reset();
-	if ((int)send(srv->client_sck[i], msg_receive,
+/*	if ((int)send(srv->client_sck[i], msg_receive,
 		 strlen(msg_receive), 0) != (int)strlen(msg_receive))
 			dprintf(STDERR_FILENO, ERROR_SEND_CLIENT, srv->client_sck[i]);
-	free(msg_receive);
+*/	free(msg_receive);
 }

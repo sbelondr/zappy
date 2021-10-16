@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/06/30 11:26:10 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/16 10:47:52 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@
 /*
 ** Commandes du client
 */
+
+typedef struct	s_command
+{
+	t_command_type	command;
+	char			*arg;
+	char			cooldown;
+}				t_command;
 
 /*
 ** Bookkeeping (Les clients ne peuvent envoyer que dix requetes sans recevoir de reponse)
@@ -73,5 +80,7 @@ typedef struct	s_srv
 	t_param					*param;
 	t_world_state			*world;
 }				t_srv;
+
+typedef char* (*t_game_action)(t_world_state*, t_client*);
 
 #endif

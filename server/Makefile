@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/07/07 10:25:34 by selver           ###   ########.fr        #
+#    Updated: 2021/10/16 10:28:55 by selver           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,10 @@ SRCS_NAMES = server.c\
 	client.c\
 	client_commands_movement.c\
 	client_commands_vision.c\
-	listen.c
+	listen.c\
+	command_helper.c\
+	command_dispatcher.c
+
 HEADERS_NAMES = server.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)

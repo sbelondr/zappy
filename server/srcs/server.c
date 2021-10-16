@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/06/30 16:29:46 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/16 10:48:08 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,40 @@ int main(int ac, char **av)
 		FD_ZERO(&writefds);
 		FD_SET(srv->master_sck, &readfds);
 		max_sd = ft_set_max_sd(srv, &readfds);
-		activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
-		if (activity < 0)
-			dprintf(STDERR_FILENO, "select error\n");
-		if (activity > 0)
+		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
 		{
-			ft_add_new_client(srv, &readfds);
-			ft_listen_srv(srv, &readfds);
+			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
+			if (activity < 0)
+				dprintf(STDERR_FILENO, "select error\n");
+			if (activity > 0)
+			{
+				ft_add_new_client(srv, &readfds);
+				ft_listen_srv(srv, &readfds);
+			}
 		}
+		timeout.tv_sec = 2;
+		for (int i = 0; i < param.allowed_clients_amount; ++i)
+		{
+			t_list *current = ft_lstgetbypos(st.client_list, i);
+			t_client *client;	
+			if (!current)
+				continue;
+			client = current->content;
+			if (client->buffer[0].cooldown > 0)
+				client->buffer[0].cooldown -= 1;
+			else
+			{
+				if (client->buffer[0].command != COMMAND_NONE)
+				{
+					printf("VALID %s", client->buffer[0].arg);
+					t_game_action act = get_action_from_enum(client->buffer[0].command);
+					char *msg = act(srv->world, client);
+					send(srv->client_sck[i], msg, ft_strlen(msg), 0);
+					shift_command(client);
+				}
+			}
+		}
+		printf("TEST\n");
 	}
 	free(srv);
 	return (EXIT_SUCCESS);

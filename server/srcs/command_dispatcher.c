@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   constants.h                                        :+:      :+:    :+:   */
+/*   command_dispatcher.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2021/10/16 10:23:24 by selver           ###   ########.fr       */
+/*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
+/*   Updated: 2021/10/16 10:48:53 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONSTANTS_H
-# define CONSTANTS_H
+#include "server.h"
+#include "functions.h"
 
-#define ERROR_SEND_CLIENT "Le client %d n'a pas reçu le message. Je vais lui monter ses morts \n"
-#define ERROR_CLIENT_EXIT "Le client %d s'est barré sans payer\n"
-
-
-typedef enum	e_ressources {
-	LINEMATE,
-	DERAUMERE,
-	SIBUR,
-	LAMENDIANE,
-	PHIRAS,
-	THYSTAME,
-	FOOD
-}				t_ressources;
-
-typedef enum	e_command_type
+t_game_action	get_action_from_enum(t_command_type command)
 {
+	t_game_action array[15];
+
+	bzero(array, sizeof(t_game_action) * 15);
+	array[1] = avance;
+	array[2] = turn_right;
+	array[3] = turn_left;
+	array[4] = action_see_string;
+	array[5] = see_inventaire;
+	array[6] = pickup_item;
+	array[7] = putdown_item;
+	return (array[command]);
+}
+
+/*
 	COMMAND_NONE,
 	COMMAND_AVANCE,
 	COMMAND_DROITE,
@@ -42,16 +42,4 @@ typedef enum	e_command_type
 	COMMAND_INCANTATION,
 	COMMAND_FORK,
 	COMMAND_CONNECT_NBR
-}				t_command_type;
-
-
-typedef enum	e_orientation
-{
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST
-}				t_orientation;
-
-
-#endif
+ */
