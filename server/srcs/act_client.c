@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/16 10:50:44 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 10:05:58 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,60 +29,49 @@ t_client *get_current_client(t_srv *srv, int i)
 	return (ft_lstgetbypos(srv->world->client_list, i)->content);
 }
 
-char	*ft_lexer(t_srv *srv, char *buf, int i) //HELP: c koi i
+void	ft_lexer(t_srv *srv, char *buf, int i) //HELP: c koi i
 {
 	t_client	*c;
-	char		*message;
 
 	c = get_current_client(srv, i);
 	if (!ft_strcmp(buf, "droite"))
-	{
-		message = turn_right(srv->world, c);
 		append_command(c, new_command(COMMAND_DROITE, "", 7));
-	}
 	else if (!ft_strcmp(buf, "gauche"))
-		message = turn_left(srv->world, c);
+		append_command(c, new_command(COMMAND_GAUCHE, "", 7));
 	else if (!ft_strcmp(buf, "avance"))
-		message = avance(srv->world, c);
+		append_command(c, new_command(COMMAND_AVANCE, "", 7));
 	else if (!ft_strcmp(buf, "voir"))
-		message = action_see_string(srv->world, c);
+		append_command(c, new_command(COMMAND_VOIR, "", 7));
 	else if (!ft_strcmp(buf, "inventaire"))
-		message = see_inventaire(srv->world, c);
+		append_command(c, new_command(COMMAND_INVENTAIRE, "", 1));
 	else if (!ft_strncmp(buf, "pose", 4))
 	{
 		char **arr = ft_strsplit(buf, ' ');
-		c->buffer[0].arg = arr[1];
-		message = putdown_item(srv->world, c);
-		free(arr[1]);
+		append_command(c, new_command(COMMAND_POSER, arr[1], 7));
 		free(arr[0]);
 		free(arr);
 	}
 	else if (!ft_strncmp(buf, "prendre", 7))
 	{
 		char **arr = ft_strsplit(buf, ' ');
-		c->buffer[0].arg = arr[1];
-		message = pickup_item(srv->world, c);
-		free(arr[1]);
+		append_command(c, new_command(COMMAND_PRENDRE, arr[1], 7));
 		free(arr[0]);
 		free(arr);
 	}
 	else
-		message = ft_strdup("???");
-	return (message);
+		append_command(c, new_command(COMMAND_UNKNOWN, "", 0));
 }
 
 void ft_client_send_data(t_srv *srv, char *buff, int valread, int i)
 {
-	char *msg_receive;
-
 	buff[valread] = 0;
 	green();
 	printf("%d ", i);
 	printf("[%d] -> %s\n", srv->client_sck[i], buff); //...
-	msg_receive = ft_lexer(srv, buff, i);
+	ft_lexer(srv, buff, i);
 	reset();
 /*	if ((int)send(srv->client_sck[i], msg_receive,
 		 strlen(msg_receive), 0) != (int)strlen(msg_receive))
 			dprintf(STDERR_FILENO, ERROR_SEND_CLIENT, srv->client_sck[i]);
-*/	free(msg_receive);
+*/	
 }

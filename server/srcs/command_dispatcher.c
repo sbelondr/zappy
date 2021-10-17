@@ -6,25 +6,33 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
-/*   Updated: 2021/10/16 10:48:53 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 10:48:36 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 #include "functions.h"
 
+static char		*unknown_command(t_world_state *world, t_client *client)
+{
+	(void)world;
+	(void)client;
+	return (ft_strdup("???"));
+}
+
 t_game_action	get_action_from_enum(t_command_type command)
 {
-	t_game_action array[15];
+	t_game_action array[COMMAND_NBR + 1];
 
-	bzero(array, sizeof(t_game_action) * 15);
-	array[1] = avance;
-	array[2] = turn_right;
-	array[3] = turn_left;
-	array[4] = action_see_string;
-	array[5] = see_inventaire;
-	array[6] = pickup_item;
-	array[7] = putdown_item;
+	ft_bzero(array, sizeof(t_game_action) * COMMAND_NBR);
+	array[COMMAND_UNKNOWN] = unknown_command;
+	array[COMMAND_AVANCE] = avance;
+	array[COMMAND_DROITE] = turn_right;
+	array[COMMAND_GAUCHE] = turn_left;
+	array[COMMAND_VOIR] = action_see_string;
+	array[COMMAND_INVENTAIRE] = see_inventaire;
+	array[COMMAND_PRENDRE] = pickup_item;
+	array[COMMAND_POSER] = putdown_item;
 	return (array[command]);
 }
 

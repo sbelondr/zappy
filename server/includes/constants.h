@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2021/10/16 10:23:24 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 09:52:23 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ typedef enum	e_command_type
 	COMMAND_BROADCAST,
 	COMMAND_INCANTATION,
 	COMMAND_FORK,
-	COMMAND_CONNECT_NBR
+	COMMAND_CONNECT_NBR,
+	COMMAND_UNKNOWN,
+	COMMAND_NBR
 }				t_command_type;
 
 

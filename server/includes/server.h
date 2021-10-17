@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 #include "struct.h"
+#include "functions.h"
 
 #define BUFF_READ 100
 

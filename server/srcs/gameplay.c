@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/07/17 14:35:57 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 09:38:18 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		broadcast(t_world_state *world, t_client *emitter, t_client *recepter)
 	int			direction;
 
 	diff_x = emitter->p_x - recepter->p_x;
+	diff_y = emitter->p_y - recepter->p_y;
 	if (abs(diff_x) > world->params.world_width / 2)
 		diff_x *= -1;
 	if (abs(diff_y) > world->params.world_height / 2)

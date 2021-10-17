@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 09:01:14 by selver            #+#    #+#             */
-/*   Updated: 2021/07/07 10:26:50 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 10:49:02 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int *get_case(t_world_state *world, int x, int y)
  * TODO:	prendre en compte le nombre de joueurs sur la case aussi
  */
 
-int	quantity_of_elements(t_world_state *world, int *square)
+int	quantity_of_elements(int *square)
 {
 	int	ret;
 

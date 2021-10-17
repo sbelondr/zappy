@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2021/10/16 10:29:10 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 10:49:13 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ t_param			parse_input(int ac, char **av);
 t_world_state	init_world(t_param param);
 t_client		*new_client(void);
 int				*get_case(t_world_state *world, int x, int y);
-int				quantity_of_elements(t_world_state *world, int *square);
+int				quantity_of_elements(int *square);
 
-#endif
 
 /*
  * GAMEPLAY
@@ -43,3 +42,10 @@ void			append_command(t_client *client, t_command to_append);
 void			shift_command(t_client *client);
 t_command		new_command(t_command_type command, char *arg, int cooldown);
 t_game_action	get_action_from_enum(t_command_type command);
+
+/*
+ * GAME
+ */
+
+void			game_tick(t_srv *srv);
+#endif

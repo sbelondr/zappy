@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/08/15 16:20:07 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/17 10:58:14 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,30 @@ static int	build_see_part(char *str, char *name, int count)
 	return (offset);
 }
 
+static int	build_player_part(t_world_state *world, t_client *caller, char *str)
+{
+	t_list		*current;
+	t_client	*client;
+	int			nbr;
+
+	nbr = 0;
+	current = world->client_list;
+	while (current)
+	{
+		client = current->content;	
+		printf("x: %d y: %d id: %d\n", client->p_x, client->p_y, client->id);
+		printf("x: %d y: %d id: %d (caller)\n", caller->p_x, caller->p_y, caller->id);
+		if (client->p_x == caller->p_x && client->p_y == caller->p_y
+				&& client->id != caller->id)
+		{
+			printf("Found one!!\n");
+			nbr += 1;
+		}
+		current = current->next;
+	}
+	return (build_see_part(str, " PLAYER", nbr));
+}
+
 /*
  * Donne la chaîne de charactères à retourner au client
  * PARAMS: t_world_state *world -> world state
@@ -73,21 +97,17 @@ char	*action_see_string(t_world_state *world, t_client *player)
 		for (int i = -offsetx; i <= offsetx; ++i)
 		{
 			items = get_case(world, player->p_y + offsetx, player->p_x + i);
-			cnt += quantity_of_elements(world, items);
-			printf("%d ", i);
+			cnt += quantity_of_elements(items);
 		}
-		printf("\n");
 		offsetx -= 1;
 	}
-	printf("Elements: %d\n", cnt);
 	const int player_level_demo = 3; //Remplacer par player->lvl quand ça sera prêt
 	int number_of_cases = (1 + ((player_level_demo - 1) * 2 + 1)) / 2 * player_level_demo;
-	printf("Number: %d\n", number_of_cases);
 	ret = ft_strnew(cnt * 15 + number_of_cases + 5000); //nique, on devrait jamais avoir autant besoin de caractères donc pas de segfault
 	ret[0] = '{';
 	int offset = 1;
-	offsetx = 1;
-	while (offsetx >= 0)
+	offsetx = 0;
+	while (offsetx <= 1)
 	{
 		for (int i = -offsetx; i <= offsetx; ++i)
 		{
@@ -108,12 +128,11 @@ char	*action_see_string(t_world_state *world, t_client *player)
 			offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
 			offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
 			offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-			if (offsetx > 0)
-				ret[offset++] = ',';
+			offset += build_player_part(world, player, ret);
+			ret[offset++] = ',';
 		}
-		offsetx -= 1;
+		offsetx += 1;
 	}
-	ret[offset++] = '}';
-	printf("STRING vision: %s\n", ret);
+	ret[offset - 1] = '}';
 	return (ret);
 }
