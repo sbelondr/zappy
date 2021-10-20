@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/10/17 09:38:18 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/18 12:34:31 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,15 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 	{
 		target->p_x = (target->p_x + 1) % world->params.world_width;
 	}
-	if (dir == WEST)
+	else if (dir == WEST)
 	{
 		target->p_x -= 1;
 		if (target->p_x < 0)
 			target->p_x = world->params.world_width - 1;
+	}
+	else
+	{
+		printf("ERROR IN move_player!! dir = %d pour player = %d\n", dir, target->id);
 	}
 }
 

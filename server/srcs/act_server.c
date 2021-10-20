@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/07/01 11:09:55 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/18 16:01:34 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,20 @@ void ft_add_new_client(t_srv *srv, fd_set *readfds)
 			{
 				srv->client_sck[i] = new_socket;
 				yellow();
-				printf("Add new client\n");
+				printf("Add new client: %d\n", i);
 				reset();
+				ft_lst_append(&srv->world->client_list, ft_lstnew(new_client(i), sizeof(t_client)));
+				t_list *current = srv->world->client_list;
+				while (current)
+				{
+					t_client *cl;
+					cl = current->content;
+					printf("Current list: x:%d y:%d id:%d\n", cl->p_x, cl->p_y, cl->id);
+					current = current->next;
+				}
 				break;
 			}
 		}
-		ft_lst_append(&srv->world->client_list, ft_lstnew_no_copy(new_client(), sizeof(t_client)));
 	}
 }
 

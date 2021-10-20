@@ -6,12 +6,19 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/17 10:58:14 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/20 12:07:57 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
 #include "functions.h"
+#define _GNU_SOURCE
+#include <stdio.h>
+
+/*
+ * Silence warning
+ */
+int asprintf(char **strp, const char *fmt, ...);
 
 char	*see_inventaire(t_world_state *world, t_client *player)
 {
@@ -62,10 +69,7 @@ static int	build_player_part(t_world_state *world, t_client *caller, char *str)
 	while (current)
 	{
 		client = current->content;	
-		printf("x: %d y: %d id: %d\n", client->p_x, client->p_y, client->id);
-		printf("x: %d y: %d id: %d (caller)\n", caller->p_x, caller->p_y, caller->id);
-		if (client->p_x == caller->p_x && client->p_y == caller->p_y
-				&& client->id != caller->id)
+		if (client->id != caller->id)
 		{
 			printf("Found one!!\n");
 			nbr += 1;
@@ -89,7 +93,15 @@ char	*action_see_string(t_world_state *world, t_client *player)
 	int		*items;
 	int		cnt;
 	int		offsetx;
+	t_vector2	target;
 
+	t_list *current = world->client_list;
+	while (current)
+	{
+		t_client *caller = current->content;
+		printf("x: %d y: %d id: %d\n", caller->p_x, caller->p_y, caller->id);
+		current = current->next;
+	}
 	offsetx = 1;
 	cnt = 0;
 	while (offsetx >= 0)
@@ -112,15 +124,16 @@ char	*action_see_string(t_world_state *world, t_client *player)
 		for (int i = -offsetx; i <= offsetx; ++i)
 		{
 			if (player->orientation == NORTH)
-				items = get_case(world, player->p_x + i, player->p_y - offsetx);
+				target = ft_vector2(player->p_x + 1, player->p_y - offsetx);
 			else if (player->orientation == EAST)
-				items = get_case(world, player->p_x + offsetx, player->p_y + i);
+				target = ft_vector2(player->p_x + offsetx, player->p_y + 1);
 			else if (player->orientation == SOUTH)
-				items = get_case(world, player->p_x + i, player->p_y + offsetx);
+				target = ft_vector2(player->p_x + i, player->p_y + offsetx);
 			else if (player->orientation == WEST)
-				items = get_case(world, player->p_x - offsetx, player->p_y - i);
+				target = ft_vector2(player->p_x - offsetx, player->p_y - i);
 			else
 				printf("ERROR: orientation: %d !E {%d, %d, %d, %d}\n", player->orientation, NORTH, EAST, SOUTH, WEST);
+			items = get_case(world, target.x, target.y); 
 			offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
 			offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
 			offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
@@ -128,7 +141,18 @@ char	*action_see_string(t_world_state *world, t_client *player)
 			offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
 			offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
 			offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-			offset += build_player_part(world, player, ret);
+			int nbr = 0;
+			t_client *client;
+			t_list *current;
+			current = world->client_list;
+			while (current)
+			{
+				client = current->content;	
+				if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
+					nbr += 1;
+				current = current->next;
+			}
+			offset += build_see_part(ret + offset, " PLAYER", nbr);
 			ret[offset++] = ',';
 		}
 		offsetx += 1;
