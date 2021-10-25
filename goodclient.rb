@@ -3,17 +3,14 @@
 require 'socket'
 
 s = TCPSocket.new 'localhost', 8080
-s.print 'gauche'
-sleep(5)
-s.print 'gauche'
-sleep(5)
-s.print 'voir'
-sleep(5)
-s.print 'avance'
+
 puts s.recv(99)
-s.print 'voir'
-while lign = s.recv(99)
-  s.print 'avance'
+s.puts 'goodclient'
+puts s.recv(99)
+s.puts 'voir'
+loop do
+  s.puts 'avance'
   puts s.recv(99)
-  s.print 'voir'
+  s.puts 'voir'
+  puts s.recv(99)
 end

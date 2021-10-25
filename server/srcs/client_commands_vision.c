@@ -6,13 +6,12 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/20 12:07:57 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/24 10:04:14 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
 #include "functions.h"
-#define _GNU_SOURCE
 #include <stdio.h>
 
 /*
@@ -56,27 +55,6 @@ static int	build_see_part(char *str, char *name, int count)
 		offset += ft_strlen(name);
 	}
 	return (offset);
-}
-
-static int	build_player_part(t_world_state *world, t_client *caller, char *str)
-{
-	t_list		*current;
-	t_client	*client;
-	int			nbr;
-
-	nbr = 0;
-	current = world->client_list;
-	while (current)
-	{
-		client = current->content;	
-		if (client->id != caller->id)
-		{
-			printf("Found one!!\n");
-			nbr += 1;
-		}
-		current = current->next;
-	}
-	return (build_see_part(str, " PLAYER", nbr));
 }
 
 /*

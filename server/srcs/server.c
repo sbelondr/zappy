@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/18 12:23:49 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/24 10:12:00 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int main(int ac, char **av)
 				dprintf(STDERR_FILENO, "select error\n");
 				exit(1); //TODO: select erreur en boucle, trouver une solution
 			}
-			if (activity > 0) //d'après le man ça arrive tout le temps...
+			else if (activity > 0) //d'après le man ça arrive tout le temps...
 			{
 				ft_add_new_client(srv, &readfds); //ALORS PK CA
 				ft_listen_srv(srv, &readfds);

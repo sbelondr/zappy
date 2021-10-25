@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2021/10/18 12:28:18 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/25 10:01:09 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,24 @@ void			append_command(t_client *client, t_command to_append);
 void			shift_command(t_client *client);
 t_command		new_command(t_command_type command, char *arg, int cooldown);
 t_game_action	get_action_from_enum(t_command_type command);
+void			simple_send(t_srv *srv, int id, char *msg);
+int				add_to_team(t_srv *srv, char *team_name, int id);
+t_client		*get_current_client(t_srv *srv, int i);
 
 /*
  * GAME
  */
 
 void			game_tick(t_srv *srv);
+
+/*
+ * MONITEUR
+ */
+
+char			*moniteur_msz(t_world_state *world);
+char			*moniteur_bct(t_world_state *world, int x, int y);
+char			*moniteur_mct(t_world_state *world);
+char			*moniteur_sgt(t_world_state *world);
+char			*moniteur_tna(t_world_state *world);
+
 #endif

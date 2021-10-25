@@ -6,7 +6,7 @@
 #    By: jayache <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 19:39:42 by jayache           #+#    #+#              #
-#    Updated: 2021/03/09 09:51:51 by selver           ###   ########.fr        #
+#    Updated: 2021/10/24 11:09:06 by selver           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ BASE = $(MEM) $(STR) $(IS) $(PUT) ft_toupper.c ft_tolower.c ft_error.c
 
 LST = ft_lstnew.c ft_lstdelone.c ft_lstdel.c ft_lst_size.c ft_lstadd.c ft_lstiter.c \
 	  ft_lstmap.c  ft_lst_append.c ft_lstgetbypos.c ft_lstnew_no_copy.c \
-	  ft_sorted_list_insert.c ft_lst_exist.c
+	  ft_sorted_list_insert.c ft_lst_exist.c ft_lstdelbyval.c
 
 ALGO= ft_astar.c
 

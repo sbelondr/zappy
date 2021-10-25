@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/10/17 10:39:45 by selver           ###   ########.fr        #
+#    Updated: 2021/10/25 09:29:08 by selver           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,10 @@ SRCS_NAMES = server.c\
 	listen.c\
 	command_helper.c\
 	command_dispatcher.c\
-	game_tick.c
+	game_tick.c\
+	team_helper.c\
+	helpers.c \
+	moniteur_commands.c
 
 HEADERS_NAMES = server.h
 
