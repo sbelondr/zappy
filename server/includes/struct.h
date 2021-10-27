@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/10/24 10:07:25 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/26 16:17:58 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_client
 	int				p_x;
 	int				p_y;
 	int				id;
+	int				socket_id;
 	t_orientation	orientation;
 	int				ressource[7];
 	char			*team_name;

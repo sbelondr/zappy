@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2021/10/25 10:02:56 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/26 16:01:19 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,17 @@ char	*moniteur_tna(t_world_state *world)
 		ret = dup;
 		current = current->next;
 	}
+	return (ret);
+}
+
+//Joueur
+char	*moniteur_pnw(t_client *client)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pnw #%d %d %d %d %d %s\n", client->id, client->p_x, client->p_y, client->orientation, client->lvl, client->team_name);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
 }

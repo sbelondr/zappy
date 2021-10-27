@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2021/10/17 09:52:23 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/25 10:05:53 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 
 
 typedef enum	e_ressources {
+	FOOD,
 	LINEMATE,
 	DERAUMERE,
 	SIBUR,
 	LAMENDIANE,
 	PHIRAS,
 	THYSTAME,
-	FOOD
 }				t_ressources;
 
 typedef enum	e_command_type
