@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/24 10:04:14 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 16:37:45 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  */
 int asprintf(char **strp, const char *fmt, ...);
 
-char	*see_inventaire(t_world_state *world, t_client *player)
+char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 {
 	char	*inventory;
 	int		*res;
@@ -30,7 +30,8 @@ char	*see_inventaire(t_world_state *world, t_client *player)
 	error = asprintf(&inventory,
 			"{nourriture %d, sibur %d, phiras %d, linemate %d,"
 			" thystame %d, lamendiane %d, deraumere %d}",
-			res[6], res[2], res[4], res[0], res[5], res[3], res[1]);
+			res[FOOD], res[SIBUR], res[PHIRAS], res[LINEMATE],
+			res[THYSTAME], res[LAMENDIANE], res[DERAUMERE]);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (inventory);
@@ -65,7 +66,7 @@ static int	build_see_part(char *str, char *name, int count)
  * TODO: player number 
  */
 
-char	*action_see_string(t_world_state *world, t_client *player)
+char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 {
 	char	*ret;
 	int		*items;

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:27:26 by selver            #+#    #+#             */
-/*   Updated: 2021/07/04 15:38:08 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 14:50:57 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_world_state	init_world(t_param params)
 
 	ret.params = params;
 	ret.client_list = NULL;
+	ret.egg_list = NULL;
 	ret.map = calloc(params.world_height, sizeof(int**));
 	for (int i = 0; i < params.world_height; i++)
 		ret.map[i] = calloc(params.world_width, sizeof(int*));

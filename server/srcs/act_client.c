@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/25 09:06:16 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 14:31:13 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		append_command(c, new_command(COMMAND_AVANCE, "", 7));
 	else if (!ft_strcmp(buf, "voir"))
 		append_command(c, new_command(COMMAND_VOIR, "", 7));
+	else if (!ft_strcmp(buf, "fork"))
+		append_command(c, new_command(COMMAND_FORK, "", 42));
 	else if (!ft_strcmp(buf, "inventaire"))
 		append_command(c, new_command(COMMAND_INVENTAIRE, "", 1));
 	else if (!ft_strncmp(buf, "pose", 4))

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
-/*   Updated: 2021/10/17 10:48:36 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 14:30:29 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_game_action	get_action_from_enum(t_command_type command)
 	array[COMMAND_INVENTAIRE] = see_inventaire;
 	array[COMMAND_PRENDRE] = pickup_item;
 	array[COMMAND_POSER] = putdown_item;
+	array[COMMAND_FORK] = player_fork;
 	return (array[command]);
 }
 

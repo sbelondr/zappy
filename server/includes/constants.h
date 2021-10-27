@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2021/10/25 10:05:53 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 15:39:14 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #define ERROR_SEND_CLIENT "Le client %d n'a pas reçu le message. Je vais lui monter ses morts \n"
 #define ERROR_CLIENT_EXIT "Le client %d s'est barré sans payer\n"
-
 
 typedef enum	e_ressources {
 	FOOD,

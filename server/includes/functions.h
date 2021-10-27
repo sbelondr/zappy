@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2021/10/25 10:01:09 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 17:02:28 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ int				quantity_of_elements(int *square);
  * GAMEPLAY
  */
 
-char			*action_see_string(t_world_state *world, t_client *client);
-char			*avance(t_world_state *world, t_client *client);
-char			*turn_right(t_world_state *world, t_client *client);
-char			*turn_left(t_world_state *world, t_client *client);
-char			*see_inventaire(t_world_state *world, t_client *client);
-char			*pickup_item(t_world_state *world, t_client *client);
-char			*putdown_item(t_world_state *world, t_client *client);
+char			*action_see_string(t_srv *srv, t_world_state *world, t_client *client);
+char			*avance(t_srv *srv,t_world_state *world, t_client *client);
+char			*turn_right(t_srv *srv,t_world_state *world, t_client *client);
+char			*turn_left(t_srv *srv,t_world_state *world, t_client *client);
+char			*see_inventaire(t_srv *srv,t_world_state *world, t_client *client);
+char			*pickup_item(t_srv *srv,t_world_state *world, t_client *client);
+char			*putdown_item(t_srv *srv,t_world_state *world, t_client *client);
+char			*player_fork(t_srv *srv,t_world_state *world, t_client *client);
 
 /*
  * HELPERS
@@ -45,6 +46,10 @@ t_game_action	get_action_from_enum(t_command_type command);
 void			simple_send(t_srv *srv, int id, char *msg);
 int				add_to_team(t_srv *srv, char *team_name, int id);
 t_client		*get_current_client(t_srv *srv, int i);
+t_egg			*get_egg_by_id(t_world_state *world, int id);
+t_client		*get_client_by_id(t_srv *srv, int id);
+struct timeval	delta_to_time(int delta);
+int		add_egg_to_team(t_world_state *world, char *team_name, int egg_id);
 
 /*
  * GAME
@@ -61,5 +66,12 @@ char			*moniteur_bct(t_world_state *world, int x, int y);
 char			*moniteur_mct(t_world_state *world);
 char			*moniteur_sgt(t_world_state *world);
 char			*moniteur_tna(t_world_state *world);
+char			*moniteur_pnw(t_client *client);
+char			*moniteur_ppo(t_client *client);
+char			*moniteur_pgt(t_client *client, int ressource);
+char			*moniteur_pdr(t_client *client, int ressource);
+char			*moniteur_enw(t_egg *egg);
+char			*moniteur_pin(t_client *client);
+void			send_to_all_moniteur(t_srv *srv, char *msg);
 
 #endif

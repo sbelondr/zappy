@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/10/26 16:17:58 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 16:38:11 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,19 @@ typedef struct	s_client
 	int				p_x;
 	int				p_y;
 	int				id;
-	int				socket_id;
 	t_orientation	orientation;
 	int				ressource[7];
 	char			*team_name;
 }				t_client;
+
+typedef struct	s_egg
+{
+	char		*team_name;
+	int			p_x;
+	int			p_y;
+	int			id;
+	int			father_id;
+}				t_egg;
 
 /*
 ** Donnees en input
@@ -53,6 +61,7 @@ typedef struct	s_team
 {
 	char				*team_name;	
 	t_list				*team_clients;
+	t_list				*team_eggs;
 }				t_team;
 
 typedef struct	s_param
@@ -71,6 +80,7 @@ typedef struct	s_world_state
 	int			***map; //Note: c'est un pointer vers pointers vers tableau de 7 cases
 	t_param		params;
 	t_list		*client_list;
+	t_list		*egg_list;
 }				t_world_state;
 
 typedef struct	s_srv
@@ -83,6 +93,6 @@ typedef struct	s_srv
 	t_world_state			*world;
 }				t_srv;
 
-typedef char* (*t_game_action)(t_world_state*, t_client*);
+typedef char* (*t_game_action)(t_srv*, t_world_state*, t_client*);
 
 #endif

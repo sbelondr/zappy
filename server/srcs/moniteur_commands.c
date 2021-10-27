@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2021/10/26 16:01:19 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 17:04:19 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,91 @@ char	*moniteur_pnw(t_client *client)
 	char	*ret;
 	int		error;
 
-	error = asprintf(&ret, "pnw #%d %d %d %d %d %s\n", client->id, client->p_x, client->p_y, client->orientation, client->lvl, client->team_name);
+	error = asprintf(&ret, "pnw #%d %d %d %d %d %s\n",
+			client->id, client->p_x, client->p_y, client->orientation + 1,
+			client->lvl, client->team_name);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
+}
+
+//Oeufs
+char	*moniteur_enw(t_egg *egg)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "enw #%d #%d %d %d\n",
+			egg->id, egg->father_id, egg->p_x, egg->p_y);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+//Position joueur
+char	*moniteur_ppo(t_client *client)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "ppo #%d %d %d %d\n",
+			client->id, client->p_x, client->p_y, client->orientation + 1);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+//pose une ressource
+char	*moniteur_pdr(t_client *client, int ressource)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pdr #%d %d\n", client->id, ressource);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+//prend une ressource
+char	*moniteur_pgt(t_client *client, int ressource)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pgt #%d %d\n", client->id, ressource);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+//inventaire
+char	*moniteur_pin(t_client *client)
+{
+	char	*ret;
+	int		error;
+	int		*inv;
+
+	inv = client->ressource;
+	error = asprintf(&ret, "pin #%d %d %d %d %d %d %d %d %d %d\n", 
+			client->id, client->p_x, client->p_y, inv[0], inv[1], inv[2],
+			inv[3], inv[4], inv[5], inv[6]);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+void	send_to_all_moniteur(t_srv *srv, char *msg)
+{
+	t_list *current;
+	t_client	*c;
+
+	current = srv->world->client_list;
+	while (current)
+	{
+		c = current->content;
+		if (!ft_strcmp(c->team_name, "GRAPHIC"))
+			simple_send(srv, c->id, msg);
+		current = current->next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/10/18 12:34:31 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 13:57:42 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,60 +93,13 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 	}
 }
 
-int		attempt_take_item(const char *name, int *quant, int *inv, char *arg)
+struct timeval	delta_to_time(int delta)
 {
-	if (ft_strequ(arg, name) && *quant > 0)
-	{
-		--*quant;
-		++*inv;
-		return (1);
-	}
-	return (0);
-}
+	struct timeval	ret;
+	double			time;
 
-char	*pickup_item(t_world_state *world, t_client *player)
-{
-	char	*arg;
-	int		*square;
-	int		success;
-
-	success = 0;
-	square = get_case(world, player->p_x, player->p_y);
-	printf("Player: %d %d case: %d %d %d %d\n", player->p_x, player->p_y, square[SIBUR], square[LINEMATE], square[LAMENDIANE], square[FOOD]);
-	arg = player->buffer[0].arg;
-	success |= attempt_take_item("SIBUR", &(square[SIBUR]), &player->ressource[SIBUR], arg);
-	success |= attempt_take_item("LAMENDIANE", &square[LAMENDIANE], &player->ressource[LAMENDIANE], arg);
-	success |= attempt_take_item("FOOD", &square[FOOD], &player->ressource[FOOD], arg);
-	success |= attempt_take_item("LINEMATE", &(square[LINEMATE]), &player->ressource[LINEMATE], arg);
-	success |= attempt_take_item("THYSTAME", &square[THYSTAME], &player->ressource[THYSTAME], arg);
-	return (ft_strdup(success ? "OK" : "KO"));
-}
-
-int		attempt_put_item(const char *name, int *quant, int *inv, char *arg)
-{
-	if (ft_strequ(arg, name) && *inv > 0)
-	{
-		--*inv;
-		++*quant;
-		return (1);
-	}
-	return (0);
-}
-
-char	*putdown_item(t_world_state *world, t_client *player)
-{
-	char	*arg;
-	int		*square;
-	int		success;
-
-	success = 0;
-	square = get_case(world, player->p_x, player->p_y);
-	printf("Player: %d %d case: %d %d %d %d\n", player->p_x, player->p_y, square[SIBUR], square[LINEMATE], square[LAMENDIANE], square[FOOD]);
-	arg = player->buffer[0].arg;
-	success |= attempt_put_item("SIBUR", &(square[SIBUR]), &player->ressource[SIBUR], arg);
-	success |= attempt_put_item("LAMENDIANE", &square[LAMENDIANE], &player->ressource[LAMENDIANE], arg);
-	success |= attempt_put_item("FOOD", &square[FOOD], &player->ressource[FOOD], arg);
-	success |= attempt_put_item("LINEMATE", &(square[LINEMATE]), &player->ressource[LINEMATE], arg);
-	success |= attempt_put_item("THYSTAME", &square[THYSTAME], &player->ressource[THYSTAME], arg);
-	return (ft_strdup(success ? "OK" : "KO"));
+	time = 1.0 / delta;
+	ret.tv_sec = (int)time;
+	ret.tv_usec = (time - ret.tv_sec) * 100000;
+	return (ret);
 }

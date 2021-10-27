@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/24 10:12:00 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/27 13:58:11 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,7 @@ int main(int ac, char **av)
 	yellow();
 	printf("Launch srv\n");
 	reset();
-	float time = 1 / param.time_delta;
-	timeout.tv_sec = (int)time;
-	timeout.tv_usec = (time - (int)time) * 100000;
+	timeout = delta_to_time(param.time_delta);
 	while (1)
 	{
 		FD_ZERO(&readfds);
@@ -102,7 +100,7 @@ int main(int ac, char **av)
 				ft_listen_srv(srv, &readfds);
 			}
 		}
-		timeout.tv_sec = 1;
+		timeout = delta_to_time(param.time_delta);
 		game_tick(srv);
 	}
 	free(srv);
