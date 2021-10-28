@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2021/06/30 11:26:54 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:53:03 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ t_team	new_team(char *name)
 
 	team.team_name = name;
 	team.team_clients = NULL;
+	team.team_eggs = NULL;
 	return (team);
 }
 

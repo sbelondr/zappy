@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/27 14:31:13 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:42:51 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,19 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 {
 	t_client	*c;
 
-	c = get_current_client(srv, i);
+	c = get_client_by_id(srv, i);
 	if (c->team_name == NULL)
 	{
 		//check team
 		printf("NO TEAM\n");
 		if (!add_to_team(srv, buf, i))
 		{
-			simple_send(srv, i, "0\n");
 			//break connection
 		}
-		return;
+		else if (ft_strcmp(c->team_name, "GRAPHIC"))
+			send_to_all_moniteur(srv, moniteur_pnw(c));
 	}
-	if (!ft_strcmp(c->team_name, "MONITEUR"))
+	else if (!ft_strcmp(c->team_name, "MONITEUR"))
 	{
 		
 	}
@@ -68,6 +68,13 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		append_command(c, new_command(COMMAND_FORK, "", 42));
 	else if (!ft_strcmp(buf, "inventaire"))
 		append_command(c, new_command(COMMAND_INVENTAIRE, "", 1));
+	else if (!ft_strncmp(buf, "broadcast", 9))
+	{
+		char **arr = ft_strsplit(buf, ' ');
+		append_command(c, new_command(COMMAND_BROADCAST, arr[1], 7));
+		free(arr[0]);
+		free(arr);
+	}
 	else if (!ft_strncmp(buf, "pose", 4))
 	{
 		char **arr = ft_strsplit(buf, ' ');

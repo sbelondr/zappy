@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 17:04:19 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:36:55 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,20 @@ char	*moniteur_pdr(t_client *client, int ressource)
 	return (ret);
 }
 
+//broadcast
+char	*moniteur_pbc(int id, char *msg)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pbc #%d %s\n", id, msg);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+
+
 //prend une ressource
 char	*moniteur_pgt(t_client *client, int ressource)
 {
@@ -186,6 +200,7 @@ char	*moniteur_pin(t_client *client)
 	return (ret);
 }
 
+//Send msg to all graphic clients connected - free msg afterwards.
 void	send_to_all_moniteur(t_srv *srv, char *msg)
 {
 	t_list *current;
@@ -195,8 +210,9 @@ void	send_to_all_moniteur(t_srv *srv, char *msg)
 	while (current)
 	{
 		c = current->content;
-		if (!ft_strcmp(c->team_name, "GRAPHIC"))
-			simple_send(srv, c->id, msg);
+		if (c && c->team_name && !ft_strcmp(c->team_name, "GRAPHIC"))
+			simple_send(srv, c->id, ft_strdup(msg));
 		current = current->next;
 	}
+	free(msg);
 }

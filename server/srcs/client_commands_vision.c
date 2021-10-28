@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 16:37:45 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 09:51:15 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 	int		error;
 
 	(void)world;
+	(void)srv;
 	res = player->ressource;
 	error = asprintf(&inventory,
 			"{nourriture %d, sibur %d, phiras %d, linemate %d,"
@@ -74,6 +75,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	int		offsetx;
 	t_vector2	target;
 
+	(void)srv;
 	t_list *current = world->client_list;
 	while (current)
 	{

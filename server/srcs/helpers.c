@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 14:27:24 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:00:25 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void simple_send(t_srv *srv, int id, char *msg)
 	{
 		dprintf(STDERR_FILENO, ERROR_SEND_CLIENT, srv->client_sck[id]);
 	}
+	free(msg);
 }
 
 t_client *get_current_client(t_srv *srv, int i)

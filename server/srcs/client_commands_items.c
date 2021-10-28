@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 17:03:25 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:19:48 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ static int	attempt_put_item(const char *name, int *quant, int *inv, char *arg)
 
 static int	string_to_res_id(char *res_name)
 {
-	int res;	
+	int	res;
+
 	if (!ft_strcmp("SIBUR", res_name))
 		res = SIBUR;
 	else if (!ft_strcmp("LAMENDIANE", res_name))
@@ -53,7 +54,8 @@ static int	string_to_res_id(char *res_name)
 		res = -1;
 	return (res);
 }
-char		*putdown_item(t_srv *srv,t_world_state *world, t_client *player)
+
+char	*putdown_item(t_srv *srv, t_world_state *world, t_client *player)
 {
 	char	*arg;
 	int		*square;
@@ -73,7 +75,7 @@ char		*putdown_item(t_srv *srv,t_world_state *world, t_client *player)
 	return (ft_strdup(success ? "OK\n" : "KO\n"));
 }
 
-char		*pickup_item(t_srv *srv,t_world_state *world, t_client *player)
+char	*pickup_item(t_srv *srv, t_world_state *world, t_client *player)
 {
 	char	*arg;
 	int		*square;

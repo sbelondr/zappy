@@ -6,12 +6,14 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 15:37:33 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:09:24 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 #include "functions.h"
+
+int asprintf(char **strp, const char *fmt, ...);
 
 static void	welcome_moniteur(t_srv *srv, int id)
 {
@@ -21,24 +23,18 @@ static void	welcome_moniteur(t_srv *srv, int id)
 
 	c = get_client_by_id(srv, id);
 	c->team_name = "GRAPHIC";
-	msg = moniteur_msz(srv->world);
-	simple_send(srv, id, msg);
-	free(msg);
+	simple_send(srv, id, moniteur_msz(srv->world));
 	msg = moniteur_sgt(srv->world);
 	simple_send(srv, id, msg);
-	free(msg);
 	msg = moniteur_mct(srv->world);
 	simple_send(srv, id, msg);
-	free(msg);
 	msg = moniteur_tna(srv->world);
 	simple_send(srv, id, msg);
-	free(msg);
 	current = srv->world->client_list;
 	while (current)
 	{
 		msg = moniteur_pnw(current->content);
 		simple_send(srv, id, msg);
-		free(msg);
 		current = current->next;
 	}
 	current = srv->world->egg_list;
@@ -46,21 +42,40 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	{
 		msg = moniteur_enw(current->content);
 		simple_send(srv, id, msg);
-		free(msg);
 		current = current->next;
 	}
 }
 
-// returns 0 on failure, 1 on success
+static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
+{
+	int			lstsize;
+	char		*msg;
+	int			remaining_slots;
+
+	lstsize = ft_lst_size(team->team_clients);
+	remaining_slots = srv->param->allowed_clients_amount - lstsize
+		+ ft_lst_size(team->team_eggs);
+	asprintf(&msg, "%d\n", remaining_slots);
+	simple_send(srv, c->id, msg);
+	asprintf(&msg, "%d %d\n",
+			srv->param->world_width, srv->param->world_height);
+	simple_send(srv, c->id, msg);
+	if (remaining_slots <= 0)
+		return (0);
+	ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
+	c->team_name = ft_strdup(team->team_name);
+	return (1);
+}
+
 /*
  * Adds a client to a team
+ * Returns 0 on failure, 1 on success
  */
 int		add_to_team(t_srv *srv, char *team_name, int id)
 {
 	t_client	*c;
 	t_list		*current;
 	t_team		*team;
-	int			lstsize;
 
 	c = get_client_by_id(srv, id);
 	if (!ft_strcmp(team_name, "GRAPHIC"))
@@ -68,22 +83,12 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 		welcome_moniteur(srv, id);
 		return (1);
 	}	
-		current = srv->param->team_list;
+	current = srv->param->team_list;
 	while (current)
 	{
 		team = current->content;
 		if (!ft_strcmp(team->team_name, team_name))
-		{
-			lstsize = ft_lst_size(team->team_clients);
-			if (lstsize >= srv->param->allowed_clients_amount)
-				return (0);
-			ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
-			printf("Appended!\n");
-			simple_send(srv, id, "4\n");
-			simple_send(srv, id, "10 10\n");
-			c->team_name = ft_strdup(team_name);
-			return (1);
-		}
+			return (perform_add_to_team(srv, team, c));
 		current = current->next;
 	}
 	return (0);

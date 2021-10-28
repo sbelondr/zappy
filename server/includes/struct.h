@@ -6,19 +6,19 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 16:38:11 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:59:11 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_H
 # define STRUCT_H
 
-#include "includes.h"
-#include "constants.h"
+# include "includes.h"
+# include "constants.h"
 
 /*
-** Commandes du client
-*/
+ ** Commandes du client
+ */
 
 typedef struct	s_command
 {
@@ -28,8 +28,8 @@ typedef struct	s_command
 }				t_command;
 
 /*
-** Bookkeeping (Les clients ne peuvent envoyer que dix requetes sans recevoir de reponse)
-*/
+ ** Bookkeeping (Les clients ne peuvent envoyer que dix requetes sans recevoir de reponse)
+ */
 
 typedef struct	s_client
 {
@@ -54,14 +54,14 @@ typedef struct	s_egg
 }				t_egg;
 
 /*
-** Donnees en input
-*/
+ ** Donnees en input
+ */
 
 typedef struct	s_team
 {
-	char				*team_name;	
-	t_list				*team_clients;
-	t_list				*team_eggs;
+	char		*team_name;	
+	t_list		*team_clients;
+	t_list		*team_eggs;
 }				t_team;
 
 typedef struct	s_param

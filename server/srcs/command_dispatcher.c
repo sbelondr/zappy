@@ -6,17 +6,18 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 14:30:29 by selver           ###   ########.fr       */
+/*   Updated: 2021/10/28 10:39:44 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 #include "functions.h"
 
-static char		*unknown_command(t_world_state *world, t_client *client)
+static char		*unknown_command(t_srv *srv, t_world_state *world, t_client *client)
 {
 	(void)world;
 	(void)client;
+	(void)srv;
 	return (ft_strdup("???"));
 }
 
@@ -34,6 +35,7 @@ t_game_action	get_action_from_enum(t_command_type command)
 	array[COMMAND_PRENDRE] = pickup_item;
 	array[COMMAND_POSER] = putdown_item;
 	array[COMMAND_FORK] = player_fork;
+	array[COMMAND_BROADCAST] = broadcast;
 	return (array[command]);
 }
 
