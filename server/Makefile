@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/10/27 14:42:51 by selver           ###   ########.fr        #
+#    Updated: 2021/11/01 14:27:13 by sbelondr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ DEBUG = yes
 SRCDIR = srcs/
 OBJDIR = objs/
 INCDIR = includes/
+LIBDIR=libft/
+LIBS_NAMES=libft.a
 
 VPATH = objs:\
 	srcs:
@@ -38,6 +40,7 @@ else
 	CFLAGS = -Wall -Wextra -Werror
 endif
 CPPFLAGS = -I $(INCDIR) -I libft/ #COUCOU samuel ça c'est un peu moche non ???
+#Sam: Oui en effet
 
 # --------------- #
 # Different names #
@@ -73,6 +76,7 @@ OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 
 OBJ = $(addprefix $(OBJDIR), $(OBJS_NAMES))
 HEADERS = $(addprefix $(INCDIR), $(HEADERS_NAMES))
+LIB = $(addprefix $(LIBDIR), $(LIBS_NAMES))
 
 # ----------------- #
 # Command variables #
@@ -84,12 +88,13 @@ PRINT = printf
 PHONY = all clean cleans fclean re lldb norm help
 REMOVE = "\r\033[K"
 FUNC = "%-60b\r"
+MAKE = make
 
 # ----- #
 # Rules #
 # ----- #
 
-all : $(NAME)
+all : libs $(NAME)
 
 ifeq ($(DEBUG), yes)
 	@$(PRINT) "Debug mode : on\n"
@@ -97,7 +102,7 @@ else
 	@$(PRINT) "Debug mode : off\n"
 endif
 
-$(NAME) : $(OBJS_NAMES)
+$(NAME) : $(LIBS) $(OBJS_NAMES)
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) libft/libft.a #TU te démerdes moi ça me casse les couilles
 	@$(PRINT) $(REMOVE)"Executable built\n"
 
@@ -105,7 +110,16 @@ $(NAME) : $(OBJS_NAMES)
 	@$(CREATE) $(OBJDIR)
 	@$(CC) -o $(OBJDIR)$@ -c $< $(CFLAGS) $(CPPFLAGS)
 
-clean : 
+libs :
+	@$(MAKE) -j3 -C $(LIBDIR)
+
+cleanlibs :
+	@$(MAKE) -C $(LIBDIR) clean
+
+fcleanlibs :
+	@$(MAKE) -C $(LIBDIR) fclean
+
+clean : cleanlibs
 	@$(DEL) $(OBJDIR)
 	@$(PRINT) ".o file deleted\n"
 
@@ -113,7 +127,7 @@ cleans :
 	@$(DEL) $(OBJDIR)
 	@$(PRINT) ".o file deleted\n"
 
-fclean : cleans 
+fclean : cleans fcleanlibs
 	@$(DEL) $(NAME)
 	@$(PRINT) "Executable destroyed\n"
 
