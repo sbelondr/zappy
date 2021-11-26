@@ -10,7 +10,7 @@
 #include "struct.h"
 #include "functions.h"
 
-#define BUFF_READ 100
+#define BUFF_READ 2048
 
 typedef struct	s_case_map
 {

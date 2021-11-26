@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2021/11/01 14:27:13 by sbelondr         ###   ########.fr        #
+#    Updated: 2021/11/26 10:35:43 by sbelondr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ VPATH = objs:\
 # Compiler and flags #
 # ------------------ #
 
-CC = cc
+CC = gcc
 ifeq ($(DEBUG), yes)
 	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -fsanitize=address -g3
 else

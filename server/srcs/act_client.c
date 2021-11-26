@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/28 10:42:51 by selver           ###   ########.fr       */
+/*   Updated: 2021/11/26 16:08:00 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 	getpeername(sd, (struct sockaddr *)&(srv->address),
 			(socklen_t *)&(srv->addrlen));
 	red();
+	t_client *c = get_client_by_id(srv, i);
+	if (ft_strequ(c->team_name, "GRAPHIC"))
+		c->team_name = NULL;
 	printf(ERROR_CLIENT_EXIT, srv->client_sck[i]);
 	reset();
 	close(sd);
@@ -95,10 +98,12 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 
 void ft_client_send_data(t_srv *srv, char *buff, int valread, int i)
 {
+	if (valread < 0)
+		return ;
 	buff[valread] = 0;
 	if (!delete_newline(buff))
 	{
-		printf("ERROR: CLIENT DOES NOT RESPECT RFC\n");
+		printf("ERROR: CLIENT DOES NOT RESPECT RFC: '%s'\n", buff);
 		exit(1);
 	}
 	green();
