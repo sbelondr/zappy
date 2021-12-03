@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:09:24 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/03 13:17:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,13 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	simple_send(srv, id, msg);
 	current = srv->world->client_list;
 	while (current)
-	{
-		msg = moniteur_pnw(current->content);
-		simple_send(srv, id, msg);
+	{	
+		t_client *c = current->content;
+		if (c->team_name)
+		{
+			msg = moniteur_pnw(current->content);
+			simple_send(srv, id, msg);
+		}
 		current = current->next;
 	}
 	current = srv->world->egg_list;
