@@ -69,6 +69,7 @@ const list_command = [
 func add_block(texture, vec: Vector3):
 	var obj = texture.instance()
 	obj.translation = vec
+	#obj.set("surface_1/material", load("gem_material.tres"))
 	$Terrain.add_child(obj, true)
 	return obj
 
@@ -107,15 +108,16 @@ func die_trantorien(name: String) -> void:
 		list_player.erase(name)
 
 func _on_Timer_timeout():
-	var vec : Vector3 = list_player["coucou"][1]
-	vec.x += 1
-	vec.z += 1
-	list_player["coucou"][1] = vec
-	if vec.x < g_x:
-		move_trantorien("coucou", vec)
-	else:
-		$Timer.stop()
-		die_trantorien("coucou")
+	pass
+#	var vec : Vector3 = list_player["coucou"][1]
+#	vec.x += 1
+#	vec.z += 1
+#	list_player["coucou"][1] = vec
+#	if vec.x < g_x:
+#		move_trantorien("coucou", vec)
+#	else:
+#		$Timer.stop()
+#		die_trantorien("coucou")
 		
 func launch_timer():
 	$Timer.wait_time = TIME
@@ -171,18 +173,9 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'sgt':
 			TIME = int(arr[1])
 		elif arr[0] == 'bct':
-			# q q q q q q q
-#			if (int(arr[1]) == 19 and int(arr[2]) == 19):
-#				print("ok")
-#				add_block(gem, Vector3(19, 1, 19))
-#				add_block(gem2, Vector3(19, 1, 19))
-#				add_block(gem3, Vector3(19, 1, 19))
-#				add_block(gem4, Vector3(19, 1, 19))
-#				add_block(gem5, Vector3(19, 1, 19))
-#				add_block(gem6, Vector3(19, 1, 19))
-#				add_block(gem7, Vector3(19, 1, 19))
 			if (int(arr[3]) > 0):
 				add_block(gem, Vector3(int(arr[1]), 1, int(arr[2])))
+				
 			if (int(arr[4]) > 0):
 				add_block(gem2, Vector3(int(arr[1]), 1, int(arr[2])))
 			if (int(arr[5]) > 0):
