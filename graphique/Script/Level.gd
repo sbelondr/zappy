@@ -22,6 +22,10 @@ const Client = preload("res://Script/Client.gd")
 var _client: Client = Client.new()
 
 var list_player = Dictionary()
+var list_team = Dictionary()
+
+onready var tree = get_node("CanvasLayer/Tree")
+var root_tree;
 
 # color teams
 var cnt_color = 0
@@ -43,6 +47,11 @@ enum TRANTORIEN {
 	TEAMS
 }
 
+enum TEAM {
+	COLOR
+	TREE_ID
+}
+
 # add block
 # Args:
 # 	texture: texture block
@@ -51,9 +60,7 @@ enum TRANTORIEN {
 func add_block(texture, vec: Vector3):
 	var obj = texture.instance()
 	obj.translation = vec
-	#obj.set("surface_1/material", load("gem_material.tres"))
 	$Terrain.add_child(obj, true)
-	print(vec)
 	return obj
 
 func create_map() -> void:
@@ -69,6 +76,10 @@ func create_map() -> void:
 func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
 	var obj = add_block(trantorien, vec)
 	list_player[name] = [obj, vec, orientation, level, teams]
+	print (list_team[teams])
+	print(name)
+	var subchild1 = tree.create_item(list_team[teams])
+	subchild1.set_text(0, name)
 
 func is_interpolate(val: int, new_val: int) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
@@ -141,6 +152,8 @@ func _ready():
 	_client.connect("data", self, "_handle_client_data")
 	_client.connect("error", self, "_handle_client_error")
 	_client.connect_to_server(HOST, PORT)
+	root_tree = tree.create_item()
+	tree.set_hide_root(true)
 
 func _handle_client_connected() -> void:
 	print("Client connected to server.")
@@ -167,7 +180,7 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			print('new player: ' + arr[6])
 			if arr[6] != 'GRAPHIC' and arr[6] != '(null)':
 				add_trantorien(arr[1], Vector3(int(arr[2]), 1, int(arr[3])), int(arr[4]), int(arr[5]), arr[6])
-				$CanvasLayer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
+				$CanvasLayer/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
 		# move player
 		elif arr[0] == 'ppo':
 			print('position')
@@ -194,7 +207,13 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				add_block(gem7, Vector3(int(arr[1]), 1, int(arr[2])))
 		# add team in HUD
 		elif arr[0] == 'tna':
-			$CanvasLayer/teams.bbcode_text += "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
+			$CanvasLayer/Panel/VBoxContainer/teams.bbcode_text += "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
+
+			var child1 = tree.create_item(root_tree)
+			child1.set_text(0, arr[1])
+#			var subchild1 = tree.create_item(child1)
+#			subchild1.set_text(0, "test")
+			list_team[arr[1]] = child1
 			cnt_color += 1
 		else:
 			print("Commande not set: '%s'" % line)
