@@ -2,10 +2,14 @@
 
 require 'socket'
 
+if ARGV.empty?
+	puts "You must pass the team name as first argument"
+end
+
 s = TCPSocket.new 'localhost', 8080
 
 puts s.recv(99)
-s.puts 'goodclient'
+s.puts ARGV[0] 
 puts s.recv(99)
 s.puts 'voir'
 loop do

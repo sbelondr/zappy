@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/11/26 16:08:00 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/12/05 11:11:23 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 			(socklen_t *)&(srv->addrlen));
 	red();
 	t_client *c = get_client_by_id(srv, i);
-	if (ft_strequ(c->team_name, "GRAPHIC"))
-		c->team_name = NULL;
+	c->team_name = NULL;
 	printf(ERROR_CLIENT_EXIT, srv->client_sck[i]);
 	reset();
 	close(sd);
