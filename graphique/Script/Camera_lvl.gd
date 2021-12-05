@@ -15,9 +15,9 @@ func _physics_process(delta):
 	if Input.is_action_pressed("ui_down"):
 		var v = get_v_offset()
 		set_v_offset(v - g_move)
-	if Input.is_action_just_pressed("dezoom"):
-		fov = fov - 10
 	if Input.is_action_just_pressed("zoom"):
+		fov = fov - 10
+	if Input.is_action_just_pressed("dezoom"):
 		fov = fov + 10
 
 
