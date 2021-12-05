@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/11/26 11:18:58 by sbelondr         ###   ########.fr       */
+/*   Updated: 2021/12/05 09:43:31 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,9 @@ int main(int ac, char **av)
 			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
 			if (activity < 0)
 			{
+				//remove_client()
 				;
-				//dprintf(STDERR_FILENO, "select error\n");
+				dprintf(STDERR_FILENO, "select error\n");
 				//exit(1); //TODO: select erreur en boucle, trouver une solution
 			}
 			else if (activity > 0) //d'après le man ça arrive tout le temps...
