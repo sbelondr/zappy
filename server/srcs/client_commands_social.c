@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:55:43 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/10 10:39:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	egg.p_x = player->p_x;
 	egg.p_y = player->p_y;
 	egg.father_id = player->id;
+	egg.maturity = 600;
 	current = world->egg_list;
 	while (current)
 	{
@@ -90,7 +91,7 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 	int		error;
 	t_list	*current;
 	t_client	*c;
-	
+
 	arg = player->buffer[0].arg;
 	current = world->client_list;
 	while (current)

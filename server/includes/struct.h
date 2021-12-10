@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:59:11 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/10 10:36:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_egg
 	char		*team_name;
 	int			p_x;
 	int			p_y;
+	int			maturity;
 	int			id;
 	int			father_id;
 }				t_egg;
