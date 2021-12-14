@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:55:43 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/14 10:36:34 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	egg.team_name = ft_strdup(player->team_name);
 	egg.p_x = player->p_x;
 	egg.p_y = player->p_y;
+	egg.maturity = 600;
 	egg.father_id = player->id;
 	current = world->egg_list;
 	while (current)

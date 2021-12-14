@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2021/12/03 12:04:49 by jayache          ###   ########.fr       */
+/*   Updated: 2021/12/14 10:55:52 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,17 @@ char	*moniteur_pin(t_client *client)
 	error = asprintf(&ret, "pin #%d %d %d %d %d %d %d %d %d %d\n", 
 			client->id, client->p_x, client->p_y, inv[0], inv[1], inv[2],
 			inv[3], inv[4], inv[5], inv[6]);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+char	*moniteur_pex(t_client *client)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pex #%d\n", client->id);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
