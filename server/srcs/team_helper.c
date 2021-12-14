@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2021/12/03 13:17:19 by jayache          ###   ########.fr       */
+/*   Updated: 2021/12/14 10:52:48 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,67 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	}
 }
 
+int		remaining_slots(t_srv *srv, t_team *team)
+{
+	int		lstsize;
+	int		eggsize;
+	t_list	*current;
+	t_egg	*egg;
+	
+	eggsize = 0;
+	lstsize = ft_lst_size(team->team_clients);
+	current = team->team_eggs;
+	while (current)
+	{
+		egg = current->content;
+		if (egg->maturity <= 0)
+			eggsize++;
+		current = current->next;
+	}
+	return (srv->param->allowed_clients_amount - lstsize + eggsize);
+}
+
+t_egg	*get_first_valid_egg(t_team *team)
+{
+	t_list	*current;
+	t_egg	*egg;
+
+	current = team->team_eggs;
+	while (current)
+	{
+		egg = current->content;
+		if (egg->maturity <= 0)
+			return (egg);
+		current = current->next;
+	}
+	return (NULL);
+}
+
 static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 {
-	int			lstsize;
 	char		*msg;
-	int			remaining_slots;
+	int			room;
+	t_egg		*egg;
 
-	lstsize = ft_lst_size(team->team_clients);
-	remaining_slots = srv->param->allowed_clients_amount - lstsize
-		+ ft_lst_size(team->team_eggs);
-	asprintf(&msg, "%d\n", remaining_slots);
+	room = remaining_slots(srv, team);
+	asprintf(&msg, "%d\n", room);
 	simple_send(srv, c->id, msg);
 	asprintf(&msg, "%d %d\n",
 			srv->param->world_width, srv->param->world_height);
 	simple_send(srv, c->id, msg);
-	if (remaining_slots <= 0)
+	free(msg);
+	if (room <= 0)
 		return (0);
 	ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
 	c->team_name = ft_strdup(team->team_name);
+	if (ft_lst_size(team->team_clients) >= (unsigned int)srv->param->allowed_clients_amount)
+	{
+		egg = get_first_valid_egg(team);
+		c->p_x = egg->p_x;
+		c->p_y = egg->p_y;
+		egg->used = 1;
+	}
+
 	return (1);
 }
 
