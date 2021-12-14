@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:21:55 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/10 10:37:52 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	game_tick(t_srv *srv)
 {
 	t_list		*current;
 	t_client	*client;
+	t_egg	*egg;
 	int			i;
 
 	i = 0;
@@ -50,5 +51,13 @@ void	game_tick(t_srv *srv)
 		}
 		current = current->next;
 		++i;
+	}
+	current = srv->world->egg_list;
+	while (current)
+	{
+		egg = current->content;
+		if (egg->maturity > 0)
+			egg->maturity--;
+		current = current->next;
 	}
 }
