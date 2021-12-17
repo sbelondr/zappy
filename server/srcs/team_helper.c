@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2021/12/14 10:52:48 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/15 10:09:50 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	asprintf(&msg, "%d %d\n",
 			srv->param->world_width, srv->param->world_height);
 	simple_send(srv, c->id, msg);
-	free(msg);
 	if (room <= 0)
 		return (0);
 	ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
@@ -110,7 +109,6 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		c->p_y = egg->p_y;
 		egg->used = 1;
 	}
-
 	return (1);
 }
 
