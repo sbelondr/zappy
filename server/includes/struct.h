@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/01/09 15:15:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/09 15:26:39 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct	s_egg
 	int			p_x;
 	int			p_y;
 	int			maturity;
+	int			used;
 	int			id;
 	int			father_id;
 }				t_egg;

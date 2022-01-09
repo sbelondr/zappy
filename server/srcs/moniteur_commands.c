@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/01/09 14:39:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/09 15:34:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,17 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	free(tmp);
+	return (ret);
+}
+
+char	*moniteur_pex(t_client *client)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pex #%d\n", client->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
 }
 
