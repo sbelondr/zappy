@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:58:28 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/09 14:58:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char			*pickup_item(t_srv *srv, t_world_state *wld, t_client *c);
 char			*putdown_item(t_srv *srv, t_world_state *wld, t_client *c);
 char			*player_fork(t_srv *srv, t_world_state *wld, t_client *c);
 char			*broadcast(t_srv *srv, t_world_state *wld, t_client *c);
+char			*ritual(t_srv *srv, t_world_state *wld, t_client *c);
 
 /*
  * HELPERS
@@ -75,6 +76,8 @@ char			*moniteur_pdr(t_client *client, int ressource);
 char			*moniteur_enw(t_egg *egg);
 char			*moniteur_pin(t_client *client);
 char			*moniteur_pbc(int id, char *msg);
+char			*moniteur_pic(t_world_state *wld, t_client *client);
+char			*moniteur_pie(int x, int y, int success);
 void			send_to_all_moniteur(t_srv *srv, char *msg);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2021/12/03 12:04:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/09 14:39:33 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,50 @@ char	*moniteur_pin(t_client *client)
 	error = asprintf(&ret, "pin #%d %d %d %d %d %d %d %d %d %d\n", 
 			client->id, client->p_x, client->p_y, inv[0], inv[1], inv[2],
 			inv[3], inv[4], inv[5], inv[6]);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+char	*moniteur_pic(t_world_state *world, t_client *client)
+{
+	char		*ret;
+	char		*tmp;
+	int			error;
+	t_list		*current;
+	t_client	*c;
+
+	error = asprintf(&ret, "pic %d %d %d #%d", client->p_x, client->p_y, client->lvl, client->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	current = world->client_list;
+	while (current)
+	{
+		c = current->content;
+		if (c->p_x == client->p_x && c->p_y == client->p_y && c->lvl == client->lvl)
+		{
+			tmp = ret;
+			error = asprintf(&ret, "%s #%d", tmp, c->id);
+			if (error < 0)
+				ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+			free(tmp);
+		}
+		current = current->next;
+	}
+	tmp = ret;
+	error = asprintf(&ret, "%s\n", tmp);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	free(tmp);
+	return (ret);
+}
+
+char	*moniteur_pie(int x, int y, int success)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pie %d %d %d\n", x, y, success); 
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
