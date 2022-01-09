@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2021/12/03 13:17:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/07 10:15:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,33 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	}
 }
 
+int			available_slots(t_srv *srv, t_team *team)
+{
+	int		lstsize;
+	int		remaining_slots;
+	int		valid_eggs;
+	t_list	*current;
+	t_egg	*egg;
+
+	valid_eggs = 0;
+	lstsize = ft_lst_size(team->team_clients);
+	remaining_slots = srv->param->allowed_clients_amount - lstsize;
+	current = team->team_eggs;
+	while (current)
+	{
+		egg = current->content;
+		valid_eggs += (egg->maturity <= 0);
+		current = current->next;
+	}
+	return (remaining_slots + valid_eggs);
+}
+
 static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 {
-	int			lstsize;
 	char		*msg;
 	int			remaining_slots;
 
-	lstsize = ft_lst_size(team->team_clients);
-	remaining_slots = srv->param->allowed_clients_amount - lstsize
-		+ ft_lst_size(team->team_eggs);
+	remaining_slots = available_slots(srv, team);
 	asprintf(&msg, "%d\n", remaining_slots);
 	simple_send(srv, c->id, msg);
 	asprintf(&msg, "%d %d\n",

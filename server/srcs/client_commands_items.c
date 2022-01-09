@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:19:48 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/07 11:48:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,13 @@ char	*putdown_item(t_srv *srv, t_world_state *world, t_client *player)
 	arg = player->buffer[0].arg;
 	inv = player->ressource;
 	res = string_to_res_id(arg);
-	success |= attempt_put_item(arg, &(square[res]), &inv[res], arg);
-	send_to_all_moniteur(srv, moniteur_pdr(player, res));
-	send_to_all_moniteur(srv, moniteur_pin(player));
-	send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
+	if (res != -1)
+	{
+		success |= attempt_put_item(arg, &(square[res]), &inv[res], arg);
+		send_to_all_moniteur(srv, moniteur_pdr(player, res));
+		send_to_all_moniteur(srv, moniteur_pin(player));
+		send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
+	}
 	return (ft_strdup(success ? "OK\n" : "KO\n"));
 }
 
@@ -88,9 +91,12 @@ char	*pickup_item(t_srv *srv, t_world_state *world, t_client *player)
 	inv = player->ressource;
 	arg = player->buffer[0].arg;
 	res = string_to_res_id(arg);
-	success |= attempt_take_item(arg, &(square[res]), &inv[res], arg);
-	send_to_all_moniteur(srv, moniteur_pgt(player, res));
-	send_to_all_moniteur(srv, moniteur_pin(player));
-	send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
+	if (res != -1)
+	{
+		success |= attempt_take_item(arg, &(square[res]), &inv[res], arg);
+		send_to_all_moniteur(srv, moniteur_pgt(player, res));
+		send_to_all_moniteur(srv, moniteur_pin(player));
+		send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
+	}
 	return (ft_strdup(success ? "OK\n" : "KO\n"));
 }

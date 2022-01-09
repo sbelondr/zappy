@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:41:32 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/09 15:02:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,8 @@ char	*turn_left(t_srv *srv, t_world_state *world, t_client *player)
 		player->orientation = 0;
 	send_to_all_moniteur(srv, moniteur_ppo(player));
 	return (ft_strdup("OK\n"));
+}
+
+char	*kick(t_srv *srv, t_world_state *world, t_client *player)
+{
 }

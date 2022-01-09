@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2021/12/10 10:39:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/09 15:20:48 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,54 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 		current = current->next;
 	}
 	return (ft_strdup("OK\n"));
+}
+
+static int	is_enough_for_ritual(int level, int players, int *objs)
+{
+	if (level == 1 && players >= 1 && objs[LINEMATE] >= 1)
+		return (1);
+	else if (level == 2 && players >= 2 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 && objs[SIBUR] >= 1)
+		return (1);
+	else if (level == 3 && players >= 2 && objs[LINEMATE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1)
+		return (1);
+	return (0);
+}
+
+char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
+{
+	t_list		*current;
+	t_client	*c;
+	int			players;
+	int			success;
+	int			error;
+	char		*msg;
+
+	players = 0;
+	success = 0;
+	current = world->client_list;
+	while (current)
+	{
+		c = current->content;
+		printf("%d/%d %d/%d %d/%d %p/%p\n", c->p_x, player->p_x, c->p_y, player->p_y, c->lvl, player->lvl, c, player);
+		if (c->p_x == player->p_x && c->p_y == player->p_y && c->lvl == player->lvl)
+			players++;
+		current = current->next;
+	}
+	if (is_enough_for_ritual(player->lvl, players, get_case(world, player->p_x, player->p_y)))
+	{
+		current = world->client_list;
+		while (current)
+		{
+			c = current->content;
+			if (c->p_x == player->p_x && c->p_y == player->p_y && c->lvl == player->lvl)
+				c->lvl += 1;
+			current = current->next;
+		}
+		success = 1;
+	}
+	error = asprintf(&msg, "Niveau actuel : %d\n", player->lvl);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
+	return (msg);
 }

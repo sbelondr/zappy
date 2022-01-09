@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:39:44 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/09 14:40:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_game_action	get_action_from_enum(t_command_type command)
 	array[COMMAND_POSER] = putdown_item;
 	array[COMMAND_FORK] = player_fork;
 	array[COMMAND_BROADCAST] = broadcast;
+	array[COMMAND_INCANTATION] = ritual;
 	return (array[command]);
 }
 
