@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/marvin-vray.obj-9868260cf71b2e7ef895c6e7d601df60.mesh"
+
+[deps]
+
+files=[ "res://.import/marvin-vray.obj-9868260cf71b2e7ef895c6e7d601df60.mesh" ]
+
+source_file="res://Assets/Player/marvin-vray.obj"
+dest_files=[ "res://.import/marvin-vray.obj-9868260cf71b2e7ef895c6e7d601df60.mesh", "res://.import/marvin-vray.obj-9868260cf71b2e7ef895c6e7d601df60.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
