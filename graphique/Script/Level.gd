@@ -2,6 +2,8 @@ extends Spatial
 
 const texture_block: PackedScene = preload("res://Texture/block.tscn")
 const trantorien: PackedScene = preload("res://Texture/Trantorien.tscn")
+
+# get all gems texture
 const gem: PackedScene = preload("res://Texture/Gem.tscn")
 const gem2: PackedScene = preload("res://Texture/Gem2.tscn")
 const gem3: PackedScene = preload("res://Texture/Gem3.tscn")
@@ -9,6 +11,11 @@ const gem4: PackedScene = preload("res://Texture/Gem4.tscn")
 const gem5: PackedScene = preload("res://Texture/Gem5.tscn")
 const gem6: PackedScene = preload("res://Texture/Gem6.tscn")
 const gem7: PackedScene = preload("res://Texture/Gem7.tscn")
+
+# get egg texture
+const egg: PackedScene = preload("res://Texture/Egg.tscn");
+
+
 var g_x: int = 10
 var g_z: int = 10
 
@@ -154,6 +161,8 @@ func _ready():
 	_client.connect_to_server(HOST, PORT)
 	root_tree = tree.create_item()
 	tree.set_hide_root(true)
+	
+	add_block(egg, Vector3(10, 1, 10));
 
 func _handle_client_connected() -> void:
 	print("Client connected to server.")
@@ -166,7 +175,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		var arr : Array = line.split(' ')
 		# generate map
 		if arr[0] == "msz":
-			print('map')
 			g_x = int(arr[1])
 			g_z = int(arr[2])
 			var camera_script = preload("res://Script/Camera_lvl.gd")
@@ -208,13 +216,49 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		# add team in HUD
 		elif arr[0] == 'tna':
 			$CanvasLayer/Panel/VBoxContainer/teams.bbcode_text += "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
-
 			var child1 = tree.create_item(root_tree)
 			child1.set_text(0, arr[1])
 #			var subchild1 = tree.create_item(child1)
 #			subchild1.set_text(0, "test")
 			list_team[arr[1]] = child1
 			cnt_color += 1
+		# un joueur fait un broadcast
+		elif arr[0] == 'pbc':
+			pass
+		# lance incantation
+		elif arr[0] == 'pic':
+			pass
+		# Fin de l’incantation sur la case donnée avec le résultat R
+		elif arr[0] == 'pie':
+			pass
+		# Le joueur est mort de faim.
+		elif arr[0] == 'pdi':
+			die_trantorien(arr[1])
+		# le joueur jette une ressource
+		elif arr[0] == 'pdr':
+			pass
+		# le joueur prend une ressource
+		elif arr[0] == 'pgt':
+			pass
+		# loeuf a ete pondu
+		elif arr[0] == 'enw':
+			pass
+		# loeuf eclot
+		elif arr[0] == 'eht':
+			pass
+		# joueur connecte pour l'oeuf
+		elif arr[0] == 'ebo':
+			pass
+		# l'oeuf est mort
+		elif arr[0] == 'edi':
+			pass
+		# fin du jeu
+		elif arr[0] == 'seg':
+			get_tree().change_scene("res://Scene/GameOver.tscn")
+		# message serveur
+		elif arr[0] == 'smg':
+			pass
+		
 		else:
 			print("Commande not set: '%s'" % line)
 		
