@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/28 10:01:32 by selver           ###   ########.fr       */
+/*   Updated: 2021/12/13 10:43:35 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void ft_add_new_client(t_srv *srv, fd_set *readfds)
 				break;
 			}
 		}
+		//loops through eggs
 	}
 }
 

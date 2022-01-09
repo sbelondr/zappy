@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/01/07 10:15:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/09 15:32:28 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,17 @@ int			available_slots(t_srv *srv, t_team *team)
 	return (remaining_slots + valid_eggs);
 }
 
+t_egg	*get_first_valid_egg(t_team *team)
+{
+	//TODO
+	return (NULL);
+}
+
 static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 {
 	char		*msg;
+	int			room;
+	t_egg		*egg;
 	int			remaining_slots;
 
 	remaining_slots = available_slots(srv, team);
@@ -82,10 +90,17 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	asprintf(&msg, "%d %d\n",
 			srv->param->world_width, srv->param->world_height);
 	simple_send(srv, c->id, msg);
-	if (remaining_slots <= 0)
+	if (room <= 0)
 		return (0);
 	ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
 	c->team_name = ft_strdup(team->team_name);
+	if (ft_lst_size(team->team_clients) >= (unsigned int)srv->param->allowed_clients_amount)
+	{
+		egg = get_first_valid_egg(team);
+		c->p_x = egg->p_x;
+		c->p_y = egg->p_y;
+		egg->used = 1;
+	}
 	return (1);
 }
 
