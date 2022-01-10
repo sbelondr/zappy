@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:21:55 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/09 15:06:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ static void	treat_command(t_srv *srv, t_client *client, int client_id)
 	printf("[%d] <- %s\n", client_id, msg);
 	ret = send(srv->client_sck[client_id], msg, ft_strlen(msg), MSG_DONTWAIT);
 	if (ret != ft_strlen(msg))
-	{
 		printf("ERROR!! send n'a pas tout envoyé");
-	}
 	shift_command(client);
 }
 
@@ -32,13 +30,23 @@ void	game_tick(t_srv *srv)
 {
 	t_list		*current;
 	t_client	*client;
+	t_egg		*egg;
 	int			i;
+	int			ret;
 
 	i = 0;
 	current = srv->world->client_list;
 	while (current)
 	{
 		client = current->content;
+		if (client->buffer[0].command == COMMAND_INCANTATION && client->buffer[0].cooldown == 300)
+		{
+			printf("[%d] <- %s\n", i, "elevation en cours\n");
+			ret = send(srv->client_sck[i], "elevation en cours\n", 19, MSG_DONTWAIT);
+			if (ret != 19)
+				printf("ERROR!! send n'a pas tout envoyé");
+			send_to_all_moniteur(srv, moniteur_pic(srv->world, client));
+		}
 		if (client->buffer[0].cooldown > 0)
 			client->buffer[0].cooldown -= 1;
 		else
@@ -50,5 +58,13 @@ void	game_tick(t_srv *srv)
 		}
 		current = current->next;
 		++i;
+	}
+	current = srv->world->egg_list;
+	while (current)
+	{
+		egg = current->content;
+		if (egg->maturity > 0)
+			egg->maturity--;
+		current = current->next;
 	}
 }

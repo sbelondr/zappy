@@ -17,17 +17,6 @@ typedef struct	s_case_map
 	int ress[7];
 }				t_case_map;
 
-typedef struct	s_player
-{
-	enum e_ressources	*inventory;
-	int					lvl;
-	int					life;
-	int					p_x;
-	int					p_y;
-	int					orientation;
-	struct s_player		*nxt;
-}				t_player;
-
 /*
 ** server.c
 */

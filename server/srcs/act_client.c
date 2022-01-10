@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/12/05 11:11:23 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/10 12:04:36 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,38 @@ static int		delete_newline(char *buf)
 	return (1);
 }
 
+void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
+{
+	if (!strcmp(buf, "msz"))
+		simple_send(srv, c->id, moniteur_msz(srv->world));
+	else if (!strcmp(buf, "mct"))
+		simple_send(srv, c->id, moniteur_mct(srv->world));
+	else if (!strcmp(buf, "tna"))
+		simple_send(srv, c->id, moniteur_tna(srv->world));
+	else if  (!strncmp(buf, "bct", 3))
+	{
+		//TODO: CHECK VALIDITY OF ARGS
+		char **args = ft_strsplit(buf);
+		simple_send(srv, c->id, moniteur_bct(srv->world, atoi(args[1]), atoi(args[2])));
+		free(args[0]);
+		free(args[1]);
+		free(args[2]);
+		free(args);
+	}
+	else if  (!strncmp(buf, "ppo", 3))
+	{
+		//TODO: CHECK VALIDITY OF ARGS
+		char **args = ft_strsplit(buf);
+		t_client *c = get_client_by_id(srv, atoi(args[1]));
+		simple_send(srv, c->id, moniteur_ppo(c));
+		free(args[0]);
+		free(args[1]);
+		free(args);
+	}
+	else
+		simple_send(srv, c->id, ft_strdup("suc\n"));
+}
+
 void	ft_lexer(t_srv *srv, char *buf, int i)
 {
 	t_client	*c;
@@ -51,24 +83,26 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		{
 			//break connection
 		}
-		else if (ft_strcmp(c->team_name, "GRAPHIC"))
+		else if (strcmp(c->team_name, "GRAPHIC"))
 			send_to_all_moniteur(srv, moniteur_pnw(c));
 	}
-	else if (!ft_strcmp(c->team_name, "MONITEUR"))
-	{
-		
-	}
-	else if (!ft_strcmp(buf, "droite"))
+	else if (!strcmp(c->team_name, "MONITEUR"))
+		parse_command_moniteur(srv, c, buf);
+	else if (!strcmp(buf, "droite"))
 		append_command(c, new_command(COMMAND_DROITE, "", 7));
-	else if (!ft_strcmp(buf, "gauche"))
+	else if (!strcmp(buf, "gauche"))
 		append_command(c, new_command(COMMAND_GAUCHE, "", 7));
-	else if (!ft_strcmp(buf, "avance"))
+	else if (!strcmp(buf, "avance"))
 		append_command(c, new_command(COMMAND_AVANCE, "", 7));
-	else if (!ft_strcmp(buf, "voir"))
+	else if (!strcmp(buf, "voir"))
 		append_command(c, new_command(COMMAND_VOIR, "", 7));
-	else if (!ft_strcmp(buf, "fork"))
+	else if (!strcmp(buf, "incantation"))
+		append_command(c, new_command(COMMAND_INCANTATION, "", 300));
+	else if (!strcmp(buf, "fork"))
 		append_command(c, new_command(COMMAND_FORK, "", 42));
-	else if (!ft_strcmp(buf, "inventaire"))
+	else if (!strcmp(buf, "expulse"))
+		append_command(c, new_command(COMMAND_EXPULSER,	"", 7));
+	else if (!strcmp(buf, "inventaire"))
 		append_command(c, new_command(COMMAND_INVENTAIRE, "", 1));
 	else if (!ft_strncmp(buf, "broadcast", 9))
 	{
@@ -77,14 +111,14 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		free(arr[0]);
 		free(arr);
 	}
-	else if (!ft_strncmp(buf, "pose", 4))
+	else if (!strncmp(buf, "pose", 4))
 	{
 		char **arr = ft_strsplit(buf, ' ');
 		append_command(c, new_command(COMMAND_POSER, arr[1], 7));
 		free(arr[0]);
 		free(arr);
 	}
-	else if (!ft_strncmp(buf, "prendre", 7))
+	else if (!strncmp(buf, "prendre", 7))
 	{
 		char **arr = ft_strsplit(buf, ' ');
 		append_command(c, new_command(COMMAND_PRENDRE, arr[1], 7));
