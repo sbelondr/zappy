@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Case",
 "language": "GDScript",
 "path": "res://case.gd"
+}, {
+"base": "Node",
+"class": "Gems",
+"language": "GDScript",
+"path": "res://Script/Gems.gd"
 } ]
 _global_script_class_icons={
-"Case": ""
+"Case": "",
+"Gems": ""
 }
 
 [application]
