@@ -32,19 +32,22 @@ color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
 margin_top = 150.0
 margin_right = 1280.0
 margin_bottom = 250.0
-custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0.94902, 0.0313726, 0.0313726, 1 )
+custom_fonts/font = SubResource( 1 )
 text = "Game Over !"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="btn_play_again" type="Button" parent="."]
 margin_left = 530.0
 margin_top = 300.0
 margin_right = 750.0
 margin_bottom = 400.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.188235, 0.870588, 0.0470588, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "Play again"
 flat = true
 script = ExtResource( 2 )
@@ -57,8 +60,8 @@ margin_left = 530.0
 margin_top = 450.0
 margin_right = 750.0
 margin_bottom = 550.0
-custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.94902, 0.0313726, 0.0313726, 1 )
+custom_fonts/font = SubResource( 3 )
 text = "Quit"
 flat = true
 script = ExtResource( 3 )

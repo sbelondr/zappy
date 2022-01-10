@@ -4,16 +4,6 @@ const texture_block: PackedScene = preload("res://Texture/block.tscn")
 const trantorien: PackedScene = preload("res://Texture/Trantorien.tscn")
 
 # get all gems texture
-enum GEM {
-	BLUE,
-	YELLOW,
-	RED,
-	GREEN,
-	ORANGE,
-	PINK,
-	PURPLE,
-}
-
 const array_gem: Array = [
 	preload("res://Texture/Gem.tscn"),
 	preload("res://Texture/Gem2.tscn"),
@@ -24,12 +14,34 @@ const array_gem: Array = [
 	preload("res://Texture/Gem7.tscn")
 ]
 
+enum GEM {
+	BLUE,
+	YELLOW,
+	RED,
+	GREEN,
+	ORANGE,
+	PINK,
+	PURPLE
+}
+
 # get egg texture
 const egg: PackedScene = preload("res://Texture/Egg.tscn");
 
 # base map
 var g_x: int = 10
 var g_z: int = 10
+var map = []
+
+enum MAP {
+	OBJ_BLOCK,
+	GEM_BLUE,
+	GEM_YELLOW,
+	GEM_RED,
+	GEM_GREEN,
+	GEM_ORANGE,
+	GEM_PINK,
+	GEM_PURPLE
+}
 
 # time unit
 var TIME: int = 1
@@ -66,7 +78,7 @@ enum EGG {
 	JOUEUR
 }
 
-# hud
+# HUD
 onready var tree = get_node("CanvasLayer/Tree")
 var root_tree;
 
@@ -87,17 +99,20 @@ const color: Array = [
 # 	texture: texture block
 #	vec: position
 # Return: obj
-func add_block(texture, vec: Vector3):
+func add_block(texture, vec: Vector3, scale=Vector3(0,0,0)):
 	var obj = texture.instance()
 	obj.translation = vec
+	if scale.x != 0:
+		obj.scale = scale
 	$Terrain.add_child(obj, true)
 	return obj
 
 func create_map() -> void:
 	var y := 0
 	for x in g_x:
+		map.append(Array())
 		for z in g_z:
-			add_block(texture_block, Vector3(x, y, z))
+			map[x].append([add_block(texture_block, Vector3(x, y, z)), [0, null], [0, null], [0, null], [0, null], [0, null], [0, null], [0, null]]);
 
 # add new Trantorien
 # Args:
@@ -106,8 +121,6 @@ func create_map() -> void:
 func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
 	var obj = add_block(trantorien, vec)
 	list_player[name] = [obj, vec, orientation, level, teams]
-	print (list_team[teams])
-	print(name)
 	var subchild1 = tree.create_item(list_team[teams])
 	subchild1.set_text(0, name)
 
@@ -149,22 +162,43 @@ func die_egg(name: String) -> void:
 		obj.queue_free()
 		list_egg.erase(name)
 
+# calc scale for the gems
+func calc_scale(q: float):
+	if q > 9:
+		q = 9
+	q /= 100
+	q *= 2
+	return Vector3(q, q, q)
+
+func insert_result_map(vec: Vector3, nb_gems: float, color_gem: int, map_gem: int):
+	var scale = calc_scale(nb_gems)
+	map[vec.x][vec.z][map_gem][0] = nb_gems
+	map[vec.x][vec.z][map_gem][1] =	add_block(array_gem[color_gem], vec, scale)
+
 # add gem when bct is send by the server
 func add_all_gem(arr):
+	var vec: Vector3 = Vector3(int(arr[1]), 1, int(arr[2]))
 	if (int(arr[3]) > 0):
-		add_block(array_gem[GEM.BLUE], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = float(arr[3])
+		insert_result_map(vec, nb_gems, GEM.BLUE, MAP.GEM_BLUE)
 	if (int(arr[4]) > 0):
-		add_block(array_gem[GEM.YELLOW], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = int(arr[4])
+		insert_result_map(vec, nb_gems, GEM.YELLOW, MAP.GEM_YELLOW)
 	if (int(arr[5]) > 0):
-		add_block(array_gem[GEM.RED], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = int(arr[5])
+		insert_result_map(vec, nb_gems, GEM.RED, MAP.GEM_RED)
 	if (int(arr[6]) > 0):
-		add_block(array_gem[GEM.GREEN], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = int(arr[6])
+		insert_result_map(vec, nb_gems, GEM.GREEN, MAP.GEM_GREEN)
 	if (int(arr[7]) > 0):
-		add_block(array_gem[GEM.ORANGE], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = int(arr[7])
+		insert_result_map(vec, nb_gems, GEM.ORANGE, MAP.GEM_ORANGE)
 	if (int(arr[8]) > 0):
-		add_block(array_gem[GEM.PINK], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = int(arr[8])
+		insert_result_map(vec, nb_gems, GEM.PINK, MAP.GEM_PINK)
 	if (int(arr[9]) > 0):
-		add_block(array_gem[GEM.PURPLE], Vector3(int(arr[1]), 1, int(arr[2])))
+		var nb_gems = int(arr[9])
+		insert_result_map(vec, nb_gems, GEM.PURPLE, MAP.GEM_PURPLE)
 
 # useless
 func _on_Timer_timeout():
@@ -238,7 +272,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				$CanvasLayer/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
 		# move player
 		elif arr[0] == 'ppo':
-			print('position')
 			#"ppo #n X Y O\n"
 			move_trantorien(arr[1], Vector3(int(arr[2]), 1, int(arr[3])))
 		# set time
