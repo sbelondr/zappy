@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2021/12/13 09:39:58 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/10 14:32:50 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,22 @@ t_egg	*get_egg_by_id(t_world_state *world, int id)
 	{
 		if (((t_egg*)current->content)->id == id)
 			return (current->content);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+t_team	*get_team_by_name(t_world_state *world, char *team_name)
+{
+	t_list	*current;
+	t_team	*team;
+
+	current = world->params.team_list;
+	while (current)
+	{
+		team = current->content;
+		if (!strcmp(team_name, team->team_name))
+			return (team);
 		current = current->next;
 	}
 	return (NULL);

@@ -6,24 +6,38 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/01/10 12:13:54 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/10 14:42:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 #include "functions.h"
 
+//TODO: check command args and free
+//TODO: les clients sont en double dans la liste??
 void ft_client_exit(t_srv *srv, int sd, int i)
 {
+	t_client	*client;
+	t_team		*team;
+
 	getpeername(sd, (struct sockaddr *)&(srv->address),
 			(socklen_t *)&(srv->addrlen));
+	srv->client_sck[i] = 0;
+	int	mcmp(t_client *a, t_client *b)
+	{
+		printf("%d == %d\n", a->id, b->id);
+		return a->id - b->id;
+	}
+	void	mdel(t_client *a) {}
+	client =  get_client_by_id(srv, i);
+	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
+	team = get_team_by_name(srv->world, client->team_name);
+	ft_lstdelbyval(&team->team_clients, client, mcmp, mdel);
+	free(client);
 	red();
-	t_client *c = get_client_by_id(srv, i);
-	c->team_name = NULL;
 	printf(ERROR_CLIENT_EXIT, srv->client_sck[i]);
 	reset();
 	close(sd);
-	srv->client_sck[i] = 0;
 }
 
 //returns 0 if no newline, 1 otherwise
