@@ -32,16 +32,16 @@ var g_x: int = 10
 var g_z: int = 10
 var map = []
 
-enum MAP {
-	OBJ_BLOCK,
-	GEM_BLUE,
-	GEM_YELLOW,
-	GEM_RED,
-	GEM_GREEN,
-	GEM_ORANGE,
-	GEM_PINK,
-	GEM_PURPLE
-}
+#enum MAP {
+#	OBJ_BLOCK,
+#	GEM_BLUE,
+#	GEM_YELLOW,
+#	GEM_RED,
+#	GEM_GREEN,
+#	GEM_ORANGE,
+#	GEM_PINK,
+#	GEM_PURPLE
+#}
 
 # time unit
 var TIME: int = 1
@@ -112,7 +112,7 @@ func create_map() -> void:
 	for x in g_x:
 		map.append(Array())
 		for z in g_z:
-			map[x].append([add_block(texture_block, Vector3(x, y, z)), [0, null], [0, null], [0, null], [0, null], [0, null], [0, null], [0, null]]);
+			map[x].append(add_block(texture_block, Vector3(x, y, z))) #, [0, null], [0, null], [0, null], [0, null], [0, null], [0, null], [0, null]]);
 
 # add new Trantorien
 # Args:
@@ -170,35 +170,37 @@ func calc_scale(q: float):
 	q *= 2
 	return Vector3(q, q, q)
 
-func insert_result_map(vec: Vector3, nb_gems: float, color_gem: int, map_gem: int):
+func insert_result_map(vec: Vector3, nb_gems: float, color_gem: int): #, map_gem: int):
 	var scale = calc_scale(nb_gems)
-	map[vec.x][vec.z][map_gem][0] = nb_gems
-	map[vec.x][vec.z][map_gem][1] =	add_block(array_gem[color_gem], vec, scale)
+	map[vec.x][vec.z].gems[color_gem] = [nb_gems, add_block(array_gem[color_gem], vec, scale)]
+#	map[vec.x][vec.z].gems[color_gem][1] = add_block(array_gem[color_gem], vec, scale)
+#	map[vec.x][vec.z][map_gem][0] = nb_gems
+#	map[vec.x][vec.z][map_gem][1] =	add_block(array_gem[color_gem], vec, scale)
 
 # add gem when bct is send by the server
 func add_all_gem(arr):
 	var vec: Vector3 = Vector3(int(arr[1]), 1, int(arr[2]))
 	if (int(arr[3]) > 0):
 		var nb_gems = float(arr[3])
-		insert_result_map(vec, nb_gems, GEM.BLUE, MAP.GEM_BLUE)
+		insert_result_map(vec, nb_gems, GEM.BLUE)
 	if (int(arr[4]) > 0):
 		var nb_gems = int(arr[4])
-		insert_result_map(vec, nb_gems, GEM.YELLOW, MAP.GEM_YELLOW)
+		insert_result_map(vec, nb_gems, GEM.YELLOW)
 	if (int(arr[5]) > 0):
 		var nb_gems = int(arr[5])
-		insert_result_map(vec, nb_gems, GEM.RED, MAP.GEM_RED)
+		insert_result_map(vec, nb_gems, GEM.RED)
 	if (int(arr[6]) > 0):
 		var nb_gems = int(arr[6])
-		insert_result_map(vec, nb_gems, GEM.GREEN, MAP.GEM_GREEN)
+		insert_result_map(vec, nb_gems, GEM.GREEN)
 	if (int(arr[7]) > 0):
 		var nb_gems = int(arr[7])
-		insert_result_map(vec, nb_gems, GEM.ORANGE, MAP.GEM_ORANGE)
+		insert_result_map(vec, nb_gems, GEM.ORANGE)
 	if (int(arr[8]) > 0):
 		var nb_gems = int(arr[8])
-		insert_result_map(vec, nb_gems, GEM.PINK, MAP.GEM_PINK)
+		insert_result_map(vec, nb_gems, GEM.PINK)
 	if (int(arr[9]) > 0):
 		var nb_gems = int(arr[9])
-		insert_result_map(vec, nb_gems, GEM.PURPLE, MAP.GEM_PURPLE)
+		insert_result_map(vec, nb_gems, GEM.PURPLE)
 
 # useless
 func _on_Timer_timeout():
@@ -305,7 +307,15 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'pdr':
 			if arr[1] in list_player:
 				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
-				add_block(array_gem[int(arr[2])], vec_player)
+				var color_gem = int(arr[2])
+				if color_gem in map[vec_player.x][vec_player.z].gems:
+					insert_result_map(vec_player, 1, color_gem)
+				else:
+					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
+					obj[0] += 1
+					var scale = calc_scale(float(obj[0]))
+					obj[1].scale = scale;
+					
 		# le joueur prend une ressource
 		elif arr[0] == 'pgt':
 			pass
