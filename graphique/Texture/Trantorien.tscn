@@ -10,7 +10,7 @@
 [node name="Trantorien" type="Spatial"]
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 0.004, 0, 0, 0, 0.004, 0, 0, 0, 0.004, -0.925488, 1.69326, 4.34897 )
+transform = Transform( 0.002, 0, 0, 0, 0.002, 0, 0, 0, 0.002, -0.279005, 0.512727, 2.10807 )
 mesh = ExtResource( 1 )
 skin = SubResource( 2 )
 material/0 = null
