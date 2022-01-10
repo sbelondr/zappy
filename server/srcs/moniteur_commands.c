@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/01/09 15:34:02 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/10 12:06:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,17 @@ char	*moniteur_pex(t_client *client)
 	int		error;
 
 	error = asprintf(&ret, "pex #%d\n", client->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+char	*moniteur_plv(t_)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pie %d %d %d\n", x, y, success); 
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
