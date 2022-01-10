@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/01/09 15:32:28 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/10 11:45:23 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ t_egg	*get_first_valid_egg(t_team *team)
 static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 {
 	char		*msg;
-	int			room;
 	t_egg		*egg;
 	int			remaining_slots;
 
@@ -90,7 +89,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	asprintf(&msg, "%d %d\n",
 			srv->param->world_width, srv->param->world_height);
 	simple_send(srv, c->id, msg);
-	if (room <= 0)
+	if (remaining_slots <= 0)
 		return (0);
 	ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
 	c->team_name = ft_strdup(team->team_name);
