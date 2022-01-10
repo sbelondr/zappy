@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/01/10 12:04:36 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/10 12:13:54 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 	else if  (!strncmp(buf, "bct", 3))
 	{
 		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf);
+		char **args = ft_strsplit(buf, ' ');
 		simple_send(srv, c->id, moniteur_bct(srv->world, atoi(args[1]), atoi(args[2])));
 		free(args[0]);
 		free(args[1]);
@@ -59,7 +59,7 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 	else if  (!strncmp(buf, "ppo", 3))
 	{
 		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf);
+		char **args = ft_strsplit(buf, ' ');
 		t_client *c = get_client_by_id(srv, atoi(args[1]));
 		simple_send(srv, c->id, moniteur_ppo(c));
 		free(args[0]);
