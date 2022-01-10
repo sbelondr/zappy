@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Script/Level.gd" type="Script" id=1]
-[ext_resource path="res://fonts/BlackSignature_PERSONAL_USE_ONLY.otf" type="DynamicFontData" id=2]
+[ext_resource path="res://fonts/batman_forever_black.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Script/Camera_lvl.gd" type="Script" id=4]
 
 [sub_resource type="BoxShape" id=1]
@@ -147,9 +147,9 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
-margin_left = -3.0
+margin_left = 3.0
 margin_top = 4.0
-margin_right = 195.0
+margin_right = 201.0
 margin_bottom = 432.0
 __meta__ = {
 "_edit_use_anchors_": false
