@@ -138,7 +138,7 @@ func move_trantorien(name: String, vec: Vector3) -> void:
 	if name in list_player:
 		var player = list_player.get(name)
 		var obj = player[TRANTORIEN.OBJ]
-#		obj.translation = vec
+#		player[TRANTORIEN.VEC] = vec
 		if is_interpolate(obj.translation.x, vec.x) and is_interpolate(obj.translation.y, vec.y) \
 			and is_interpolate(obj.translation.z, vec.z):
 			$Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
@@ -309,16 +309,23 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
 				var color_gem = int(arr[2])
 				if color_gem in map[vec_player.x][vec_player.z].gems:
-					insert_result_map(vec_player, 1, color_gem)
-				else:
 					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
 					obj[0] += 1
 					var scale = calc_scale(float(obj[0]))
 					obj[1].scale = scale;
+				else:
+					insert_result_map(vec_player, 1, color_gem)
 					
 		# le joueur prend une ressource
 		elif arr[0] == 'pgt':
-			pass
+			if arr[1] in list_player:
+				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
+				var color_gem = int(arr[2])
+				if color_gem in map[vec_player.x][vec_player.z].gems:
+					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
+					obj[0] -= 1
+					var scale = calc_scale(float(obj[0]))
+					obj[1].scale = scale;
 		# Le joueur pond un œuf.
 		elif arr[0] == 'pfk':
 			# animation
@@ -327,8 +334,10 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'enw':
 			# enw #e #n X Y
 			# fin animation
+			print('avant:')
 			if arr[2] in list_player:
-				var vec_player = list_player[arr[2]][TRANTORIEN.VEC]
+				var vec_player =  Vector3(int(arr[3]), 1, int(arr[4])) #list_player[arr[2]][TRANTORIEN.VEC]
+				print(vec_player)
 				var obj = add_block(egg, vec_player);
 				list_egg[arr[1]] = [obj, vec_player, arr[2]]
 		# loeuf eclot
@@ -349,8 +358,8 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'smg':
 			pass
 		
-		else:
-			print("Commande not set: '%s'" % line)
+#		else:
+#			print("Commande not set: '%s'" % line)
 
 func _connect_after_timeout(timeout: float) -> void:
 	yield(get_tree().create_timer(timeout), "timeout")
