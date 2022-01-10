@@ -4,48 +4,49 @@ const texture_block: PackedScene = preload("res://Texture/block.tscn")
 const trantorien: PackedScene = preload("res://Texture/Trantorien.tscn")
 
 # get all gems texture
-const gem: PackedScene = preload("res://Texture/Gem.tscn")
-const gem2: PackedScene = preload("res://Texture/Gem2.tscn")
-const gem3: PackedScene = preload("res://Texture/Gem3.tscn")
-const gem4: PackedScene = preload("res://Texture/Gem4.tscn")
-const gem5: PackedScene = preload("res://Texture/Gem5.tscn")
-const gem6: PackedScene = preload("res://Texture/Gem6.tscn")
-const gem7: PackedScene = preload("res://Texture/Gem7.tscn")
+enum GEM {
+	BLUE,
+	YELLOW,
+	RED,
+	GREEN,
+	ORANGE,
+	PINK,
+	PURPLE,
+}
+
+const array_gem: Array = [
+	preload("res://Texture/Gem.tscn"),
+	preload("res://Texture/Gem2.tscn"),
+	preload("res://Texture/Gem3.tscn"),
+	preload("res://Texture/Gem4.tscn"),
+	preload("res://Texture/Gem5.tscn"),
+	preload("res://Texture/Gem6.tscn"),
+	preload("res://Texture/Gem7.tscn")
+]
 
 # get egg texture
 const egg: PackedScene = preload("res://Texture/Egg.tscn");
 
-
+# base map
 var g_x: int = 10
 var g_z: int = 10
 
+# time unit
 var TIME: int = 1
 
-# scoket global variable
+# global variable for the socket
 const HOST: String = "localhost"
 const PORT: int = 8080
 const RECONNECT_TIMEOUT: float = 3.0
 const Client = preload("res://Script/Client.gd")
 var _client: Client = Client.new()
 
+# list
 var list_player = Dictionary()
 var list_team = Dictionary()
+var list_egg = Dictionary()
 
-onready var tree = get_node("CanvasLayer/Tree")
-var root_tree;
-
-# color teams
-var cnt_color = 0
-const color: Array = [
-	'blue',
-	'red',
-	'yellow',
-	'purple',
-	'orange',
-	'gray',
-	'white'
-]
-
+# enum for the dictionnaries
 enum TRANTORIEN {
 	OBJ,
 	VEC,
@@ -58,6 +59,28 @@ enum TEAM {
 	COLOR
 	TREE_ID
 }
+
+enum EGG {
+	OBJ,
+	VEC,
+	JOUEUR
+}
+
+# hud
+onready var tree = get_node("CanvasLayer/Tree")
+var root_tree;
+
+# color teams for the HUD
+var cnt_color = 0
+const color: Array = [
+	'blue',
+	'red',
+	'yellow',
+	'purple',
+	'orange',
+	'gray',
+	'white'
+]
 
 # add block
 # Args:
@@ -88,6 +111,7 @@ func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, te
 	var subchild1 = tree.create_item(list_team[teams])
 	subchild1.set_text(0, name)
 
+# i don't remember but it's interresting
 func is_interpolate(val: int, new_val: int) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
@@ -118,6 +142,31 @@ func die_trantorien(name: String) -> void:
 		obj.queue_free()
 		list_player.erase(name)
 
+# remove ressource egg with name
+func die_egg(name: String) -> void:
+	if name in list_egg:
+		var obj = list_egg[name][EGG.OBJ]
+		obj.queue_free()
+		list_egg.erase(name)
+
+# add gem when bct is send by the server
+func add_all_gem(arr):
+	if (int(arr[3]) > 0):
+		add_block(array_gem[GEM.BLUE], Vector3(int(arr[1]), 1, int(arr[2])))
+	if (int(arr[4]) > 0):
+		add_block(array_gem[GEM.YELLOW], Vector3(int(arr[1]), 1, int(arr[2])))
+	if (int(arr[5]) > 0):
+		add_block(array_gem[GEM.RED], Vector3(int(arr[1]), 1, int(arr[2])))
+	if (int(arr[6]) > 0):
+		add_block(array_gem[GEM.GREEN], Vector3(int(arr[1]), 1, int(arr[2])))
+	if (int(arr[7]) > 0):
+		add_block(array_gem[GEM.ORANGE], Vector3(int(arr[1]), 1, int(arr[2])))
+	if (int(arr[8]) > 0):
+		add_block(array_gem[GEM.PINK], Vector3(int(arr[1]), 1, int(arr[2])))
+	if (int(arr[9]) > 0):
+		add_block(array_gem[GEM.PURPLE], Vector3(int(arr[1]), 1, int(arr[2])))
+
+# useless
 func _on_Timer_timeout():
 	pass
 #	var vec : Vector3 = list_player["coucou"][1]
@@ -142,8 +191,8 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("-"):
 		TIME += 0.2
 		launch_timer()
-	if Input.is_action_just_pressed("debug"):
-		add_block(gem, Vector3(5, 1, 5))
+#	if Input.is_action_just_pressed("debug"):
+#		add_block(gem, Vector3(5, 1, 5))
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 	$CanvasLayer/CameraPos.text = "get_viewport().get_rect().size.x:" + String(OS.get_real_window_size()) + \
@@ -161,8 +210,6 @@ func _ready():
 	_client.connect_to_server(HOST, PORT)
 	root_tree = tree.create_item()
 	tree.set_hide_root(true)
-	
-	add_block(egg, Vector3(10, 1, 10));
 
 func _handle_client_connected() -> void:
 	print("Client connected to server.")
@@ -199,20 +246,7 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			TIME = 1.0 / int(arr[1])
 		# add gem
 		elif arr[0] == 'bct':
-			if (int(arr[3]) > 0):
-				add_block(gem, Vector3(int(arr[1]), 1, int(arr[2])))
-			if (int(arr[4]) > 0):
-				add_block(gem2, Vector3(int(arr[1]), 1, int(arr[2])))
-			if (int(arr[5]) > 0):
-				add_block(gem3, Vector3(int(arr[1]), 1, int(arr[2])))
-			if (int(arr[6]) > 0):
-				add_block(gem4, Vector3(int(arr[1]), 1, int(arr[2])))
-			if (int(arr[7]) > 0):
-				add_block(gem5, Vector3(int(arr[1]), 1, int(arr[2])))
-			if (int(arr[8]) > 0):
-				add_block(gem6, Vector3(int(arr[1]), 1, int(arr[2])))
-			if (int(arr[9]) > 0):
-				add_block(gem7, Vector3(int(arr[1]), 1, int(arr[2])))
+			add_all_gem(arr)
 		# add team in HUD
 		elif arr[0] == 'tna':
 			$CanvasLayer/Panel/VBoxContainer/teams.bbcode_text += "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
@@ -236,22 +270,35 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			die_trantorien(arr[1])
 		# le joueur jette une ressource
 		elif arr[0] == 'pdr':
-			pass
+			if arr[1] in list_player:
+				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
+				add_block(array_gem[int(arr[2])], vec_player)
 		# le joueur prend une ressource
 		elif arr[0] == 'pgt':
 			pass
+		# Le joueur pond un œuf.
+		elif arr[0] == 'pfk':
+			# animation
+			pass
 		# loeuf a ete pondu
 		elif arr[0] == 'enw':
-			pass
+			# enw #e #n X Y
+			# fin animation
+			if arr[2] in list_player:
+				var vec_player = list_player[arr[2]][TRANTORIEN.VEC]
+				var obj = add_block(egg, vec_player);
+				list_egg[arr[1]] = [obj, vec_player, arr[2]]
 		# loeuf eclot
 		elif arr[0] == 'eht':
+			# animation eclosion
+			die_egg(arr[1])
 			pass
 		# joueur connecte pour l'oeuf
 		elif arr[0] == 'ebo':
 			pass
 		# l'oeuf est mort
 		elif arr[0] == 'edi':
-			pass
+			die_egg(arr[1])
 		# fin du jeu
 		elif arr[0] == 'seg':
 			get_tree().change_scene("res://Scene/GameOver.tscn")
@@ -261,7 +308,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		
 		else:
 			print("Commande not set: '%s'" % line)
-		
 
 func _connect_after_timeout(timeout: float) -> void:
 	yield(get_tree().create_timer(timeout), "timeout")
