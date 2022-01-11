@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/01/09 15:06:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/11 09:29:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	treat_command(t_srv *srv, t_client *client, int client_id)
 	ret = send(srv->client_sck[client_id], msg, ft_strlen(msg), MSG_DONTWAIT);
 	if (ret != ft_strlen(msg))
 		printf("ERROR!! send n'a pas tout envoyé");
+	free(msg);
 	shift_command(client);
 }
 
