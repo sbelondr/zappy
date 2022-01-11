@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/12/13 10:43:35 by selver           ###   ########.fr       */
+/*   Updated: 2022/01/11 10:22:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void ft_add_new_client(t_srv *srv, fd_set *readfds)
 				printf("Add new client: %d\n", i);
 				reset();
 				simple_send(srv, i, ft_strdup("BIENVENUE\n"));
-				ft_lst_append(&srv->world->client_list, ft_lstnew(new_client(i), sizeof(t_client)));
+				ft_lst_append(&srv->world->client_list, ft_lstnew_no_copy(new_client(i), sizeof(t_client)));
 				break;
 			}
 		}

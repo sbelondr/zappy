@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 09:53:04 by jayache           #+#    #+#             */
-/*   Updated: 2022/01/10 14:40:48 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/11 09:40:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	ft_lstdelbyval(t_list **lst, void *data, int (*cmp)(), void (*del)())
 	{
 		if (!cmp(current->content, data))
 		{
-			printf("INT\n");
 			if (prev)
 				prev->next = current->next;
 			else

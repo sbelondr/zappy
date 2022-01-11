@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/01/10 11:45:23 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/11 10:52:07 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	while (current)
 	{	
 		t_client *c = current->content;
+		printf("PRESENT: %d\n", c->id);
 		if (c->team_name)
 		{
+		printf("PRESENT\n");
 			msg = moniteur_pnw(current->content);
 			simple_send(srv, id, msg);
 		}
@@ -73,7 +75,7 @@ int			available_slots(t_srv *srv, t_team *team)
 
 t_egg	*get_first_valid_egg(t_team *team)
 {
-	//TODO
+	//TODO: THAT
 	return (NULL);
 }
 
@@ -91,9 +93,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	simple_send(srv, c->id, msg);
 	if (remaining_slots <= 0)
 		return (0);
-	ft_lst_append(&team->team_clients, ft_lstnew(c, sizeof(t_client)));
+	ft_lst_append(&team->team_clients, ft_lstnew_no_copy(c, sizeof(t_client)));
 	c->team_name = ft_strdup(team->team_name);
-	if (ft_lst_size(team->team_clients) >= (unsigned int)srv->param->allowed_clients_amount)
+	if (ft_lst_size(team->team_clients) > (unsigned int)srv->param->allowed_clients_amount)
 	{
 		egg = get_first_valid_egg(team);
 		c->p_x = egg->p_x;
