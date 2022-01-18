@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/01/11 09:29:21 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/18 11:38:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,10 @@ void	game_tick(t_srv *srv)
 	while (current)
 	{
 		egg = current->content;
+		current = current->next;
 		if (egg->maturity > 0)
 			egg->maturity--;
-		current = current->next;
+		else if (egg->maturity == 0)
+			rotten_egg(srv, egg);
 	}
 }

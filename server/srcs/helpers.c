@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/01/10 14:32:50 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/18 11:45:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,19 @@ t_team	*get_team_by_name(t_world_state *world, char *team_name)
 		current = current->next;
 	}
 	return (NULL);
+}
+
+void	rotten_egg(t_srv *srv, t_egg *egg)
+{
+	t_team *team;
+
+	int	mcmp(t_egg *a, t_egg *b) { 	return a->id - b->id; }
+	void	mdel(t_egg *a) {}
+	send_to_all_moniteur(srv, moniteur_edi(egg));
+	ft_lstdelbyval(&srv->world->egg_list, egg, mcmp, mdel);
+	team = get_team_by_name(srv->world, egg->team_name);
+	ft_lstdelbyval(&team->team_eggs, egg, mcmp, mdel);
+	free(egg->team_name);
+	free(egg);
+	printf("An egg died!\n");
 }

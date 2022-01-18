@@ -142,6 +142,7 @@ func move_trantorien(name: String, vec: Vector3) -> void:
 #		player[TRANTORIEN.VEC] = vec
 		if is_interpolate(obj.translation.x, vec.x) and is_interpolate(obj.translation.y, vec.y) \
 			and is_interpolate(obj.translation.z, vec.z):
+			#obj.move_trantorien(vec, TIME)
 			$Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
 			$Tween.start()
 		else:
