@@ -125,6 +125,7 @@ func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, te
 	subchild1.set_text(0, name)
 
 # i don't remember but it's interresting
+# fuck you
 func is_interpolate(val: int, new_val: int) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
