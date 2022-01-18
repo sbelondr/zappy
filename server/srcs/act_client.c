@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/01/18 10:25:25 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/18 10:53:26 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 		if (client->buffer[i].arg)
 			free(client->buffer[i].arg);
 	}
-	free(client->team_name);
+	if (strcmp(client->team_name, "GRAPHIC"))
+		free(client->team_name);
 	free(client);
 	red();
 	printf(ERROR_CLIENT_EXIT, srv->client_sck[i]);

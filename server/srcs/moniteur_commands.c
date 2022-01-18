@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/01/11 10:47:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/18 11:44:51 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,17 @@ char	*moniteur_plv(t_client *client)
 	return (ret);
 }
 
+char	*moniteur_edi(t_egg *egg)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "edi #%d\n", egg->id); 
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
 char	*moniteur_pie(int x, int y, int success)
 {
 	char	*ret;
@@ -266,6 +277,7 @@ char	*moniteur_pie(int x, int y, int success)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
 }
+
 
 //Send msg to all graphic clients connected - free msg afterwards.
 void	send_to_all_moniteur(t_srv *srv, char *msg)
