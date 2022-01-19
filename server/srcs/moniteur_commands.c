@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/01/18 11:44:51 by jayache          ###   ########.fr       */
+/*   Updated: 2022/01/19 09:27:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ char	*moniteur_pin(t_client *client)
 	return (ret);
 }
 
+//Player incantation
 char	*moniteur_pic(t_world_state *world, t_client *client)
 {
 	char		*ret;
@@ -234,6 +235,7 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 	return (ret);
 }
 
+//Kick
 char	*moniteur_pex(t_client *client)
 {
 	char	*ret;
@@ -245,6 +247,7 @@ char	*moniteur_pex(t_client *client)
 	return (ret);
 }
 
+//Player level
 char	*moniteur_plv(t_client *client)
 {
 	char	*ret;
@@ -256,6 +259,7 @@ char	*moniteur_plv(t_client *client)
 	return (ret);
 }
 
+//Egg death
 char	*moniteur_edi(t_egg *egg)
 {
 	char	*ret;
@@ -267,6 +271,7 @@ char	*moniteur_edi(t_egg *egg)
 	return (ret);
 }
 
+//Incantation result
 char	*moniteur_pie(int x, int y, int success)
 {
 	char	*ret;
