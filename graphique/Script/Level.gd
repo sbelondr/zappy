@@ -142,9 +142,9 @@ func move_trantorien(name: String, vec: Vector3) -> void:
 #		player[TRANTORIEN.VEC] = vec
 		if is_interpolate(obj.translation.x, vec.x) and is_interpolate(obj.translation.y, vec.y) \
 			and is_interpolate(obj.translation.z, vec.z):
-			#obj.move_trantorien(vec, TIME)
-			$Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
-			$Tween.start()
+			obj.move_trantorien(vec, TIME)
+#			$Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
+#			$Tween.start()
 		else:
 			obj.translation = vec
 
@@ -154,6 +154,7 @@ func move_trantorien(name: String, vec: Vector3) -> void:
 func die_trantorien(name: String) -> void:
 	if name in list_player:
 		var obj = list_player[name][TRANTORIEN.OBJ]
+		obj.dead()
 		obj.queue_free()
 		list_player.erase(name)
 
@@ -289,18 +290,33 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			$CanvasLayer/Panel/VBoxContainer/teams.bbcode_text += "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
 			var child1 = tree.create_item(root_tree)
 			child1.set_text(0, arr[1])
-#			var subchild1 = tree.create_item(child1)
-#			subchild1.set_text(0, "test")
 			list_team[arr[1]] = child1
 			cnt_color += 1
+		elif arr[0] == 'pex':
+#			"pex #n\n"
+			var obj_player = list_player[arr[1]][TRANTORIEN.OBJ]
+			obj_player.kick()
 		# un joueur fait un broadcast
 		elif arr[0] == 'pbc':
 			pass
 		# lance incantation
 		elif arr[0] == 'pic':
+#			"pic X Y L #n #n …\n"
+			var len_arr = len(arr)
+			var i = 3
+			while i < len_arr:
+				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
+				obj.start_incantation()
+				i += 1
 			pass
 		# Fin de l’incantation sur la case donnée avec le résultat R
 		elif arr[0] == 'pie':
+			var len_arr = len(arr)
+			var i = 3
+			while i < len_arr:
+				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
+				obj.start_incantation()
+				i += 1
 			pass
 		# Le joueur est mort de faim.
 		elif arr[0] == 'pdi':
@@ -309,7 +325,9 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'pdr':
 			if arr[1] in list_player:
 				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
+				var obj_player = list_player[arr[1]][TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
+				obj_player.putdown(color_gem)
 				if color_gem in map[vec_player.x][vec_player.z].gems:
 					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
 					obj[0] += 1
@@ -322,7 +340,9 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'pgt':
 			if arr[1] in list_player:
 				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
+				var obj_player = list_player[arr[1]][TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
+				obj_player.putdown(color_gem)
 				if color_gem in map[vec_player.x][vec_player.z].gems:
 					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
 					obj[0] -= 1
