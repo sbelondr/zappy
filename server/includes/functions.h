@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/01/18 11:45:51 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/04 09:25:01 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ t_egg			*get_egg_by_id(t_world_state *world, int id);
 t_client		*get_client_by_id(t_srv *srv, int id);
 struct timeval	delta_to_time(int delta);
 int				add_egg_to_team(t_world_state *wld, char *team_name, int egg_id);
-t_team	*get_team_by_name(t_world_state *world, char *team_name);
+t_team			*get_team_by_name(t_world_state *world, char *team_name);
+void			rotten_egg(t_srv *srv, t_egg *egg);
 
 /*
  * GAME
