@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:27:26 by selver            #+#    #+#             */
-/*   Updated: 2021/10/27 14:50:57 by selver           ###   ########.fr       */
+/*   Updated: 2022/02/04 11:56:47 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ void			generate_ressource(t_world_state world)
 			world.map[y][x][THYSTAME] += (rand() % 100 < 5);
 			if (y > world.params.world_height / 3 && y < world.params.world_height / 3 * 2 &&
 					x > world.params.world_width / 3 && x < world.params.world_width / 3 * 2)
-				world.map[y][x][FOOD] += (rand() % 2);
+				world.map[y][x][FOOD] += (rand() % 2 || rand() % 2) * 2;
+			else
+				world.map[y][x][FOOD] += (rand() % 3);
 		}
 }
 
