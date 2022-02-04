@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2022/01/07 11:48:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/04 14:19:39 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,7 @@ char	*pickup_item(t_srv *srv, t_world_state *world, t_client *player)
 		send_to_all_moniteur(srv, moniteur_pin(player));
 		send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
 	}
+	if (!success)
+		printf("THIS: %d %d %d %d %d\n", square[0], square[1], square[2], square[3], square[4], square[5]);
 	return (ft_strdup(success ? "OK\n" : "KO\n"));
 }

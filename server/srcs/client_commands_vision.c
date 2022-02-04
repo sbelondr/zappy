@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 09:51:15 by selver           ###   ########.fr       */
+/*   Updated: 2022/02/04 14:26:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,54 @@ static int	build_see_part(char *str, char *name, int count)
 	return (offset);
 }
 
+t_vector2	index_to_map_vector(int index)
+{
+	if (index == 0) return ft_vector2(0, 0);
+	if (index == 1) return ft_vector2(-1, 1);
+	if (index == 2) return ft_vector2(0, 1);
+	if (index == 3) return ft_vector2(1, 1);
+	if (index == 4) return ft_vector2(-2, 2);
+	if (index == 5) return ft_vector2(-1, 2);
+	if (index == 6) return ft_vector2(0, 2);
+	if (index == 7) return ft_vector2(1, 2);
+	if (index == 8) return ft_vector2(2, 2);
+	printf("ERROR: Index is too far!!\n");
+	return ft_vector2(0, 0);
+}
+
+t_vector2	rotate_vector(t_vector2 vec, int direction)
+{
+	int	ca;
+	int	sa;
+
+	if (direction == NORTH)
+	{
+		ca = 1;
+		sa = 0;
+	}
+	else if (direction == EAST)
+	{
+		ca = 0;
+		sa = 1;
+	}
+	else if (direction == SOUTH)
+	{
+		ca = -1;
+		sa = 0;
+	}
+	else if (direction == WEST)
+	{
+		ca = 0;
+		sa = -1;
+	}
+	return (ft_vector2(ca * vec.x - sa * vec.y, sa * vec.x + ca * vec.y));
+}
 /*
  * Donne la chaîne de charactères à retourner au client
  * PARAMS: t_world_state *world -> world state
  *			t_client playe -> Observer
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
- * TODO: player number 
+ * TODO: VIEW SCALES WITH LEVEL 
  */
 
 char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
@@ -99,44 +141,34 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	ret = ft_strnew(cnt * 15 + number_of_cases + 5000); //nique, on devrait jamais avoir autant besoin de caractères donc pas de segfault
 	ret[0] = '{';
 	int offset = 1;
-	offsetx = 0;
-	while (offsetx <= 1)
+	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
 	{
-		for (int i = -offsetx; i <= offsetx; ++i)
+		target = index_to_map_vector(i);
+		target = rotate_vector(target, player->orientation);
+		target.x += player->p_x;
+		target.y += player->p_y;
+		printf("Case: %d %d\n", target.x, target.y);
+		items = get_case(world, target.x, target.y); 
+		offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
+		offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
+		offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
+		offset += build_see_part(ret + offset, " LAMENDIANE", items[LAMENDIANE]);
+		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
+		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
+		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
+		int nbr = 0;
+		t_client *client;
+		t_list *current;
+		current = world->client_list;
+		while (current)
 		{
-			if (player->orientation == NORTH)
-				target = ft_vector2(player->p_x + 1, player->p_y - offsetx);
-			else if (player->orientation == EAST)
-				target = ft_vector2(player->p_x + offsetx, player->p_y + 1);
-			else if (player->orientation == SOUTH)
-				target = ft_vector2(player->p_x + i, player->p_y + offsetx);
-			else if (player->orientation == WEST)
-				target = ft_vector2(player->p_x - offsetx, player->p_y - i);
-			else
-				printf("ERROR: orientation: %d !E {%d, %d, %d, %d}\n", player->orientation, NORTH, EAST, SOUTH, WEST);
-			items = get_case(world, target.x, target.y); 
-			offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
-			offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
-			offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
-			offset += build_see_part(ret + offset, " LAMENDIANE", items[LAMENDIANE]);
-			offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
-			offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
-			offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-			int nbr = 0;
-			t_client *client;
-			t_list *current;
-			current = world->client_list;
-			while (current)
-			{
-				client = current->content;	
-				if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
-					nbr += 1;
-				current = current->next;
-			}
-			offset += build_see_part(ret + offset, " PLAYER", nbr);
-			ret[offset++] = ',';
+			client = current->content;	
+			if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
+				nbr += 1;
+			current = current->next;
 		}
-		offsetx += 1;
+		offset += build_see_part(ret + offset, " PLAYER", nbr);
+		ret[offset++] = ',';
 	}
 	ret[offset - 1] = '}';
 	return (ret);

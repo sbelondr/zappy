@@ -13,6 +13,16 @@ class Trantorien
     @socket = socket
   end
 
+  def process
+    if @food < 10
+      if not find_food
+        do_action(["avance", "right"].sample)
+      end
+    else
+      do_action("FORK")
+    end
+  end
+
   def pickup(item)
     @socket.puts "prendre #{item}"
     if @socket.recv(99) == "OK\n"
@@ -20,6 +30,8 @@ class Trantorien
         @food += 1
         puts "Gained one food !! Current food: #{@food}"
       end
+    else
+      puts "Pickup failed for item #{item}!! WHAT DO I DO??!!"
     end
 
   end
@@ -27,6 +39,8 @@ class Trantorien
     #Bookeep ressources...
     if ["voir", "avance", "droite", "gauche"].include? action
       reduce_hunger(7)
+    elsif action == "FORK"
+      reduce_hunger(42)
     end
     @socket.puts action
     @socket.recv(999)
@@ -50,13 +64,15 @@ class Trantorien
       do_action "gauche"
     elsif (coordinates[0] < 0)
       do_action "droite"
+    else
     end
-    coordinates[0].times do
+    coordinates[0].abs.times do
       do_action "avance"
     end
   end
 
   def translate_vision_to_map(index)
+    puts "Found something at index #{index}"
     return [0, 0] if index == 0
     return [-1, 1] if index == 1
     return [0, 1] if index == 2
@@ -73,7 +89,7 @@ class Trantorien
     vision = []
     vision = do_action("voir").split(",")
     puts "#{vision}"
-    vision.each do |area, index|
+    vision.each_with_index do |area, index|
       if area.include? "FOOD"
         move_towards(translate_vision_to_map(index))
         pickup("FOOD")
@@ -94,8 +110,7 @@ def main
   player = Trantorien.new(s)
   puts data
   loop do
-    player.find_food
-    player.do_action(["avance", "droite", "gauche"].sample)
+    player.process
   end
 end
 main
