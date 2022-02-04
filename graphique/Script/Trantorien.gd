@@ -3,6 +3,11 @@ extends Spatial
 var level := 1
 var inventory := [0, 0, 0, 0, 0, 0, 0, 0]
 
+var current_rotation : float
+var goal_rotation : float
+var rotation_speed : float
+var rotation_progress : float
+
 onready var animPlayer : AnimationPlayer = get_node("AnimationPlayer")
 onready var tween : Tween = get_node("Tween")
 
@@ -13,13 +18,28 @@ func _ready():
 	animPlayer.get_animation("Ritual3").set_loop(true)
 	animPlayer.get_animation("Ritual4").set_loop(true)
 	animPlayer.get_animation("Pose").set_loop(true)
+	current_rotation = rotation.y
+	goal_rotation = current_rotation
+	rotation_progress = 0
 	
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
 func move_trantorien(dest: Vector3, speed: float) -> void:
-	tween.interpolate_property(self, "translation", null, dest, speed, Tween.TRANS_CUBIC)
+#	Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
+	tween.interpolate_property(self, "translation", self.translation, dest, speed, Tween.TRANS_CUBIC)
 	tween.start()
 	animPlayer.play("WalkCycle")
+
+func rotation_trantorien(dest: int, speed: float) -> void:
+	goal_rotation = deg2rad(dest)
+	current_rotation = rotation.y
+	rotation_speed = speed
+	rotation_progress = 0
+
+func _process(delta: float):
+	if rotation_progress < 1:
+		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
+		rotation_progress += (1 / rotation_speed) * delta
 
 #Take an item from the ground (no check done)
 #Handle animation and all, PLEASE CALL THIS
