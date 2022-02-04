@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/01/18 11:38:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/04 09:24:23 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,13 @@ void	game_tick(t_srv *srv)
 		current = current->next;
 		if (egg->maturity > 0)
 			egg->maturity--;
-		else if (egg->maturity == 0)
+		if (egg->food == 0 && egg->hunger == 0)
 			rotten_egg(srv, egg);
+		else if (egg->hunger == 0)
+		{
+			egg->food--;
+			egg->hunger = MAX_HUNGER;
+		}
+		egg->hunger--;
 	}
 }
