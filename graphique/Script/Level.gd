@@ -44,7 +44,7 @@ var map = []
 #}
 
 # time unit
-var TIME: int = 1
+var TIME: float = 1
 
 # global variable for the socket
 const HOST: String = "localhost"
@@ -113,6 +113,13 @@ func create_map() -> void:
 		map.append(Array())
 		for z in g_z:
 			map[x].append(add_block(texture_block, Vector3(x, y, z))) #, [0, null], [0, null], [0, null], [0, null], [0, null], [0, null], [0, null]]);
+#	add_trantorien("d", Vector3(0, 0.5, 0), 1, 1, "toto")
+#	add_trantorien("dd", Vector3(1, 0.5, 0), 2, 1, "toto")
+#	add_trantorien("ddd", Vector3(2, 0.5, 0), 3, 1, "toto")
+#	add_trantorien("dddd", Vector3(3, 0.5, 0), 4, 1, "0toto")
+#	add_trantorien("dddd", Vector3(0, 0.5, 19), 4, 1, "toto")
+#	add_trantorien("dddjjd", Vector3(0, 0.5, 2), 4, 1, "toto")
+#	add_trantorien("dddjd", Vector3(0, 0.5, 9), 4, 1, "toto")
 
 # add new Trantorien
 # Args:
@@ -121,8 +128,10 @@ func create_map() -> void:
 func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
 	var obj = add_block(trantorien, vec)
 	list_player[name] = [obj, vec, orientation, level, teams]
-	var subchild1 = tree.create_item(list_team[teams])
-	subchild1.set_text(0, name)
+	manage_orientation_trantorien(obj, orientation)
+	if teams in list_team:
+		var subchild1 = tree.create_item(list_team[teams])
+		subchild1.set_text(0, name)
 
 # i don't remember but it's interresting
 # fuck you
@@ -131,22 +140,43 @@ func is_interpolate(val: int, new_val: int) -> bool:
 		return true
 	return false
 
+#enum E_DIRECTION {
+#	N=1,
+#	E,
+#	S,
+#	O
+#}
+
+func manage_orientation_trantorien(obj, orientation):
+	if (orientation == 1):
+		obj.rotation_trantorien(180, TIME);
+	if (orientation == 2):
+		obj.rotation_trantorien(90, TIME);
+	if (orientation == 3):
+		obj.rotation_trantorien(0, TIME);
+	if (orientation == 4):
+		obj.rotation_trantorien(270, TIME);
+
 # deplace Trantorien
 # Args:
 #	name: name of Trantorien
 #	vec: new position of Trantorien
-func move_trantorien(name: String, vec: Vector3) -> void:
+func move_trantorien(name: String, vec: Vector3, orientation: int) -> void:
 	if name in list_player:
 		var player = list_player.get(name)
 		var obj = player[TRANTORIEN.OBJ]
+		# rotation degrees y
+#		player
 #		player[TRANTORIEN.VEC] = vec
+		manage_orientation_trantorien(obj, orientation)
 		if is_interpolate(obj.translation.x, vec.x) and is_interpolate(obj.translation.y, vec.y) \
 			and is_interpolate(obj.translation.z, vec.z):
 			obj.move_trantorien(vec, TIME)
-#			$Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
-#			$Tween.start()
+#			Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
+#			Tween.start()
 		else:
 			obj.translation = vec
+		list_player[name][TRANTORIEN.VEC] = vec
 
 # remove Trantorien on the map and the list
 # Arg:
@@ -205,31 +235,14 @@ func add_all_gem(arr):
 		var nb_gems = int(arr[9])
 		insert_result_map(vec, nb_gems, GEM.PURPLE)
 
-# useless
-func _on_Timer_timeout():
-	pass
-#	var vec : Vector3 = list_player["coucou"][1]
-#	vec.x += 1
-#	vec.z += 1
-#	list_player["coucou"][1] = vec
-#	if vec.x < g_x:
-#		move_trantorien("coucou", vec)
-#	else:
-#		$Timer.stop()
-#		die_trantorien("coucou")
-
-func launch_timer():
-	$Timer.wait_time = TIME
-	$Timer.start()
-
 func _physics_process(delta):
 	if Input.is_action_just_pressed("+"):
 		if TIME > 0.21:
 			TIME -= 0.2
-			launch_timer()
+#			launch_timer()
 	if Input.is_action_just_pressed("-"):
 		TIME += 0.2
-		launch_timer()
+#		launch_timer()
 #	if Input.is_action_just_pressed("debug"):
 #		add_block(gem, Vector3(5, 1, 5))
 	if Input.is_action_just_pressed("quit"):
@@ -264,9 +277,9 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			g_x = int(arr[1])
 			g_z = int(arr[2])
 			var camera_script = preload("res://Script/Camera_lvl.gd")
-			get_node("Camera").h_offset = g_x / 2
-			get_node("Camera").v_offset = g_z / 2
-			get_node("Camera").fov = g_x * 2
+			get_node("Camera").h_offset = g_x / 2.0
+			get_node("Camera").v_offset = g_z / 2.0
+			get_node("Camera").fov = g_x * 2.0
 			create_map()
 		# new player
 		elif arr[0] == 'pnw':
@@ -278,7 +291,7 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		# move player
 		elif arr[0] == 'ppo':
 			#"ppo #n X Y O\n"
-			move_trantorien(arr[1], Vector3(int(arr[2]), 1, int(arr[3])))
+			move_trantorien(arr[1], Vector3(int(arr[2]), 1, int(arr[3])), int(arr[4]))
 		# set time
 		elif arr[0] == 'sgt':
 			TIME = 1.0 / int(arr[1])
@@ -308,7 +321,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
 				obj.start_incantation()
 				i += 1
-			pass
 		# Fin de l’incantation sur la case donnée avec le résultat R
 		elif arr[0] == 'pie':
 			var len_arr = len(arr)
@@ -317,7 +329,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
 				obj.start_incantation()
 				i += 1
-			pass
 		# Le joueur est mort de faim.
 		elif arr[0] == 'pdi':
 			die_trantorien(arr[1])
@@ -335,7 +346,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 					obj[1].scale = scale;
 				else:
 					insert_result_map(vec_player, 1, color_gem)
-					
 		# le joueur prend une ressource
 		elif arr[0] == 'pgt':
 			if arr[1] in list_player:
