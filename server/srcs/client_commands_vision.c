@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 13:51:38 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:04:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,6 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	t_vector2	target;
 
 	(void)srv;
-	t_list *current = world->client_list;
-	while (current)
-	{
-		t_client *caller = current->content;
-		current = current->next;
-	}
 	offsetx = 1;
 	cnt = 0;
 	while (offsetx >= 0)

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 13:20:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:30:23 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 {
 	t_srv	*srv;
 	int		opt;
-	int		i = -1;
 
 	opt = SO_REUSEADDR | SO_DEBUG;
 	if (!(srv = (t_srv *)malloc(sizeof(t_srv) * 1)))

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 13:46:24 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:41:46 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	while (current)
 	{	
 		t_client *c = current->content;
-		printf("PRESENT: %d\n", c->id);
 		if (c->team_name)
 		{
-		printf("PRESENT\n");
 			msg = moniteur_pnw(current->content);
 			simple_send(srv, id, msg);
 		}
@@ -77,7 +75,6 @@ int			available_slots(t_srv *srv, t_team *team)
 		valid_eggs += (egg->maturity <= 0);
 		current = current->next;
 	}
-	printf("There is %d mature eggs!\n", valid_eggs);
 	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit) //TODO: Parametize hard limit
 		remaining_slots = srv->param->team_hard_limit - valid_eggs - lstsize;
 	return (remaining_slots + valid_eggs);
@@ -124,6 +121,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		egg = get_first_valid_egg(team);
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
+		c->orientation = rand() % 4;
 		t_egg temp;
 		ft_memcpy(&temp, egg, sizeof(t_egg));
 		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
