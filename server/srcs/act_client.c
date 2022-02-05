@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 13:06:56 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 14:30:15 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 		printf("%d == %d\n", a->id, b->id);
 		return a->id - b->id;
 	}
-	void	mdel(t_client *a) {}
+	void	mdel(t_client *a) { (void)a; }
 	client = get_client_by_id(srv, i);
 	remove_from_client_list(srv->world, client);
 	if (client->team_name && ft_strcmp(client->team_name, "GRAPHIC"))

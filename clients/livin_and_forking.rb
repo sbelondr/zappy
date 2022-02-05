@@ -39,7 +39,7 @@ class Trantorien
   def process
     if @food < 10
       if not find_food
-        do_action(["avance", "right"].sample)
+        do_action(["avance", "droite"].sample)
       end
     else
       do_action("fork")
