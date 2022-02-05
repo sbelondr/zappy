@@ -65,7 +65,7 @@ class Trantorien
     #Bookeep ressources...
     if ["voir", "avance", "droite", "gauche"].include? action
       reduce_hunger(7)
-    elsif action == "FORK"
+    elsif action == "fork"
       reduce_hunger(42)
     end
     @socket.puts action
@@ -79,6 +79,7 @@ class Trantorien
       @hunger = 126 - amount
     else
       @hunger -= amount
+      puts "Getting hungrier ! Current hunger: #{@hunger}(-#{amount}) with food #{@food}!"
     end
   end
 

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 12:49:32 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 13:44:40 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,6 @@ t_param	parse_input(int ac, char **av)
 		}
 	}
 	is_input_complete(param);
-	param.team_hard_limit = 10000; //TODO: give command line option
+	param.team_hard_limit = 500; //TODO: give command line option
 	return (param);
 }

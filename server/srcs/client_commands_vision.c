@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/04 14:26:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 13:51:38 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	while (current)
 	{
 		t_client *caller = current->content;
-		printf("x: %d y: %d id: %d\n", caller->p_x, caller->p_y, caller->id);
 		current = current->next;
 	}
 	offsetx = 1;
@@ -147,7 +146,6 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		target = rotate_vector(target, player->orientation);
 		target.x += player->p_x;
 		target.y += player->p_y;
-		printf("Case: %d %d\n", target.x, target.y);
 		items = get_case(world, target.x, target.y); 
 		offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
 		offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
