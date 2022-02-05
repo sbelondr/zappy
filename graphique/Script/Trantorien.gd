@@ -8,6 +8,8 @@ var goal_rotation : float
 var rotation_speed : float
 var rotation_progress : float
 
+var speed : float
+
 onready var animPlayer : AnimationPlayer = get_node("AnimationPlayer")
 onready var tween : Tween = get_node("Tween")
 

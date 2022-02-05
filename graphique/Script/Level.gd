@@ -112,23 +112,18 @@ func create_map() -> void:
 	for x in g_x:
 		map.append(Array())
 		for z in g_z:
-			map[x].append(add_block(texture_block, Vector3(x, y, z))) #, [0, null], [0, null], [0, null], [0, null], [0, null], [0, null], [0, null]]);
-#	add_trantorien("d", Vector3(0, 0.5, 0), 1, 1, "toto")
-#	add_trantorien("dd", Vector3(1, 0.5, 0), 2, 1, "toto")
-#	add_trantorien("ddd", Vector3(2, 0.5, 0), 3, 1, "toto")
-#	add_trantorien("dddd", Vector3(3, 0.5, 0), 4, 1, "0toto")
-#	add_trantorien("dddd", Vector3(0, 0.5, 19), 4, 1, "toto")
-#	add_trantorien("dddjjd", Vector3(0, 0.5, 2), 4, 1, "toto")
-#	add_trantorien("dddjd", Vector3(0, 0.5, 9), 4, 1, "toto")
+			map[x].append(add_block(texture_block, Vector3(x, y, z)))
 
-# add new Trantorien
 # Args:
 #	name: name for Trantorien
 #	vec: Vector to indicate the position of Trantorien
+# add new Trantorien
 func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
-	var obj = add_block(trantorien, vec)
+#	var scale = calc_scale(5)
+	var obj = add_block(trantorien, vec) #, scale)
 	list_player[name] = [obj, vec, orientation, level, teams]
 	manage_orientation_trantorien(obj, orientation)
+	# add user in HUD
 	if teams in list_team:
 		var subchild1 = tree.create_item(list_team[teams])
 		subchild1.set_text(0, name)
@@ -139,13 +134,6 @@ func is_interpolate(val: int, new_val: int) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
 	return false
-
-#enum E_DIRECTION {
-#	N=1,
-#	E,
-#	S,
-#	O
-#}
 
 func manage_orientation_trantorien(obj, orientation):
 	if (orientation == 1):
@@ -165,15 +153,10 @@ func move_trantorien(name: String, vec: Vector3, orientation: int) -> void:
 	if name in list_player:
 		var player = list_player.get(name)
 		var obj = player[TRANTORIEN.OBJ]
-		# rotation degrees y
-#		player
-#		player[TRANTORIEN.VEC] = vec
 		manage_orientation_trantorien(obj, orientation)
 		if is_interpolate(obj.translation.x, vec.x) and is_interpolate(obj.translation.y, vec.y) \
 			and is_interpolate(obj.translation.z, vec.z):
 			obj.move_trantorien(vec, TIME)
-#			Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
-#			Tween.start()
 		else:
 			obj.translation = vec
 		list_player[name][TRANTORIEN.VEC] = vec
@@ -203,12 +186,9 @@ func calc_scale(q: float):
 	q *= 2
 	return Vector3(q, q, q)
 
-func insert_result_map(vec: Vector3, nb_gems: float, color_gem: int): #, map_gem: int):
+func insert_result_map(vec: Vector3, nb_gems: float, color_gem: int):
 	var scale = calc_scale(nb_gems)
 	map[vec.x][vec.z].gems[color_gem] = [nb_gems, add_block(array_gem[color_gem], vec, scale)]
-#	map[vec.x][vec.z].gems[color_gem][1] = add_block(array_gem[color_gem], vec, scale)
-#	map[vec.x][vec.z][map_gem][0] = nb_gems
-#	map[vec.x][vec.z][map_gem][1] =	add_block(array_gem[color_gem], vec, scale)
 
 # add gem when bct is send by the server
 func add_all_gem(arr):
@@ -242,9 +222,6 @@ func _physics_process(delta):
 #			launch_timer()
 	if Input.is_action_just_pressed("-"):
 		TIME += 0.2
-#		launch_timer()
-#	if Input.is_action_just_pressed("debug"):
-#		add_block(gem, Vector3(5, 1, 5))
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 	$CanvasLayer/CameraPos.text = "get_viewport().get_rect().size.x:" + String(OS.get_real_window_size()) + \
@@ -286,12 +263,12 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			# pnw #n X Y O L N
 			print('new player: ' + arr[6])
 			if arr[6] != 'GRAPHIC' and arr[6] != '(null)':
-				add_trantorien(arr[1], Vector3(int(arr[2]), 1, int(arr[3])), int(arr[4]), int(arr[5]), arr[6])
+				add_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]), int(arr[5]), arr[6])
 				$CanvasLayer/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
 		# move player
 		elif arr[0] == 'ppo':
 			#"ppo #n X Y O\n"
-			move_trantorien(arr[1], Vector3(int(arr[2]), 1, int(arr[3])), int(arr[4]))
+			move_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]))
 		# set time
 		elif arr[0] == 'sgt':
 			TIME = 1.0 / int(arr[1])
@@ -366,17 +343,14 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'enw':
 			# enw #e #n X Y
 			# fin animation
-			print('avant:')
 			if arr[2] in list_player:
-				var vec_player =  Vector3(int(arr[3]), 1, int(arr[4])) #list_player[arr[2]][TRANTORIEN.VEC]
-				print(vec_player)
+				var vec_player =  Vector3(int(arr[3]), 0.5, int(arr[4])) #list_player[arr[2]][TRANTORIEN.VEC]
 				var obj = add_block(egg, vec_player);
 				list_egg[arr[1]] = [obj, vec_player, arr[2]]
 		# loeuf eclot
 		elif arr[0] == 'eht':
 			# animation eclosion
 			die_egg(arr[1])
-			pass
 		# joueur connecte pour l'oeuf
 		elif arr[0] == 'ebo':
 			pass
