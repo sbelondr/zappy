@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 14:41:46 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 15:04:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_egg	*get_first_valid_egg(t_team *team)
 	while (current)
 	{
 		egg = current->content;
-		if (egg->maturity <= 0)
+		if (egg->maturity <= 0 && !egg->used)
 			return (egg);
 		current = current->next;
 	}
@@ -109,11 +109,11 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	remaining_slots = available_slots(srv, team);
 	asprintf(&msg, "%d\n", remaining_slots);
 	simple_send(srv, c->id, msg);
+	if (remaining_slots <= 0)
+		return (0);
 	asprintf(&msg, "%d %d\n",
 			srv->param->world_width, srv->param->world_height);
 	simple_send(srv, c->id, msg);
-	if (remaining_slots <= 0)
-		return (0);
 	ft_lst_append(&team->team_clients, ft_lstnew_no_copy(c, sizeof(t_client)));
 	c->team_name = ft_strdup(team->team_name);
 	if (ft_lst_size(team->team_clients) > (unsigned int)srv->param->allowed_clients_amount)
@@ -121,6 +121,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		egg = get_first_valid_egg(team);
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
+		egg->used = 1;
 		c->orientation = rand() % 4;
 		t_egg temp;
 		ft_memcpy(&temp, egg, sizeof(t_egg));

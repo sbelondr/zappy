@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 14:30:15 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 15:03:31 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		printf("NO TEAM\n");
 		if (!add_to_team(srv, buf, i))
 		{
+			
 			//break connection
 		}
 		else if (strcmp(c->team_name, "GRAPHIC"))
