@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2021/10/28 10:53:03 by selver           ###   ########.fr       */
+/*   Updated: 2022/02/05 12:49:32 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,40 +111,9 @@ t_param	parse_input(int ac, char **av)
 		{
 			t_team tmp = new_team(av[++i]);
 			ft_lstadd(&param.team_list, ft_lstnew(&tmp, sizeof(t_team)));
-			//param.team_list = malloc(sizeof(t_team_list));
-			//param.team_list->team_name = av[++i];
-			//param.team_list->next = current;
 		}
 	}
 	is_input_complete(param);
+	param.team_hard_limit = 10000; //TODO: give command line option
 	return (param);
 }
-/*
-int main(int ac, char **av)
-{
-	t_param param = parse_input(ac, av);
-	t_list *current = param.team_list;
-	printf("x: %d y:: %d t: %d\n", param.world_width, param.world_height, param.time_delta);
-	printf("port: %d allowed clients: %d\n", param.port, param.allowed_clients_amount);
-	while (current)
-	{
-		printf("Team name: %s\n", ((t_team*)current->content)->team_name);
-		current = current->next;
-	}
-	t_world_state st;
-	st = init_world(param);
-	for (int y = 0; y < st.params.world_height; y++)
-	{
-		for (int x = 0; x < st.params.world_width; x++)
-		{
-			printf("[");
-			for (int z = 0; z < 7; z++)
-			{
-				printf("%d ", st.map[y][x][z]);
-			}
-			printf("]");
-		}
-		printf("\n");
-	}
-}
-*/

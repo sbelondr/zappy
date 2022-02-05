@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 11:20:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 12:55:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	}
 }
 
+int			get_maximum_players_in_game(t_srv *srv)
+{
+	return (srv->param->team_hard_limit * 2); //TODO: change constant by number of teams
+}
+
 int			available_slots(t_srv *srv, t_team *team)
 {
 	int		lstsize;
@@ -73,6 +78,8 @@ int			available_slots(t_srv *srv, t_team *team)
 		current = current->next;
 	}
 	printf("There is %d mature eggs!\n", valid_eggs);
+	if (lstsize + remaining_slots + valid_eggs > get_maximum_players_in_game(srv)) //TODO: Parametize hard limit
+		remaining_slots = get_maximum_players_in_game(srv) - valid_eggs - lstsize;
 	return (remaining_slots + valid_eggs);
 }
 
@@ -100,6 +107,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 
 	int	eggcmp(t_egg *a, t_egg *b) { return a->id == b->id; }
 	void free_egg(t_egg *a) { free(a->team_name); free(a); }
+	void emptydel(t_client *_a) { (void)_a;  }
 	printf("Connecting new client\n");
 	remaining_slots = available_slots(srv, team);
 	asprintf(&msg, "%d\n", remaining_slots);
@@ -118,7 +126,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		c->p_y = egg->p_y;
 		t_egg temp;
 		ft_memcpy(&temp, egg, sizeof(t_egg));
-		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, free_egg);
+		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
 		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}
 	return (1);

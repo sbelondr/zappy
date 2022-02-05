@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/02/04 09:23:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 12:48:20 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct	s_param
 	int			world_height;
 	int			time_delta;
 	int			allowed_clients_amount;
+	int			team_hard_limit;
 	t_list		*team_list;	
 }				t_param;
 
