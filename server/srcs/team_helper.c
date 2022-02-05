@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 12:55:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 13:46:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ int			available_slots(t_srv *srv, t_team *team)
 		current = current->next;
 	}
 	printf("There is %d mature eggs!\n", valid_eggs);
-	if (lstsize + remaining_slots + valid_eggs > get_maximum_players_in_game(srv)) //TODO: Parametize hard limit
-		remaining_slots = get_maximum_players_in_game(srv) - valid_eggs - lstsize;
+	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit) //TODO: Parametize hard limit
+		remaining_slots = srv->param->team_hard_limit - valid_eggs - lstsize;
 	return (remaining_slots + valid_eggs);
 }
 
