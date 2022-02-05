@@ -120,7 +120,7 @@ func create_map() -> void:
 # add new Trantorien
 func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
 #	var scale = calc_scale(5)
-	var obj = add_block(trantorien, vec) #, scale)
+	var obj = add_block(trantorien, vec, Vector3(0.1, 0.1, 0.1))
 	list_player[name] = [obj, vec, orientation, level, teams]
 	manage_orientation_trantorien(obj, orientation)
 	# add user in HUD
@@ -298,7 +298,7 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
 				obj.start_incantation()
 				i += 1
-		# Fin de l’incantation sur la case donnée avec le résultat R
+		# fin de l’incantation sur la case donnée avec le résultat R
 		elif arr[0] == 'pie':
 			var len_arr = len(arr)
 			var i = 3
@@ -306,7 +306,11 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
 				obj.start_incantation()
 				i += 1
-		# Le joueur est mort de faim.
+		elif arr[0] == 'plv':
+			var obj = list_player[arr[1]][TRANTORIEN.OBJ]
+			var scale = obj.scale + 0.1
+			obj.scale = scale
+		# le joueur est mort de faim.
 		elif arr[0] == 'pdi':
 			die_trantorien(arr[1])
 		# le joueur jette une ressource
