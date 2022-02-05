@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2021/10/16 09:35:41 by selver           ###   ########.fr       */
+/*   Updated: 2022/02/05 11:14:13 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_listen_srv(t_srv *srv, fd_set *readfds)
 	int	valread;
 
 	i = -1;
-	while (++i < srv->param->allowed_clients_amount)
+	while (++i < 2000)
 	{
 		sd = srv->client_sck[i];
 		if (FD_ISSET(sd, readfds))
