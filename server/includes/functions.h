@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/04 09:25:01 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 10:41:05 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char			*player_fork(t_srv *srv, t_world_state *wld, t_client *c);
 char			*broadcast(t_srv *srv, t_world_state *wld, t_client *c);
 char			*ritual(t_srv *srv, t_world_state *wld, t_client *c);
 char			*kick(t_srv *srv, t_world_state *world, t_client *client);
+char			*connect_nbr(t_srv *srv, t_world_state *world, t_client *player);
 
 /*
  * HELPERS

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/01/07 12:06:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 11:11:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 		dprintf(STDERR_FILENO, "Malloc error\n");
 		exit(EXIT_FAILURE);
 	}
-	if (!(srv->client_sck = (int*)malloc(sizeof(int) * (param->allowed_clients_amount * 10))))
+	if (!(srv->client_sck = (int*)calloc(sizeof(int), (param->allowed_clients_amount * 1000))))
 		return (NULL);
-	while (++i < param->allowed_clients_amount)
-		srv->client_sck[i] = 0;
 	if ((srv->master_sck = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 	{
 		dprintf(STDERR_FILENO, "Socket not respect you\n");

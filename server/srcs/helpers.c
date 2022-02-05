@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/01/18 11:45:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 10:50:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	rotten_egg(t_srv *srv, t_egg *egg)
 	t_team *team;
 
 	int	mcmp(t_egg *a, t_egg *b) { 	return a->id - b->id; }
-	void	mdel(t_egg *a) {}
+	void	mdel(t_egg *a) { (void)a; }
 	send_to_all_moniteur(srv, moniteur_edi(egg));
 	ft_lstdelbyval(&srv->world->egg_list, egg, mcmp, mdel);
 	team = get_team_by_name(srv->world, egg->team_name);

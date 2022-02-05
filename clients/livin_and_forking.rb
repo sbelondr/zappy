@@ -6,6 +6,24 @@ if ARGV.empty?
   puts "You must pass the team name as first argument"
 end
 
+$clients = []
+def start_new_client
+  puts "Creating new client"
+  $clients.push Thread.new {
+    s = TCPSocket.new 'localhost', 8080
+    puts "Connecting to server..."
+    puts s.recv(99)
+    s.puts ARGV[0] 
+    puts "Sent team #{ARGV[0]}..."
+    data = s.recv(99).split('\n')
+    player = Trantorien.new(s)
+    puts data
+    loop do
+      player.process
+    end
+  }
+end
+
 class Trantorien
   def initialize(socket)
     @food = 10
@@ -19,7 +37,10 @@ class Trantorien
         do_action(["avance", "right"].sample)
       end
     else
-      do_action("FORK")
+      do_action("fork")
+    end
+    if do_action("connect_nbr").to_i > 0
+      start_new_client
     end
   end
 
@@ -105,7 +126,6 @@ def main
   s = TCPSocket.new 'localhost', 8080
   puts s.recv(99)
   s.puts ARGV[0] 
-  puts "SENT TEAM"
   data = s.recv(99).split('\n')
   player = Trantorien.new(s)
   puts data

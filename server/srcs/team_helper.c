@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/01/11 10:52:07 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 11:20:33 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int			available_slots(t_srv *srv, t_team *team)
 	valid_eggs = 0;
 	lstsize = ft_lst_size(team->team_clients);
 	remaining_slots = srv->param->allowed_clients_amount - lstsize;
+	if (remaining_slots < 0)
+		remaining_slots = 0;
 	current = team->team_eggs;
 	while (current)
 	{
@@ -70,12 +72,23 @@ int			available_slots(t_srv *srv, t_team *team)
 		valid_eggs += (egg->maturity <= 0);
 		current = current->next;
 	}
+	printf("There is %d mature eggs!\n", valid_eggs);
 	return (remaining_slots + valid_eggs);
 }
 
 t_egg	*get_first_valid_egg(t_team *team)
 {
-	//TODO: THAT
+	t_list	*current;
+	t_egg	*egg;
+
+	current = team->team_eggs;
+	while (current)
+	{
+		egg = current->content;
+		if (egg->maturity <= 0)
+			return (egg);
+		current = current->next;
+	}
 	return (NULL);
 }
 
@@ -85,6 +98,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	t_egg		*egg;
 	int			remaining_slots;
 
+	int	eggcmp(t_egg *a, t_egg *b) { return a->id == b->id; }
+	void free_egg(t_egg *a) { free(a->team_name); free(a); }
+	printf("Connecting new client\n");
 	remaining_slots = available_slots(srv, team);
 	asprintf(&msg, "%d\n", remaining_slots);
 	simple_send(srv, c->id, msg);
@@ -100,7 +116,10 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		egg = get_first_valid_egg(team);
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
-		egg->used = 1;
+		t_egg temp;
+		ft_memcpy(&temp, egg, sizeof(t_egg));
+		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, free_egg);
+		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}
 	return (1);
 }
@@ -145,7 +164,7 @@ int		add_egg_to_team(t_world_state *world, char *team_name, int egg_id)
 		team = current->content;
 		if (!ft_strcmp(team->team_name, team_name))
 		{
-			ft_lst_append(&team->team_eggs, ft_lstnew(e, sizeof(t_egg))); 
+			ft_lst_append(&team->team_eggs, ft_lstnew_no_copy(e, sizeof(t_egg))); 
 			return (1);
 		}
 		current = current->next;

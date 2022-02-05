@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/01/18 10:53:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 10:42:55 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,8 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		append_command(c, new_command(COMMAND_FORK, NULL, 42));
 	else if (!strcmp(buf, "expulse"))
 		append_command(c, new_command(COMMAND_EXPULSER,	NULL, 7));
+	else if (!strcmp(buf, "connect_nbr"))
+		append_command(c, new_command(COMMAND_CONNECT_NBR, NULL, 0));
 	else if (!strcmp(buf, "inventaire"))
 		append_command(c, new_command(COMMAND_INVENTAIRE, NULL, 1));
 	else if (!ft_strncmp(buf, "broadcast", 9))
