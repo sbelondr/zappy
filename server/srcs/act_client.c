@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 10:42:55 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/05 13:06:56 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@ void	remove_from_client_list(t_world_state *world, t_client *client)
 	{
 		to_free = NULL;
 		tmp = current->content;
-		printf("PRESENT: %d\n", tmp->id);
 		if (tmp->id == client->id)
 		{
-		printf("PRESENT\n");
 			if (last)
 				last->next = current->next;
 			else

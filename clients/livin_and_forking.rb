@@ -10,7 +10,12 @@ $clients = []
 def start_new_client
   puts "Creating new client"
   $clients.push Thread.new {
-    s = TCPSocket.new 'localhost', 8080
+    s = nil
+    begin
+      s = TCPSocket.new 'localhost', 8080
+    rescue
+       return 
+    end
     puts "Connecting to server..."
     puts s.recv(99)
     s.puts ARGV[0] 
