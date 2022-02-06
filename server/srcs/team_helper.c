@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 15:04:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/06 13:47:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,19 @@ int			available_slots(t_srv *srv, t_team *team)
 	if (remaining_slots < 0)
 		remaining_slots = 0;
 	current = team->team_eggs;
+	int i = 0;
+	int x = 0;
 	while (current)
 	{
 		egg = current->content;
 		valid_eggs += (egg->maturity <= 0);
+		x += (egg->maturity <= 0 && !egg->used);
+
+		i++;
 		current = current->next;
 	}
+	printf("There is %d eggs in the list, %d are mature and %d are not used!\n", i, valid_eggs, x);
+	valid_eggs = x;
 	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit) //TODO: Parametize hard limit
 		remaining_slots = srv->param->team_hard_limit - valid_eggs - lstsize;
 	return (remaining_slots + valid_eggs);
@@ -119,12 +126,19 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	if (ft_lst_size(team->team_clients) > (unsigned int)srv->param->allowed_clients_amount)
 	{
 		egg = get_first_valid_egg(team);
+		if (egg == NULL)
+		{
+			printf("FATAL ERROR: could not find an egg to spawn in.\n");
+			exit(1);
+			return (0);
+		}
+		printf("Connecting new client with egg n#%d\n", egg->id);
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
 		egg->used = 1;
 		c->orientation = rand() % 4;
 		t_egg temp;
-		ft_memcpy(&temp, egg, sizeof(t_egg));
+		temp.id = egg->id;
 		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
 		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}

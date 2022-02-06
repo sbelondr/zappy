@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 15:03:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/06 13:32:55 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 		if (client->buffer[i].arg)
 			free(client->buffer[i].arg);
 	}
-	if (strcmp(client->team_name, "GRAPHIC"))
+	if (client->team_name && strcmp(client->team_name, "GRAPHIC"))
 		free(client->team_name);
 	free(client);
 	red();
