@@ -32,17 +32,6 @@ var g_x: int = 10
 var g_z: int = 10
 var map = []
 
-#enum MAP {
-#	OBJ_BLOCK,
-#	GEM_BLUE,
-#	GEM_YELLOW,
-#	GEM_RED,
-#	GEM_GREEN,
-#	GEM_ORANGE,
-#	GEM_PINK,
-#	GEM_PURPLE
-#}
-
 # time unit
 var TIME: float = 1
 
@@ -182,6 +171,8 @@ func die_egg(name: String) -> void:
 func calc_scale(q: float):
 	if q > 9:
 		q = 9
+	if q < 0:
+		q = 0
 	q /= 100
 	q *= 2
 	return Vector3(q, q, q)
@@ -247,7 +238,7 @@ func _handle_client_connected() -> void:
 func _handle_client_data(data: PoolByteArray) -> void:
 	var msg := data.get_string_from_utf8().split('\n')
 	for line in msg:
-		$CanvasLayer/logs.text += '\n' + line
+#		$CanvasLayer/logs.text += '\n' + line
 		var arr : Array = line.split(' ')
 		# generate map
 		if arr[0] == "msz":
@@ -316,8 +307,9 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		# le joueur jette une ressource
 		elif arr[0] == 'pdr':
 			if arr[1] in list_player:
-				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
-				var obj_player = list_player[arr[1]][TRANTORIEN.OBJ]
+				var player = list_player[arr[1]]
+				var vec_player = player[TRANTORIEN.VEC]
+				var obj_player = player[TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
 				obj_player.putdown(color_gem)
 				if color_gem in map[vec_player.x][vec_player.z].gems:
@@ -330,8 +322,9 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		# le joueur prend une ressource
 		elif arr[0] == 'pgt':
 			if arr[1] in list_player:
-				var vec_player = list_player[arr[1]][TRANTORIEN.VEC]
-				var obj_player = list_player[arr[1]][TRANTORIEN.OBJ]
+				var player = list_player[arr[1]]
+				var vec_player = player[TRANTORIEN.VEC]
+				var obj_player = player[TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
 				obj_player.putdown(color_gem)
 				if color_gem in map[vec_player.x][vec_player.z].gems:
