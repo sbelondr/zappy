@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 14:04:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/06 15:21:29 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,28 +114,49 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	char	*ret;
 	int		*items;
 	int		cnt;
-	int		offsetx;
+	int		case_nbr;
+	int nbr = 0;
 	t_vector2	target;
-
+	t_client *client;
+	t_list *current;
 	(void)srv;
-	offsetx = 1;
 	cnt = 0;
-	while (offsetx >= 0)
+	case_nbr = 4; //Remplacer par nombre de case vues au lvl du joueur
+	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
 	{
-		for (int i = -offsetx; i <= offsetx; ++i)
+		target = index_to_map_vector(i);
+		target = rotate_vector(target, player->orientation);
+		target.x += player->p_x;
+		target.y += player->p_y;
+		items = get_case(world, target.x, target.y); 
+		cnt += items[LINEMATE] * strlen(" LINEMATE");
+		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
+		cnt += items[SIBUR] * strlen(" SIBUR");
+		cnt += items[LAMENDIANE] * strlen(" LAMENDIANE");
+		cnt += items[PHIRAS] * strlen(" PHIRAS");
+		cnt += items[THYSTAME] * strlen(" THYSTAME");
+		cnt += items[FOOD] * strlen(" FOOD");
+		current = world->client_list;
+		nbr = 0;
+		while (current)
 		{
-			items = get_case(world, player->p_y + offsetx, player->p_x + i);
-			cnt += quantity_of_elements(items);
+			client = current->content;	
+			if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
+				nbr += 1;
+			current = current->next;
 		}
-		offsetx -= 1;
+		cnt += nbr * strlen(" PLAYER");
 	}
+	cnt += case_nbr + 3; //Commas, accolades and \0
+	printf("Estimated size of vision string: %d\n", cnt);
 	const int player_level_demo = 3; //Remplacer par player->lvl quand ça sera prêt
 	int number_of_cases = (1 + ((player_level_demo - 1) * 2 + 1)) / 2 * player_level_demo;
-	ret = ft_strnew(cnt * 15 + number_of_cases + 5000); //nique, on devrait jamais avoir autant besoin de caractères donc pas de segfault
+	ret = ft_strnew(cnt * 2); //nique, on devrait jamais avoir autant besoin de caractères donc pas de segfault
 	ret[0] = '{';
 	int offset = 1;
 	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
 	{
+		nbr = 0;
 		target = index_to_map_vector(i);
 		target = rotate_vector(target, player->orientation);
 		target.x += player->p_x;
@@ -148,9 +169,6 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
 		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
 		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-		int nbr = 0;
-		t_client *client;
-		t_list *current;
 		current = world->client_list;
 		while (current)
 		{
