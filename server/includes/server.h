@@ -33,7 +33,7 @@ t_srv			*init_srv(t_param *param, t_world_state *st);
 ** act_client.c
 */
 
-void			ft_client_exit(t_srv *srv, int sd, int i);
+void			ft_client_exit(t_srv *srv, int i);
 void			ft_client_send_data(t_srv *srv, char *buff, int valread, int i);
 
 /*

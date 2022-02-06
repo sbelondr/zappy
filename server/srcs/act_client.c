@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/06 13:32:55 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/06 15:24:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,21 @@ void	remove_from_client_list(t_world_state *world, t_client *client)
 	}
 }
 
-void ft_client_exit(t_srv *srv, int sd, int i)
+void ft_client_exit(t_srv *srv, int i)
 {
 	t_client	*client;
 	t_team		*team;
 
-	getpeername(sd, (struct sockaddr *)&(srv->address),
+	getpeername(srv->client_sck[i], (struct sockaddr *)&(srv->address),
 			(socklen_t *)&(srv->addrlen));
 	srv->client_sck[i] = 0;
 	int	mcmp(t_client *a, t_client *b)
 	{
-		printf("%d == %d\n", a->id, b->id);
 		return a->id - b->id;
 	}
 	void	mdel(t_client *a) { (void)a; }
 	client = get_client_by_id(srv, i);
-	remove_from_client_list(srv->world, client);
+	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
 	if (client->team_name && ft_strcmp(client->team_name, "GRAPHIC"))
 	{
 		printf("%s\n", client->team_name);
@@ -72,9 +71,9 @@ void ft_client_exit(t_srv *srv, int sd, int i)
 		free(client->team_name);
 	free(client);
 	red();
-	printf(ERROR_CLIENT_EXIT, srv->client_sck[i]);
+	printf("Deconnecting #%d\n", srv->client_sck[i]);
 	reset();
-	close(sd);
+	close(srv->client_sck[i]);
 }
 
 //returns 0 if no newline, 1 otherwise
@@ -164,7 +163,7 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		printf("NO TEAM\n");
 		if (!add_to_team(srv, buf, i))
 		{
-			
+			ft_client_exit(srv, i);
 			//break connection
 		}
 		else if (strcmp(c->team_name, "GRAPHIC"))
