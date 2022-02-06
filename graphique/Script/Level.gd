@@ -47,15 +47,6 @@ var list_player = Dictionary()
 var list_team = Dictionary()
 var list_egg = Dictionary()
 
-# enum for the dictionnaries
-enum TRANTORIEN {
-	OBJ,
-	VEC,
-	ORIENTATION,
-	LEVEL,
-	TEAMS
-}
-
 enum TEAM {
 	COLOR
 	TREE_ID
@@ -103,14 +94,31 @@ func create_map() -> void:
 		for z in g_z:
 			map[x].append(add_block(texture_block, Vector3(x, y, z)))
 
+#func test_generate_trantorien(num: int):
+#	var vec: Vector3 = Vector3(0,0,0)
+#	for i in range(num):
+#		var obj = add_block(trantorien, vec, Vector3(0.1, 0.1, 0.1))
+#		list_player['#' + str(i)] = [obj, vec, 0, 1, '']
+#	pass
+
 # Args:
 #	name: name for Trantorien
 #	vec: Vector to indicate the position of Trantorien
 # add new Trantorien
 func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
 #	var scale = calc_scale(5)
+#	var obj
+#	if name in list_player:
+#		var player = list_player[name]
+#		player[1] = vec
+#		player[2] = orientation
+#		player[3] = level
+#		player[4] = teams
+#		obj = player[0]
+#	else:
 	var obj = add_block(trantorien, vec, Vector3(0.1, 0.1, 0.1))
-	list_player[name] = [obj, vec, orientation, level, teams]
+	list_player[name] = obj #[obj, vec, orientation, level, teams]
+	obj.set_trantorien(teams, orientation, level)
 	manage_orientation_trantorien(obj, orientation)
 	# add user in HUD
 	if teams in list_team:
@@ -141,21 +149,19 @@ func manage_orientation_trantorien(obj, orientation):
 func move_trantorien(name: String, vec: Vector3, orientation: int) -> void:
 	if name in list_player:
 		var player = list_player.get(name)
-		var obj = player[TRANTORIEN.OBJ]
-		manage_orientation_trantorien(obj, orientation)
-		if is_interpolate(obj.translation.x, vec.x) and is_interpolate(obj.translation.y, vec.y) \
-			and is_interpolate(obj.translation.z, vec.z):
-			obj.move_trantorien(vec, TIME)
+		manage_orientation_trantorien(player, orientation)
+		if is_interpolate(player.translation.x, vec.x) and is_interpolate(player.translation.y, vec.y) \
+			and is_interpolate(player.translation.z, vec.z):
+			player.move_trantorien(vec, TIME)
 		else:
-			obj.translation = vec
-		list_player[name][TRANTORIEN.VEC] = vec
+			player.translation = vec
 
 # remove Trantorien on the map and the list
 # Arg:
 #	name: name of Trantorien
 func die_trantorien(name: String) -> void:
 	if name in list_player:
-		var obj = list_player[name][TRANTORIEN.OBJ]
+		var obj = list_player[name]
 		obj.dead()
 		obj.queue_free()
 		list_player.erase(name)
@@ -220,6 +226,7 @@ func _physics_process(delta):
 		", z: " + String($Camera.translation.z) + ", h: " + String($Camera.get_h_offset()) + ", v:" + String($Camera.get_v_offset()) + ", fov:" + String($Camera.fov)
 
 func _ready():
+#	test_generate_trantorien(1000)
 	# launch_timer()
 	# manage connection socket
 	add_child(_client)
@@ -275,7 +282,7 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			cnt_color += 1
 		elif arr[0] == 'pex':
 #			"pex #n\n"
-			var obj_player = list_player[arr[1]][TRANTORIEN.OBJ]
+			var obj_player = list_player[arr[1]]
 			obj_player.kick()
 		# un joueur fait un broadcast
 		elif arr[0] == 'pbc':
@@ -286,7 +293,7 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			var len_arr = len(arr)
 			var i = 3
 			while i < len_arr:
-				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
+				var obj = list_player[arr[i]]
 				obj.start_incantation()
 				i += 1
 		# fin de l’incantation sur la case donnée avec le résultat R
@@ -294,11 +301,11 @@ func _handle_client_data(data: PoolByteArray) -> void:
 			var len_arr = len(arr)
 			var i = 3
 			while i < len_arr:
-				var obj = list_player[arr[i]][TRANTORIEN.OBJ]
+				var obj = list_player[arr[i]]
 				obj.start_incantation()
 				i += 1
 		elif arr[0] == 'plv':
-			var obj = list_player[arr[1]][TRANTORIEN.OBJ]
+			var obj = list_player[arr[1]]
 			var scale = obj.scale + 0.1
 			obj.scale = scale
 		# le joueur est mort de faim.
@@ -308,10 +315,10 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'pdr':
 			if arr[1] in list_player:
 				var player = list_player[arr[1]]
-				var vec_player = player[TRANTORIEN.VEC]
-				var obj_player = player[TRANTORIEN.OBJ]
+				var vec_player = player.translation #[TRANTORIEN.VEC]
+				#var obj_player = player[TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
-				obj_player.putdown(color_gem)
+				player.putdown(color_gem)
 				if color_gem in map[vec_player.x][vec_player.z].gems:
 					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
 					obj[0] += 1
@@ -323,10 +330,10 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		elif arr[0] == 'pgt':
 			if arr[1] in list_player:
 				var player = list_player[arr[1]]
-				var vec_player = player[TRANTORIEN.VEC]
-				var obj_player = player[TRANTORIEN.OBJ]
+				var vec_player = player.translation #[TRANTORIEN.VEC]
+				#var obj_player = player[TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
-				obj_player.putdown(color_gem)
+				player.putdown(color_gem)
 				if color_gem in map[vec_player.x][vec_player.z].gems:
 					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
 					obj[0] -= 1

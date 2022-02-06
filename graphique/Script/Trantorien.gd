@@ -10,8 +10,17 @@ var rotation_progress : float
 
 var speed : float
 
+var player_id: String
+var orientation: int
+var team: String
+
 onready var animPlayer : AnimationPlayer = get_node("AnimationPlayer")
 onready var tween : Tween = get_node("Tween")
+
+func set_trantorien(pteam: String, porientation: int, plevel: int):
+	team = pteam
+	orientation = porientation
+	level = plevel
 
 func _ready():
 	animPlayer.get_animation("WalkCycle").set_loop(true)
@@ -23,19 +32,23 @@ func _ready():
 	current_rotation = rotation.y
 	goal_rotation = current_rotation
 	rotation_progress = 0
+	rotation_speed = 0.1
+	orientation = 0
+	team = ''
+	player_id = ''
 	
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
 func move_trantorien(dest: Vector3, speed: float) -> void:
 #	Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
-	tween.interpolate_property(self, "translation", self.translation, dest, speed, Tween.TRANS_CUBIC)
+	tween.interpolate_property(self, "translation", translation, dest, speed, Tween.TRANS_CUBIC)
 	tween.start()
 	animPlayer.play("WalkCycle")
 
 func rotation_trantorien(dest: int, speed: float) -> void:
 	goal_rotation = deg2rad(dest)
 	current_rotation = rotation.y
-	rotation_speed = speed
+	rotation_speed = max(speed, 0.001)
 	rotation_progress = 0
 
 func _process(delta: float):

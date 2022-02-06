@@ -10,6 +10,8 @@ enum GEM {
 	PURPLE
 }
 var gems = Dictionary()
+
+
 #var gems := [[0, null], [0, null], [0, null], [0, null], [0, null], [0, null], [0, null]]
 
 # Called when the node enters the scene tree for the first time.
