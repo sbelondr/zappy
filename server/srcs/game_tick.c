@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 14:41:25 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/07 08:08:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	game_tick(t_srv *srv)
 	int			ret;
 
 	i = 0;
+	srv->frame_nbr += 1;
 	current = srv->world->client_list;
 	while (current)
 	{

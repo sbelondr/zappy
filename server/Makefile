@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/01/18 10:00:17 by jayache          ###   ########.fr        #
+#    Updated: 2022/02/07 08:17:00 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,7 @@ SRCS_NAMES = server.c\
 	client_commands_vision.c\
 	client_commands_items.c\
 	client_commands_social.c\
+	command_lexer.c\
 	listen.c\
 	command_helper.c\
 	command_dispatcher.c\

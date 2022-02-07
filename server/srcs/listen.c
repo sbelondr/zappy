@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/06 14:14:42 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/07 08:21:46 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,12 @@ void ft_listen_srv(t_srv *srv, fd_set *readfds)
 		{
 			bzero(buff, BUFF_READ);
 			if ((valread = read(srv->client_sck[i], buff, BUFF_READ)) == 0)
+			{
+				red();
+				printf("%d: Kicking #%d because it errored out?\n", srv->frame_nbr, srv->client_sck[i]);
+				reset();
 				ft_client_exit(srv, i);
+			}
 			else
 				ft_client_send_data(srv, buff, valread, i); //Genre ça ça veut dire que tu envoies des données du serveur au client non ????
 		}

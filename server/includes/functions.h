@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 14:05:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/07 08:41:57 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int				available_slots(t_srv *srv, t_team *team);
  */
 
 void			game_tick(t_srv *srv);
+void			ft_lexer(t_srv *srv, char *buf, int i);
 
 /*
  * MONITEUR

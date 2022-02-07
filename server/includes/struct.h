@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 12:48:20 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/07 08:11:56 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct	s_srv
 	int						*client_sck;
 	t_param					*param;
 	t_world_state			*world;
+	uint64_t				frame_nbr;
 }				t_srv;
 
 typedef char* (*t_game_action)(t_srv*, t_world_state*, t_client*);
