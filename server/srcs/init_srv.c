@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 14:30:23 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/07 08:12:49 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 	int		opt;
 
 	opt = SO_REUSEADDR | SO_DEBUG;
+	if (!param)
+		ft_error("No param where given to init_srv\n");
 	if (!(srv = (t_srv *)malloc(sizeof(t_srv) * 1)))
 	{
 		dprintf(STDERR_FILENO, "Malloc error\n");
@@ -58,5 +60,6 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 	srv->addrlen = sizeof(srv->address);
 	srv->param = param;
 	srv->world = st;
+	srv->frame_nbr = 0;
 	return (srv);
 }
