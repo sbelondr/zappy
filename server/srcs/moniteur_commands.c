@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/01/19 09:27:02 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/08 08:30:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,30 @@ char	*moniteur_pnw(t_client *client)
 	return (ret);
 }
 
+//Oeuf pris
+char	*moniteur_ebo(t_egg *egg)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "ebo #%d\n", egg->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
+//Oeuf eclot
+char	*moniteur_eht(t_egg *egg)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "eht #%d\n", egg->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+
 //Oeufs
 char	*moniteur_enw(t_egg *egg)
 {
@@ -171,7 +195,17 @@ char	*moniteur_pbc(int id, char *msg)
 	return (ret);
 }
 
+//Start fork
+char	*moniteur_pfk(t_client *client)
+{
+	char	*ret;
+	int		error;
 
+	error = asprintf(&ret, "pfk #%d\n", client->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
 
 //prend une ressource
 char	*moniteur_pgt(t_client *client, int ressource)

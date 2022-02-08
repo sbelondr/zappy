@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/06 13:47:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/08 08:30:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		c->orientation = rand() % 4;
 		t_egg temp;
 		temp.id = egg->id;
+		send_to_all_moniteur(srv, moniteur_ebo(egg));
 		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
 		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}
