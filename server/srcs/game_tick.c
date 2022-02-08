@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/07 08:08:21 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/08 08:33:01 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ void	game_tick(t_srv *srv)
 			if (ret != 19)
 				printf("ERROR!! send n'a pas tout envoyé");
 			send_to_all_moniteur(srv, moniteur_pic(srv->world, client));
+		}
+		else if (client->buffer[0].command == COMMAND_FORK && client->buffer[0].cooldown == 42)
+		{
+			send_to_all_moniteur(srv, moniteur_pfk(client));
 		}
 		if (client->buffer[0].cooldown > 0)
 			client->buffer[0].cooldown -= 1;
