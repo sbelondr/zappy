@@ -6,15 +6,47 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/07 08:40:25 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/08 09:16:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 #include "server.h"
 
+//Returns an array of string, with check to ensure it has expected elements
+//If it is impossible, returns NULL
+static char	**split_args(char *str, int expected)
+{
+	int		cnt;
+	char	**ret;
+
+	cnt = 0;
+	for (int i = 0; str[i]; ++i)
+		cnt += (str[i] == ' ');
+	if (cnt != expected)
+	{
+		return (NULL);
+	}
+	ret = ft_strsplit(str, ' ');
+	if (!ret)
+		return (NULL);
+	for (int i = 0; i < expected + 1; ++i)
+	{
+		if (!ret[i])
+		{
+			//TODO: free
+			return (NULL);
+		}
+	}
+	return (ret);
+}
+
 void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 {
+	char	**args;
+	int		arg1;
+	int		arg2;
+
 	if (!strcmp(buf, "msz"))
 		simple_send(srv, c->id, moniteur_msz(srv->world));
 	else if (!strcmp(buf, "mct"))
@@ -25,53 +57,96 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		simple_send(srv, c->id, moniteur_sgt(srv->world));
 	else if  (!strncmp(buf, "sst", 3))
 	{
-		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf, ' ');
-		srv->world->params.time_delta = atoi(args[1]);
-		simple_send(srv, c->id, moniteur_sgt(srv->world));
-		free(args[0]);
-		free(args[1]);
-		free(args);
+		args = split_args(buf, 1);
+		if (args)
+		{
+			arg1 = atoi(args[1]);
+			if (arg1 > 0)
+			{
+				srv->world->params.time_delta = atoi(args[1]);
+				simple_send(srv, c->id, moniteur_sgt(srv->world));
+			}
+			else
+				simple_send(srv, c->id, strdup("sbp\n"));	
+			free(args[0]);
+			free(args[1]);
+			free(args);
+		}
+		else
+			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
 	else if  (!strncmp(buf, "bct", 3))
 	{
-		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf, ' ');
-		simple_send(srv, c->id, moniteur_bct(srv->world, atoi(args[1]), atoi(args[2])));
-		free(args[0]);
-		free(args[1]);
-		free(args[2]);
+		args = split_args(buf, 2);
+		if (args)
+		{
+			arg1 = atoi(args[1]);
+			arg2 = atoi(args[2]);
+			if (arg1 >= 0 && arg2 >= 0 && arg1 < srv->param->world_width && arg2 < srv->param->world_height)
+				simple_send(srv, c->id, moniteur_bct(srv->world, atoi(args[1]), atoi(args[2])));
+			else
+				simple_send(srv, c->id, strdup("sbp\n"));	
+			free(args[0]);
+			free(args[1]);
+			free(args[2]);
+		}
+		else
+			simple_send(srv, c->id, strdup("sbp\n"));	
 		free(args);
 	}
 	else if  (!strncmp(buf, "pin", 3))
 	{
-		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf, ' ');
-		t_client *c = get_client_by_id(srv, atoi(args[1]));
-		simple_send(srv, c->id, moniteur_pin(c));
-		free(args[0]);
-		free(args[1]);
-		free(args);
+		args = split_args(buf, 1);
+		if (args)
+		{
+			arg1 = atoi(args[1]);
+			c = get_client_by_id(srv, arg1);
+			if (arg1 >= 0 && c)
+				simple_send(srv, c->id, moniteur_pin(c));
+			else
+				simple_send(srv, c->id, strdup("sbp\n"));	
+			free(args[0]);
+			free(args[1]);
+			free(args);
+		}
+		else
+			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
 	else if  (!strncmp(buf, "plv", 3))
 	{
-		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf, ' ');
-		t_client *c = get_client_by_id(srv, atoi(args[1]));
-		simple_send(srv, c->id, moniteur_plv(c));
-		free(args[0]);
-		free(args[1]);
-		free(args);
+		args = split_args(buf, 1);
+		if (args)
+		{
+			arg1 = atoi(args[1]);
+			c = get_client_by_id(srv, arg1);
+			if (arg1 >= 0 && c)
+				simple_send(srv, c->id, moniteur_plv(c));
+			else
+				simple_send(srv, c->id, strdup("sbp\n"));
+					free(args[0]);
+			free(args[1]);
+			free(args);
+		}
+		else
+			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
 	else if  (!strncmp(buf, "ppo", 3))
 	{
-		//TODO: CHECK VALIDITY OF ARGS
-		char **args = ft_strsplit(buf, ' ');
-		t_client *c = get_client_by_id(srv, atoi(args[1]));
-		simple_send(srv, c->id, moniteur_ppo(c));
-		free(args[0]);
-		free(args[1]);
-		free(args);
+		args = split_args(buf, 1);
+		if (args)
+		{
+			arg1 = atoi(args[1]);
+			c = get_client_by_id(srv, arg1);
+			if (arg1 >= 0 && c)
+				simple_send(srv, c->id, moniteur_ppo(c));
+			else
+				simple_send(srv, c->id, strdup("sbp\n"));	
+			free(args[0]);
+			free(args[1]);
+			free(args);
+		}
+		else
+			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
 	else
 		simple_send(srv, c->id, ft_strdup("suc\n"));
@@ -84,13 +159,12 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 	c = get_client_by_id(srv, i);
 	if (c->team_name == NULL)
 	{
-		//check team
 		printf("NO TEAM\n");
 		if (!add_to_team(srv, buf, i))
 		{
 			ft_client_exit(srv, i);
 			red();
-			printf("Closing connection to #%d\n", srv->client_sck[i]);
+			printf("%ld: Closing connection to #%d\n", srv->frame_nbr, srv->client_sck[i]);
 			reset();
 		}
 		else if (strcmp(c->team_name, "GRAPHIC"))

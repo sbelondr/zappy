@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/08 08:30:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/08 09:08:56 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,7 +321,7 @@ char	*moniteur_pie(int x, int y, int success)
 //Send msg to all graphic clients connected - free msg afterwards.
 void	send_to_all_moniteur(t_srv *srv, char *msg)
 {
-	t_list *current;
+	t_list		*current;
 	t_client	*c;
 
 	current = srv->world->client_list;
