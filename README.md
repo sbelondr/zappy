@@ -13,7 +13,12 @@
 8. Disconnect it, the server will properly register it
 9. Go back to step 5.
 
+UPDATE:
+It looks like now, even without manual intervention the serveur will start "forgetting" clients. This *may* just be "Livin and Forking" acting up.
+This happens at around ~400 clients. The serveur will only answer correctly to the ~ 15 first clients, and will not talk to the others one besides registering them.
+This may be related to the serveur disconnecting client from time to time.
+
 #Performance
-- Disconnecting clients is relatively slow. May just be the printing.
+- Disconnecting clients is relatively slow. 
 
 [^1]: A variant if you stop the server with a lower amount of players on it is, it will only listen to *one* player and ignore others, *despite them connecting successfully*
