@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/08 08:38:04 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/09 08:54:38 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,32 @@ static void	treat_command(t_srv *srv, t_client *client, int client_id)
 	shift_command(client);
 }
 
+void	egg_tick(t_srv *srv, t_list *egg_list)
+{
+	t_egg	*egg;
+
+	while (egg_list)
+	{
+		egg = egg_list->content;
+		egg_list = egg_list->next;
+		if (egg->maturity > 0)
+			egg->maturity--;
+		if (egg->food == 0 && egg->hunger == 0)
+			rotten_egg(srv, egg);
+		else if (egg->hunger <= 0)
+		{
+			egg->food--;
+			egg->hunger = MAX_HUNGER;
+		}
+		else
+			egg->hunger--;
+	}
+}
+
 void	game_tick(t_srv *srv)
 {
 	t_list		*current;
 	t_client	*client;
-	t_egg		*egg;
 	int			i;
 	int			ret;
 
@@ -63,21 +84,5 @@ void	game_tick(t_srv *srv)
 		current = current->next;
 		++i;
 	}
-	current = srv->world->egg_list;
-	while (current)
-	{
-		egg = current->content;
-		current = current->next;
-		if (egg->maturity > 0)
-			egg->maturity--;
-		if (egg->food == 0 && egg->hunger == 0)
-			rotten_egg(srv, egg);
-		else if (egg->hunger <= 0)
-		{
-			egg->food--;
-			egg->hunger = MAX_HUNGER;
-		}
-		else
-			egg->hunger--;
-	}
+	egg_tick(srv, srv->world->egg_list);
 }
