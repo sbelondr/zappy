@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/06 15:21:29 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/09 08:58:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,12 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	int		*items;
 	int		cnt;
 	int		case_nbr;
-	int nbr = 0;
+	int		nbr = 0;
 	t_vector2	target;
 	t_client *client;
 	t_list *current;
 	(void)srv;
+
 	cnt = 0;
 	case_nbr = 4; //Remplacer par nombre de case vues au lvl du joueur
 	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
@@ -149,9 +150,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	}
 	cnt += case_nbr + 3; //Commas, accolades and \0
 	printf("Estimated size of vision string: %d\n", cnt);
-	const int player_level_demo = 3; //Remplacer par player->lvl quand ça sera prêt
-	int number_of_cases = (1 + ((player_level_demo - 1) * 2 + 1)) / 2 * player_level_demo;
-	ret = ft_strnew(cnt * 2); //nique, on devrait jamais avoir autant besoin de caractères donc pas de segfault
+	ret = ft_strnew(cnt);
 	ret[0] = '{';
 	int offset = 1;
 	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau

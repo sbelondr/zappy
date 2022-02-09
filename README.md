@@ -1,5 +1,5 @@
-##TODO:
-#Sockets
+# TODO:
+## Sockets
 - After disconnecting a lot of clients, the server start acting weird and stop listening to new clients (They can connect, but cannot send/receive much)
 - The server doesn't seem to detect *every* disconnection
 - To reproduce:
@@ -18,7 +18,12 @@ It looks like now, even without manual intervention the serveur will start "forg
 This happens at around ~400 clients. The serveur will only answer correctly to the ~ 15 first clients, and will not talk to the others one besides registering them.
 This may be related to the serveur disconnecting client from time to time.
 
-#Performance
+## Performance
 - Disconnecting clients is relatively slow. 
+- Vision command is heavily optimizable
+- Do not start before using a profiler first
+- We'll do it when everything else is working
 
 [^1]: A variant if you stop the server with a lower amount of players on it is, it will only listen to *one* player and ignore others, *despite them connecting successfully*
+
+*[CTRL+C]: Keyboard Interrupt
