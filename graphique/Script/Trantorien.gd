@@ -21,21 +21,14 @@ func set_trantorien(pteam: String, porientation: int, plevel: int):
 	team = pteam
 	orientation = porientation
 	level = plevel
-
-func _ready():
-	animPlayer.get_animation("WalkCycle").set_loop(true)
-	animPlayer.get_animation("Ritual1").set_loop(true)
-	animPlayer.get_animation("Ritual2").set_loop(true)
-	animPlayer.get_animation("Ritual3").set_loop(true)
-	animPlayer.get_animation("Ritual4").set_loop(true)
-	animPlayer.get_animation("Pose").set_loop(true)
-	current_rotation = rotation.y
-	goal_rotation = current_rotation
-	rotation_progress = 0
-	rotation_speed = 0.1
-	orientation = 0
-	team = ''
-	player_id = ''
+	
+#Much better than using attributes as globals, PLEASE CALL THIS
+func set_level(new_level: int) -> void:
+	level = new_level
+	
+#Much better than using attributes as globals, PLEASE CALL THIS
+func set_inventory(new_inventory: Array) -> void:
+	inventory = new_inventory
 	
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
@@ -51,10 +44,13 @@ func rotation_trantorien(dest: int, speed: float) -> void:
 	rotation_speed = max(speed, 0.001)
 	rotation_progress = 0
 
-func _process(delta: float):
-	if rotation_progress < 1:
-		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
-		rotation_progress += (1 / rotation_speed) * delta
+#Handle fork animation and fade into fork loop, PLEASE CALL THIS
+func fork_start() -> void:
+	animPlayer.play("Ponte")
+
+#Handles animation end, PLEASE CALL THIS
+func fork_end() -> void:
+	animPlayer.play_backwards("Ponte")
 
 #Take an item from the ground (no check done)
 #Handle animation and all, PLEASE CALL THIS
@@ -99,14 +95,30 @@ func dead() -> void:
 func idle() -> void:
 	animPlayer.play("Pose")
 
+func _ready():
+	animPlayer.get_animation("WalkCycle").set_loop(true)
+	animPlayer.get_animation("Ritual1").set_loop(true)
+	animPlayer.get_animation("Ritual2").set_loop(true)
+	animPlayer.get_animation("Ritual3").set_loop(true)
+	animPlayer.get_animation("Ritual4").set_loop(true)
+	animPlayer.get_animation("Pose").set_loop(true)
+	animPlayer.get_animation("Ponte loop").set_loop(true)
+	current_rotation = rotation.y
+	goal_rotation = current_rotation
+	rotation_progress = 0
+	rotation_speed = 0.1
+	orientation = 0
+	team = ''
+	player_id = ''
+	
 #Private function, PLEASE DO *NOT* CALL THIS
-func _death_animation_finished(_animation_name: String) -> void:
-	queue_free()
-	
-#Much better than using attributes as globals, PLEASE CALL THIS
-func set_level(new_level: int) -> void:
-	level = new_level
-	
-#Much better than using attributes as globals, PLEASE CALL THIS
-func set_inventory(new_inventory: Array) -> void:
-	inventory = new_inventory
+func _death_animation_finished(animation_name: String) -> void:
+	if animation_name == "Death":
+		queue_free()
+	elif animation_name == "Ponte":
+		animPlayer.play("Ponte loop")
+
+func _process(delta: float):
+	if rotation_progress < 1:
+		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
+		rotation_progress += (1 / rotation_speed) * delta
