@@ -25,5 +25,3 @@ This may be related to the serveur disconnecting client from time to time.
 - We'll do it when everything else is working
 
 [^1]: A variant if you stop the server with a lower amount of players on it is, it will only listen to *one* player and ignore others, *despite them connecting successfully*
-
-*[CTRL+C]: Keyboard Interrupt
