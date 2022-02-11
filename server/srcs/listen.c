@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/07 08:21:46 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/11 09:52:54 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void ft_listen_srv(t_srv *srv, fd_set *readfds)
 			if ((valread = read(srv->client_sck[i], buff, BUFF_READ)) == 0)
 			{
 				red();
-				printf("%d: Kicking #%d because it errored out?\n", srv->frame_nbr, srv->client_sck[i]);
+				printf("%ld: Kicking #%d because it errored out?\n", srv->frame_nbr, srv->client_sck[i]);
 				reset();
 				ft_client_exit(srv, i);
 			}
