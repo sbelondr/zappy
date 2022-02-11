@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/07 08:40:38 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/11 10:16:23 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void ft_client_exit(t_srv *srv, int i)
 	t_client	*client;
 	t_team		*team;
 
-	/*getpeername(srv->client_sck[i], (struct sockaddr *)&(srv->address), //????? pk tu changes l'addresses du serveur?
-			(socklen_t *)&(srv->addrlen));
-	*/srv->client_sck[i] = 0;
+//	getpeername(srv->client_sck[i], (struct sockaddr *)&(srv->address), //????? pk tu changes l'addresses du serveur?
+//			(socklen_t *)&(srv->addrlen));
+//	dprintf(STDERR_FILENO, "client_sck: %d\n", srv->client_sck[i]);
 	int	mcmp(t_client *a, t_client *b)
 	{
 		return a->id - b->id;
@@ -71,6 +71,7 @@ void ft_client_exit(t_srv *srv, int i)
 	free(client);
 	printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
 	close(srv->client_sck[i]);
+	srv->client_sck[i] = 0;
 }
 
 //returns 0 if no newline, 1 otherwise
