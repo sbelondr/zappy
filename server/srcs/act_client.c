@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/11 10:16:23 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/02/11 12:45:39 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,6 @@ void ft_client_exit(t_srv *srv, int i)
 	t_client	*client;
 	t_team		*team;
 
-//	getpeername(srv->client_sck[i], (struct sockaddr *)&(srv->address), //????? pk tu changes l'addresses du serveur?
-//			(socklen_t *)&(srv->addrlen));
-//	dprintf(STDERR_FILENO, "client_sck: %d\n", srv->client_sck[i]);
 	int	mcmp(t_client *a, t_client *b)
 	{
 		return a->id - b->id;
@@ -87,7 +84,7 @@ static int		delete_newline(char *buf)
 }
 
 
-void ft_client_send_data(t_srv *srv, char *buff, int valread, int i)
+void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 {
 	if (valread < 0)
 		return ;
@@ -98,7 +95,7 @@ void ft_client_send_data(t_srv *srv, char *buff, int valread, int i)
 		exit(1);
 	}
 	green();
-	printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); //...
+	printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
 	ft_lexer(srv, buff, i);
 	reset();
 }
