@@ -17,6 +17,8 @@ var team: String
 onready var animPlayer : AnimationPlayer = get_node("AnimationPlayer")
 onready var tween : Tween = get_node("Tween")
 
+signal selected(player)
+
 func set_trantorien(pteam: String, porientation: int, plevel: int):
 	team = pteam
 	orientation = porientation
@@ -122,3 +124,10 @@ func _process(delta: float):
 	if rotation_progress < 1:
 		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
 		rotation_progress += (1 / rotation_speed) * delta
+
+
+func _on_input_event(camera, event, position, normal, shape_idx):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed:
+			emit_signal("selected", self)
+			print("Selected")
