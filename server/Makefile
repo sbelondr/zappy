@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/02/07 08:17:00 by jayache          ###   ########.fr        #
+#    Updated: 2022/02/09 09:00:53 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,9 +35,9 @@ VPATH = objs:\
 
 CC = gcc
 ifeq ($(DEBUG), yes)
-	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -g3 -fsanitize=address 
+	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -g3 
 else
-	CFLAGS = -Wall -Wextra -Werror
+	CFLAGS = -Wall -Wextra -Werror -O3
 endif
 CPPFLAGS = -I $(INCDIR) -I libft/ #COUCOU samuel ça c'est un peu moche non ???
 #Sam: Oui en effet

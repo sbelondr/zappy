@@ -45,16 +45,17 @@ def main
   data = s.recv(99).split('\n')
   player = Converging.new(s)
   puts data
-    Thread.new do
-      s = TCPSocket.new 'localhost', 8080
-      puts s.recv(99)
-      s.puts ARGV[0] 
-      data = s.recv(99).split('\n')
-      player = Converging.new(s)
-      loop do
-        player.process
-      end
+  test = Thread.new do
+    puts "in thread"
+    ss = TCPSocket.new 'localhost', 8080
+    puts ss.recv(99)
+    ss.puts ARGV[0] 
+    data = ss.recv(99).split('\n')
+    pplayer = Converging.new(ss)
+    loop do
+      pplayer.process
     end
+  end
   loop do
     player.process
   end

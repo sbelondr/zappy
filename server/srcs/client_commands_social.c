@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/06 13:46:13 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/12 14:54:22 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
  * RETURNS:	int	-> The num of the case giving the direction of the ray
  * TODO: Does not take into account the recepter orientation
  */
+
 static int	b_dir(t_world_state *world, t_client *emitter, t_client *recepter)
 {
 	int			diff_x;
@@ -69,29 +70,32 @@ static int	b_dir(t_world_state *world, t_client *emitter, t_client *recepter)
 		diff_x *= -1;
 	if (abs(diff_y) > world->params.world_height / 2)
 		diff_y *= -1;
-	diff_y = emitter->p_y - recepter->p_y;
 	direction = 0;
 	if (diff_x == 0 && diff_y == 0 && emitter->id != recepter->id)
-	{
 		direction = 0;
-	}
 	else if (diff_x == 0 && diff_y < 0)
 		direction = 1;
 	else if (diff_x == 0 && diff_y > 0)
-		direction = 2;
-	else if (diff_x < 0 && diff_y == 0)
-		direction = 3;
-	else if (diff_x > 0 && diff_y == 0)
-		direction = 4;
-	else if (diff_x > 0 && diff_y > 0)
 		direction = 5;
-	else if (diff_x < 0 && diff_y < 0)
+	else if (diff_x < 0 && diff_y == 0)
+		direction = 7;
+	else if (diff_x > 0 && diff_y == 0)
+		direction = 3;
+	else if (diff_x > 0 && diff_y > 0)
 		direction = 6;
 	else if (diff_x < 0 && diff_y < 0)
-		direction = 7;
+		direction = 2;
+	else if (diff_x < 0 && diff_y < 0)
+		direction = 4;
 	else if (diff_x < 0 && diff_y > 0)
 		direction = 8;
-	return (direction);
+	if (recepter->orientation == EAST && direction != 0)
+		direction = (direction + 2) % 8;
+	else if (recepter->orientation == SOUTH && direction != 0)
+		direction = (direction + 4) % 8;
+	else if (recepter->orientation == WEST && direction != 0)
+		direction = (direction + 6) % 8;
+	return (direction % 9);
 }
 
 char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
@@ -107,7 +111,7 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 	while (current)
 	{
 		c = current->content;
-		error = asprintf(&msg, "%d %s\n", b_dir(world, player, c), arg);
+		error = asprintf(&msg, "message %d, %s\n", b_dir(world, player, c), arg);
 		if (error < 0)
 			ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 		if (!ft_strcmp(c->team_name, "GRAPHIC"))
