@@ -19,7 +19,8 @@ func calc_scale(quantity: int):
 #item_id is based off the server's list
 func add_item(item_id: int):
 	var item : Spatial = get_node("Materials/%s" % item_names[item_id])
-	item.scale += Vector3.ONE * 0.01
+	block_content[item_id] += 1
+	item.visible = block_content[item_id] != 0
 	item.scale = calc_scale(block_content[item_id])
 
 #Remove *one* item
@@ -27,6 +28,7 @@ func add_item(item_id: int):
 func remove_item(item_id: int):
 	var item : Spatial = get_node("Materials/%s" % item_names[item_id])
 	block_content[item_id] -= 1
+	item.visible = block_content[item_id] != 0
 	item.scale = calc_scale(block_content[item_id])
 
 #Change the whole inventory, useful during setup / desync
@@ -34,8 +36,10 @@ func remove_item(item_id: int):
 func set_inventory(inventory: Array):
 	block_content = inventory
 	for item_id in len(block_content):
+		get_node("Materials/%s" % item_names[item_id]).visible = block_content[item_id] != 0
 		get_node("Materials/%s" % item_names[item_id]).scale = calc_scale(block_content[item_id])
 	
+	
 func _ready():
-	for child in get_node("Materials").children():
+	for child in get_node("Materials").get_children():
 		child.visible = false
