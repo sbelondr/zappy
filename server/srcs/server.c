@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/05 13:51:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/11 12:41:51 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	ft_arraydel(char ***line)
 
 void ft_quit(int sig)
 {
+	printf("Kill all clients\n");
 	t_srv *srv = *g_srv;
 	int i = -1;
 	int sd;
@@ -42,7 +43,7 @@ void ft_quit(int sig)
 		if (sd > 0)
 		{
 			red();
-			printf("Un client s'est barre sans payer\n");
+			printf("Shutdown client: %d\n", srv->client_sck[i]);
 			reset();
 			shutdown(sd, SHUT_WR);
 			if (close(sd))
@@ -89,22 +90,20 @@ int main(int ac, char **av)
 		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
 		{
 			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
-			if (activity < 0)
+			// activity < 0 -> error socket
+			// activity > 0 -> nouvelle connection est detecte ou nouveau message recu
+			// activity = 0 -> rien ne se passe
+			if (activity > 0) //d'après le man ça arrive tout le temps...
+				// le man a tort regarde le commentaire du haut
 			{
-				//remove_client()
-				;
-				//dprintf(STDERR_FILENO, "select error\n");
-				//exit(1); //TODO: select erreur en boucle, trouver une solution
-			}
-			else if (activity > 0) //d'après le man ça arrive tout le temps...
-			{
-				ft_add_new_client(srv, &readfds); //ALORS PK CA
+				ft_add_new_client(srv, &readfds); //ALORS PK CA // cherche si il a recu une nouvelle connexion
 				ft_listen_srv(srv, &readfds);
 			}
+
 		}
 		timeout = delta_to_time(param.time_delta);
 		game_tick(srv);
 	}
-	free(srv);
+	ft_quit(0);
 	return (EXIT_SUCCESS);
 }
