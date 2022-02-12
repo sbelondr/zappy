@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/08 09:16:30 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:46:38 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
 		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}
+	c->p_x = rand() % srv->param->world_width;
+	c->p_y = rand() % srv->param->world_height;
+	printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
 	return (1);
 }
 
