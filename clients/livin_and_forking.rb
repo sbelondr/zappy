@@ -68,8 +68,17 @@ class Trantorien
     elsif action == "fork"
       reduce_hunger(42)
     end
+    ret = ""
+    begin
     @socket.puts action
-    @socket.recv(999)
+    ret = @socket.recv(999)
+    rescue 
+      puts "Connection to socket got screwed"
+      puts "I don't know what to do...."
+      puts "Goodbye!!!"
+      sleep 10
+    end
+    ret
   end
 
   def reduce_hunger(amount)
