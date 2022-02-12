@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/09 08:54:38 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:41:11 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	egg_tick(t_srv *srv, t_list *egg_list)
 	}
 }
 
-void	game_tick(t_srv *srv)
+void	client_tick(t_srv *srv, t_list *player_list)
 {
 	t_list		*current;
 	t_client	*client;
@@ -57,8 +57,7 @@ void	game_tick(t_srv *srv)
 	int			ret;
 
 	i = 0;
-	srv->frame_nbr += 1;
-	current = srv->world->client_list;
+	current = player_list;
 	while (current)
 	{
 		client = current->content;
@@ -83,6 +82,17 @@ void	game_tick(t_srv *srv)
 		}
 		current = current->next;
 		++i;
+	}
+
+}
+
+void	game_tick(t_srv *srv)
+{
+	srv->frame_nbr += 1;
+	client_tick(srv, srv->world->client_list);
+	if (srv->frame_nbr % 1000 > 0) //TODO: make this a command line parameter
+	{
+		generate_ressource(*srv->world);
 	}
 	egg_tick(srv, srv->world->egg_list);
 }

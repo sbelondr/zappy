@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/08 09:16:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:30:36 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,10 +195,8 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		append_command(c, new_command(COMMAND_INVENTAIRE, NULL, 1));
 	else if (!ft_strncmp(buf, "broadcast", 9))
 	{
-		char **arr = ft_strsplit(buf, ' ');
-		append_command(c, new_command(COMMAND_BROADCAST, arr[1], 7));
-		free(arr[0]);
-		free(arr);
+		char *arg = ft_strdup(buf + strlen("broadcast "));
+		append_command(c, new_command(COMMAND_BROADCAST, arg, 7));
 	}
 	else if (!strncmp(buf, "pose", 4))
 	{

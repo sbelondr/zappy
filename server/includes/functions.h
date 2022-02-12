@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/08 08:32:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:36:40 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int				add_egg_to_team(t_world_state *wld, char *team_name, int egg_id);
 t_team			*get_team_by_name(t_world_state *world, char *team_name);
 void			rotten_egg(t_srv *srv, t_egg *egg);
 int				available_slots(t_srv *srv, t_team *team);
+void			generate_ressource(t_world_state world);
 
 /*
  * GAME
