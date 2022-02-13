@@ -184,8 +184,10 @@ func calc_scale(q: float):
 	return Vector3(q, q, q)
 
 func insert_result_map(vec: Vector3, nb_gems: float, color_gem: int):
-	var scale = calc_scale(nb_gems)
-	map[vec.x][vec.z].gems[color_gem] = [nb_gems, add_block(array_gem[color_gem], vec, scale)]
+#	var scale = calc_scale(nb_gems)
+	for i in int(nb_gems):
+		map[vec.x][vec.z].add_item(color_gem)
+#	map[vec.x][vec.z].gems[color_gem] = [nb_gems, add_block(array_gem[color_gem], vec, scale)]
 
 # add gem when bct is send by the server
 func add_all_gem(arr):
@@ -319,13 +321,14 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				#var obj_player = player[TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
 				player.putdown(color_gem)
-				if color_gem in map[vec_player.x][vec_player.z].gems:
-					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
-					obj[0] += 1
-					var scale = calc_scale(float(obj[0]))
-					obj[1].scale = scale;
-				else:
-					insert_result_map(vec_player, 1, color_gem)
+#				if color_gem in map[vec_player.x][vec_player.z].gems:
+				map[vec_player.x][vec_player.z].add_item(color_gem)
+#					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
+#					obj[0] += 1
+#					var scale = calc_scale(float(obj[0]))
+#					obj[1].scale = scale;
+#				else:
+#					insert_result_map(vec_player, 1, color_gem)
 		# le joueur prend une ressource
 		elif arr[0] == 'pgt':
 			if arr[1] in list_player:
@@ -334,18 +337,21 @@ func _handle_client_data(data: PoolByteArray) -> void:
 				#var obj_player = player[TRANTORIEN.OBJ]
 				var color_gem = int(arr[2])
 				player.putdown(color_gem)
-				if color_gem in map[vec_player.x][vec_player.z].gems:
-					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
-					obj[0] -= 1
-					var scale = calc_scale(float(obj[0]))
-					obj[1].scale = scale;
+#				if color_gem in map[vec_player.x][vec_player.z].gems:
+				map[vec_player.x][vec_player.z].remove_item(color_gem)
+#					var obj = map[vec_player.x][vec_player.z].gems[color_gem]
+#					obj[0] -= 1
+#					var scale = calc_scale(float(obj[0]))
+#					obj[1].scale = scale;
 		# Le joueur pond un œuf.
 		elif arr[0] == 'pfk':
+			list_player[arr[1]].fork_start()
 			# animation
 			pass
 		# loeuf a ete pondu
 		elif arr[0] == 'enw':
 			# enw #e #n X Y
+			list_player[arr[2]].fork_end()
 			# fin animation
 			if arr[2] in list_player:
 				var vec_player =  Vector3(int(arr[3]), 0.5, int(arr[4])) #list_player[arr[2]][TRANTORIEN.VEC]
