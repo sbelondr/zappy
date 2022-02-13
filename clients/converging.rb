@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'socket'
 require "./Trantorien.rb"
 
 if ARGV.empty?
@@ -9,22 +8,22 @@ if ARGV.empty?
 end
 
 class Converging < Trantorien
-  def initialize(socket)
-    super socket
+  def initialize(*args)
+    super
+    @goal = nil
   end
-
-  def process
-    if @food < 126 * 10
-      if not find_food
-        do_action(["avance", "droite"].sample)
-      end
+  def take_decision
+    if not @goal.nil?
+      move_towards(@goal)
+      @goal = find_item("PLAYER")
     else
-      do_action("broadcast I AM FULL")
+      do_action("broadcast #{@self_id}: I AM HERE")
     end
   end
 
   def on_broadcast_received(msg, direction)
-    puts "I received #{msg} from #{direction} !!"
+    puts "#{@self_id}: I received #{msg} from #{direction} !!"
+    @goal = translate_broadcast_to_vector(direction)
   end
 
   def find_food
@@ -37,27 +36,4 @@ class Converging < Trantorien
   end
 end
 
-def main
-  array = ['voir', 'avance', 'droite', 'gauche', 'prendre FOOD', 'poser FOOD', 'fork']
-  s = TCPSocket.new 'localhost', 8080
-  puts s.recv(99)
-  s.puts ARGV[0] 
-  data = s.recv(99).split('\n')
-  player = Converging.new(s)
-  puts data
-  test = Thread.new do
-    puts "in thread"
-    ss = TCPSocket.new 'localhost', 8080
-    puts ss.recv(99)
-    ss.puts ARGV[0] 
-    data = ss.recv(99).split('\n')
-    pplayer = Converging.new(ss)
-    loop do
-      pplayer.process
-    end
-  end
-  loop do
-    player.process
-  end
-end
-main
+main Converging, ARGV[0]
