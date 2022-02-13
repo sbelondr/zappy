@@ -28,13 +28,28 @@ margin_right = 1280.0
 margin_bottom = 720.0
 color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
 
-[node name="lbl_over" type="Label" parent="."]
-margin_top = 150.0
+[node name="lbl_title" type="Label" parent="."]
+margin_top = 71.0
 margin_right = 1280.0
-margin_bottom = 250.0
+margin_bottom = 171.0
+rect_pivot_offset = Vector2( 519, 78 )
 custom_colors/font_color = Color( 0.94902, 0.0313726, 0.0313726, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "Game Over !"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="team_win" type="Label" parent="."]
+margin_top = 177.0
+margin_right = 1280.0
+margin_bottom = 277.0
+rect_pivot_offset = Vector2( 519, 78 )
+custom_colors/font_color = Color( 0.94902, 0.0313726, 0.0313726, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "Machin  win"
 align = 1
 valign = 1
 __meta__ = {
