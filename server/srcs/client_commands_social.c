@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/12 14:54:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/13 14:05:51 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,15 @@
 //TODO: change ft_itoa -- slowest function ever
 char	*connect_nbr(t_srv *srv, t_world_state *world, t_client *player)
 {
-	int	slots = available_slots(srv, get_team_by_name(world, player->team_name));
-	return (ft_itoa(slots));
+	int		slots;
+	int		error;
+	char	*ret;
+
+	slots = available_slots(srv, get_team_by_name(world, player->team_name));
+	error = asprintf(&ret, "%d\n", slots);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
 }
 
 char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
@@ -111,13 +118,16 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 	while (current)
 	{
 		c = current->content;
-		error = asprintf(&msg, "message %d, %s\n", b_dir(world, player, c), arg);
-		if (error < 0)
-			ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
-		if (!ft_strcmp(c->team_name, "GRAPHIC"))
-			simple_send(srv, c->id, moniteur_pbc(player->id, arg));
-		else if (c->id != player->id)
-			simple_send(srv, c->id, msg);
+		if (c->team_name)
+		{
+			error = asprintf(&msg, "message %d, %s\n", b_dir(world, player, c), arg);
+			if (error < 0)
+				ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+			if (!ft_strcmp(c->team_name, "GRAPHIC"))
+				simple_send(srv, c->id, moniteur_pbc(player->id, arg));
+			else if (c->id != player->id)
+				simple_send(srv, c->id, msg);
+		}
 		current = current->next;
 	}
 	return (ft_strdup("OK\n"));

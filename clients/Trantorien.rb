@@ -1,14 +1,32 @@
 # frozen_string_literal: true
 
+require 'socket'
+
 class Trantorien
-  def initialize(socket)
+  def initialize(team_name, ip = "localhost", port = 8080)
+    @team_name = team_name
+    @self_id = rand(100000)
+    @dead = false
     @food = 126 * 10
     @inventory = [0, 0, 0, 0, 0, 0, 0]
-    @socket = socket
+    @socket = TCPSocket.new ip, port 
+    puts "New Trantorien attempting to connect! Received: #{@socket.recv(99)}"
+    @socket.puts @team_name 
+    data = @socket.recv(99).split("\n")
+    puts "Received #{data}"
+    if data[0].to_i == 0
+      @dead = true
+    end
+  end
+
+  def take_decision
+    puts "Override me!"
   end
 
   def process
-    puts "Override me!"
+    if not @dead
+      take_decision
+    end
   end
 
   def pickup(item)
@@ -62,10 +80,8 @@ class Trantorien
       @socket.puts action
       ret = listen
     rescue 
-      puts "Connection to socket got screwed"
-      puts "I don't know what to do...."
-      puts "Goodbye!!!"
-      exit
+      puts "#{@self_id}: Server booted me!!"
+      @dead = true
     end
     ret
   end
@@ -74,10 +90,10 @@ class Trantorien
     answered = false
     response = ""
     while not answered
-      response = @socket.recv(999).chomp
+      response = @socket.gets.chomp
       if response.start_with? "message "
         tmp = response.split ','
-        on_broadcast_received(tmp[1], tmp[0].split(' ')[1])
+        on_broadcast_received(tmp[1], tmp[0].split(' ')[1].to_i)
       else
         answered = true
       end
@@ -123,6 +139,20 @@ class Trantorien
     return [5, 5]
   end
 
+  def translate_broadcast_to_vector(index)
+    return [0, 0] if index == 0
+    return [0, 1] if index == 1
+    return [-1, 1] if index == 2
+    return [-1, 0] if index == 3
+    return [-1, -1] if index == 4
+    return [0, -1] if index == 5
+    return [1, -1] if index == 6
+    return [1, 0] if index == 7
+    return [1, 1] if index == 8
+    puts "ERROR: invalid index: #{index}" 
+    nil
+  end
+
   #Returns coordinates to object if seen, nil otherwise
   def find_item(item)
     vision = []
@@ -134,5 +164,32 @@ class Trantorien
       end
     end
     return nil 
+  end
+  def available_slots
+    do_action("connect_nbr").to_i
+  end
+end
+
+def main(trantorien, team_name)
+  threads = []
+  main_player =  trantorien.new team_name
+  t = Thread.new do
+    loop do
+      main_player.process
+      can_connect = main_player.available_slots
+      (can_connect - 1).times do
+        tmp = Thread.new do
+          pp = trantorien.new team_name
+          loop do
+            pp.process
+          end
+        end
+        threads.push tmp 
+      end
+    end
+  end
+  threads.push t
+  loop do
+    
   end
 end
