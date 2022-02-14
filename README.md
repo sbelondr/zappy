@@ -5,4 +5,38 @@
 - Do not start before using a profiler first
 - We'll do it when everything else is working
 
-[^1]: A variant if you stop the server with a lower amount of players on it is, it will only listen to *one* player and ignore others, *despite them connecting successfully*
+## Client Library
+- Make it a module
+
+##Server
+- Telling clients they are dead *before* kicking them. 
+
+# Client library
+## Functions:
+
+###To override:
+- `take_decision`: Override this to create your client behaviour. Called constantly, does not need to be an infinite loop,
+- `on_broadcast_received(msg, direction)`: Override this. Called when receiving a broadcast
+- `initialize(*args)`: You *can* override this. Call `super` if you do to call parent constructor.
+
+###Action helper
+- `pickup(item)`: Attempts to pickup `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
+- `pose(item)`:  Attempts to pose `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
+- `do_action(action)`: Send `action` to server, and blocks while listening. Returns server answer.
+- `listen`: Blocks while listening to server and returns answer. Only return upon receiving something other than a broadcast.
+- `find_item(item)`: Returns a vector giving the 2D direction towards `item` if found, `nil` otherwise.
+- `move_towards(coordinates)`: Move towards coordinates. Parameter is relative. Does not guarantee final orientation.
+
+###Misc helper
+- `item_name_to_id(item_name)`: Returns the server ID corresponding to a given item name string.
+- `translate_broadcast_to_vector(direction)`: Returns a vector giving the 2D direction towards to given broadcast
+- `translate_vision_to_map(index)`: Returns a vector giving the 2D direction towards a given case from the vision string.
+- `available_slots`: Returns available slots on the server for the team.
+
+###Class var
+- `@team_name`: The team name as given in parameter
+- `@self_id`: a randomly generated ID, going from 0 to 100,000. Not guaranteed to be unique, but close enough.
+- `@dead`: True if there is reason to believe the client is dead. (Such as server saying it so, for example)
+- `@inventory`: Array containing stones. Server order. 
+- `@food`: Hunger/food. Decreased automatically when calling `do_action`.
+- `@socket`: Server socket. Be careful with it.
