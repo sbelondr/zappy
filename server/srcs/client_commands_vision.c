@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/12 10:37:57 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/14 07:56:18 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		}
 		cnt += nbr * strlen(" PLAYER");
 	}
-	cnt += case_nbr + 3; //Commas, accolades and \0
+	cnt += case_nbr + 4; //Commas, accolades and \0
 	printf("Estimated size of vision string: %d\n", cnt);
 	ret = ft_strnew(cnt);
 	ret[0] = '{';
@@ -179,6 +179,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		offset += build_see_part(ret + offset, " PLAYER", nbr);
 		ret[offset++] = ',';
 	}
-	ret[offset - 1] = '}';
+	ret[offset++] = '}';
+	ret[offset++] = '\n';
 	return (ret);
 }
