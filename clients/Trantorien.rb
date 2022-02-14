@@ -34,7 +34,6 @@ class Trantorien
     if ret == "ok"
       if item == "FOOD"
         @food += 126
-        puts "Gained one food !! Current food: #{@food}"
       else
         @inventory[item_name_to_id(item)] += 1
       end
@@ -54,7 +53,7 @@ class Trantorien
         @inventory[item_name_to_id(item)] -= 1
       end
     else
-      puts "Pickup failed for item #{item}!! WHAT DO I DO??!!"
+      puts "Pose failed for item #{item}!! WHAT DO I DO??!!"
     end
   end
 
@@ -79,7 +78,7 @@ class Trantorien
     begin
       @socket.puts action
       ret = listen
-    rescue 
+    rescue Errno::ECONNREFUSED 
       puts "#{@self_id}: Server booted me!!"
       @dead = true
     end
@@ -107,7 +106,6 @@ class Trantorien
 
   def reduce_hunger(amount)
       @food -= amount
-      puts "Getting hungrier ! Current hunger: #{@food}(-#{amount})!"
   end
 
   def move_towards(coordinates)
@@ -157,7 +155,6 @@ class Trantorien
   def find_item(item)
     vision = []
     vision = do_action("voir").split(",")
-    puts "#{vision}"
     vision.each_with_index do |area, index|
       if area.include? item 
         return translate_vision_to_map(index)
@@ -165,6 +162,7 @@ class Trantorien
     end
     return nil 
   end
+
   def available_slots
     do_action("connect_nbr").to_i
   end

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/13 14:05:51 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/14 09:56:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,23 +85,35 @@ static int	b_dir(t_world_state *world, t_client *emitter, t_client *recepter)
 	else if (diff_x == 0 && diff_y > 0)
 		direction = 5;
 	else if (diff_x < 0 && diff_y == 0)
-		direction = 7;
-	else if (diff_x > 0 && diff_y == 0)
 		direction = 3;
+	else if (diff_x > 0 && diff_y == 0)
+		direction = 7;
 	else if (diff_x > 0 && diff_y > 0)
 		direction = 6;
 	else if (diff_x < 0 && diff_y < 0)
 		direction = 2;
-	else if (diff_x < 0 && diff_y < 0)
-		direction = 4;
-	else if (diff_x < 0 && diff_y > 0)
+	else if (diff_x > 0 && diff_y < 0)
 		direction = 8;
+	else if (diff_x < 0 && diff_y > 0)
+		direction = 4;
 	if (recepter->orientation == EAST && direction != 0)
-		direction = (direction + 2) % 8;
+	{
+		direction = (direction + 2);
+		if (direction > 8)
+			direction %= 8;
+	}
 	else if (recepter->orientation == SOUTH && direction != 0)
-		direction = (direction + 4) % 8;
+	{
+		direction = (direction + 4);
+		if (direction > 8)
+			direction %= 8;
+	}
 	else if (recepter->orientation == WEST && direction != 0)
-		direction = (direction + 6) % 8;
+	{
+		direction = (direction + 6);
+		if (direction > 8)
+			direction %= 8;
+	}
 	return (direction % 9);
 }
 

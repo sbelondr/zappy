@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/13 14:47:51 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/14 07:53:51 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	game_tick(t_srv *srv)
 	client_tick(srv, srv->world->client_list);
 	if (srv->frame_nbr % 10000 > 0) //TODO: make this a command line parameter
 	{
-		generate_ressource(*srv->world);
+//		generate_ressource(*srv->world);
 	}
 	egg_tick(srv, srv->world->egg_list);
 }
