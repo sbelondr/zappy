@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/11 12:41:51 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/02/15 10:17:52 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,23 @@ void ft_quit(int sig)
 	exit(sig);
 }
 
+//Returns timeval timeout for select
+struct timeval	time_left(struct timeval limit)
+{
+	struct timeval current;
+	struct timeval ret;
+
+	gettimeofday(&current, NULL);
+	ret.tv_sec = 0;
+	ret.tv_usec = 0;
+	if (timercmp(&current, &limit, >) > 0)
+		return (ret);
+	timersub(&limit, &current, &ret);
+	if (ret.tv_sec > 1000)
+		timerclear(&ret);
+	return (ret);
+}
+
 int main(int ac, char **av)
 {
 	int				max_sd;
@@ -67,8 +84,11 @@ int main(int ac, char **av)
 	fd_set			writefds;
 	t_srv			*srv;
 	struct timeval	timeout;
+	struct timeval	end;
+	struct timeval	tmp;
 	t_world_state	st;
 	t_param			param;
+
 
 	param = parse_input(ac, av);
 	st = init_world(param);
@@ -81,12 +101,16 @@ int main(int ac, char **av)
 	printf("Launch srv\n");
 	reset();
 	timeout = delta_to_time(param.time_delta);
+	gettimeofday(&end, NULL);
 	while (1)
 	{
+		timeradd(&end, &timeout, &tmp);
+		end = tmp;
 		FD_ZERO(&readfds);
 		FD_ZERO(&writefds);
 		FD_SET(srv->master_sck, &readfds);
 		max_sd = ft_set_max_sd(srv, &readfds);
+		timeout = time_left(end);
 		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
 		{
 			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
@@ -99,9 +123,10 @@ int main(int ac, char **av)
 				ft_add_new_client(srv, &readfds); //ALORS PK CA // cherche si il a recu une nouvelle connexion
 				ft_listen_srv(srv, &readfds);
 			}
-
+			timeout = time_left(end);
 		}
 		timeout = delta_to_time(param.time_delta);
+		printf("%ld:TICK!!\n", srv->frame_nbr);
 		game_tick(srv);
 	}
 	ft_quit(0);

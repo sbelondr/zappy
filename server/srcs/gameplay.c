@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2021/10/28 10:26:16 by selver           ###   ########.fr       */
+/*   Updated: 2022/02/15 10:18:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,6 @@ struct timeval	delta_to_time(int delta)
 
 	time = 1.0 / delta;
 	ret.tv_sec = (int)time;
-	ret.tv_usec = (time - ret.tv_sec) * 100000;
+	ret.tv_usec = (time - ret.tv_sec) * 1000000;
 	return (ret);
 }
