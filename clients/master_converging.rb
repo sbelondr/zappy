@@ -10,19 +10,22 @@ end
 class Converging < Trantorien
   def initialize(*args)
     super
-    @goal = nil
+    @goal = [0, 0]
     @found_player = nil
     @king = true 
     @king_id = @self_id.to_i
   end
 
   def take_decision
-    if not @goal.nil? and not @king
+    if not @king
+      if @goal != [0, 0]
       puts "#{@self_id}: MOVING"
+      end
       move_towards @goal
-      @goal = nil
+      @goal = [0, 0]
     else
       do_action("broadcast #{@self_id}: I AM HERE")
+      puts "#{@self_id} sent a broadcast!"
     end
   end
 
