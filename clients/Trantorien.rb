@@ -37,10 +37,10 @@ class Trantorien
       else
         @inventory[item_name_to_id(item)] += 1
       end
-      return true
+      true
     else
       puts "Pickup failed for item #{item}!! WHAT DO I DO??!!"
-      return false
+      false
     end
   end
 
@@ -52,8 +52,10 @@ class Trantorien
       else
         @inventory[item_name_to_id(item)] -= 1
       end
+      true
     else
       puts "Pose failed for item #{item}!! WHAT DO I DO??!!"
+      false
     end
   end
 
@@ -108,8 +110,13 @@ class Trantorien
       @food -= amount
   end
 
+  #TODO: reduce the amount of action to go back
   def move_towards(coordinates)
-    coordinates[1].times do
+    if coordinates[1] < 0
+      do_action "droite"
+      do_action "droite"
+    end
+    coordinates[1].abs.times do
       do_action "avance"
     end
     if (coordinates[0] > 0)
