@@ -15,13 +15,13 @@
 
 ##Graphics
 - When using the graphics, both server and clients slows down massively.
-- Client #0 never moves from its position.
 
 # Client library
 ## Functions:
 
 ###To override:
 - `take_decision`: Override this to create your client behaviour. Called constantly, does not need to be an infinite loop,
+- `starter`: Override this to create your client behaviour. Called once before `take_decision` at the start of the game, then never again.
 - `on_broadcast_received(msg, direction)`: Override this. Called when receiving a broadcast
 - `initialize(*args)`: You *can* override this. Call `super` if you do to call parent constructor.
 
