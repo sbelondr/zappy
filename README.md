@@ -6,10 +6,16 @@
 - We'll do it when everything else is working
 
 ## Client Library
-- Make it a module
+- Handle level up
+- Handle kicking
 
 ##Server
 - Telling clients they are dead *before* kicking them. 
+- Use ~conditional compilation~ to avoid relying on gettimeofday unless it is necessary.
+
+##Graphics
+- When using the graphics, both server and clients slows down massively.
+- Client #0 never moves from its position.
 
 # Client library
 ## Functions:
@@ -23,7 +29,7 @@
 - `pickup(item)`: Attempts to pickup `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
 - `pose(item)`:  Attempts to pose `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
 - `do_action(action)`: Send `action` to server, and blocks while listening. Returns server answer.
-- `listen`: Blocks while listening to server and returns answer. Only return upon receiving something other than a broadcast.
+- `listen(only_one = false)`: Blocks while listening to server and returns answer. Only return upon receiving something other than a broadcast, unless `only_one` is `true`.
 - `find_item(item)`: Returns a vector giving the 2D direction towards `item` if found, `nil` otherwise.
 - `move_towards(coordinates)`: Move towards coordinates. Parameter is relative. Does not guarantee final orientation.
 
@@ -32,6 +38,7 @@
 - `translate_broadcast_to_vector(direction)`: Returns a vector giving the 2D direction towards to given broadcast
 - `translate_vision_to_map(index)`: Returns a vector giving the 2D direction towards a given case from the vision string.
 - `available_slots`: Returns available slots on the server for the team.
+- `dead?`: Returns death status.
 
 ###Class var
 - `@team_name`: The team name as given in parameter
