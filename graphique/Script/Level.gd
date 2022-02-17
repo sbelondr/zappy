@@ -388,3 +388,16 @@ func _handle_client_disconnected() -> void:
 func _handle_client_error() -> void:
 	print("Client error.")
 	_connect_after_timeout(RECONNECT_TIMEOUT)
+
+
+
+
+func _on_Tree_item_selected():
+	var sel : TreeItem = tree.get_selected()
+	var id = sel.get_text(0)
+	if not id in list_player:
+		return
+	for player in list_player:
+		list_player[player].highlight_end()
+	list_player[id].highlight()
+	print(id)

@@ -9,6 +9,7 @@ var rotation_speed : float
 var rotation_progress : float
 
 var speed : float
+var highlighted := false
 
 var player_id: String
 var orientation: int
@@ -127,6 +128,15 @@ func _process(delta: float):
 		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
 		rotation_progress += (1 / rotation_speed) * delta
 
+func highlight():
+	if not highlighted:
+		highlighted = true
+		scale *= 2
+
+func highlight_end():
+	if highlighted:
+		highlighted = false
+		scale /= 2
 
 func _on_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
