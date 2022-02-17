@@ -208,3 +208,4 @@ process_material = SubResource( 14 )
 draw_pass_1 = SubResource( 15 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="item_selected" from="CanvasLayer/Tree" to="." method="_on_Tree_item_selected"]
