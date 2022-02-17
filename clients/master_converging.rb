@@ -2,11 +2,6 @@
 
 require "./Trantorien.rb"
 
-if ARGV.empty?
-  puts "You must pass the team name as first argument"
-  exit 1
-end
-
 class Converging < Client::Trantorien
   def initialize(*args)
     super
@@ -65,4 +60,4 @@ class Converging < Client::Trantorien
   end
 end
 
-Client::main Converging, ARGV[0]
+Client::main Converging

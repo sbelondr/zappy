@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'socket'
+require 'optparse'
 
 module Client
 
@@ -184,16 +185,33 @@ module Client
     end
   end
 
-  def self.main(trantorien, team_name)
+  def self.main(trantorien)
+    options = self.parse
+    p options
     threads = []
-    main_player =  trantorien.new team_name
     loop do
-      tt = trantorien.new team_name
+      tt = trantorien.new options[:team] 
       if not tt.dead?
         threads << Thread.new { loop { tt.process; break if tt.dead? } }
       end
-      sleep 1
+      sleep options[:delay]
     end
     threads.each { |thr| thr.join }
+  end
+
+  def self.parse
+    options = {:delay => 1}
+    OptionParser.new do |parser|
+      parser.banner = "Usage: #{File.basename($0)} -t team [-d delay]"
+
+      parser.on("-t", "--team TEAM", String, "Player team")
+      parser.on("-d", "--delay SECONDS", Integer, "Attempt connecting each SECONDS seconds. Defaults to 1")
+      parser.on("-h", "--help", "Display this help") { puts parser; exit }
+
+    end.parse!(into: options)
+    if options[:team].nil?
+      exit
+    end
+    options 
   end
 end
