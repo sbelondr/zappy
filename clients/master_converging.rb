@@ -7,22 +7,29 @@ if ARGV.empty?
   exit 1
 end
 
-class Converging < Trantorien
+class Converging < Client::Trantorien
   def initialize(*args)
     super
     @goal = [0, 0]
     @found_player = nil
     @king = true 
     @king_id = @self_id.to_i
+    @with_king = true 
   end
 
   def take_decision
     if not @king
-      if @goal != [0, 0]
-      puts "#{@self_id}: MOVING"
+      if @with_king
+        puts "BECAUSE I REACHED MY LISTENING!"
+        listen true
+      else
+        if @goal != [0, 0]
+          move_towards @goal
+          @goal = [0, 0]
+        else
+          listen true
+        end
       end
-      move_towards @goal
-      @goal = [0, 0]
     else
       do_action("broadcast #{@self_id}: I AM HERE")
       puts "#{@self_id} sent a broadcast!"
@@ -36,9 +43,14 @@ class Converging < Trantorien
     if id > @king_id
       @king_id = id
       @king = false
+      @with_king = false
     end
     if id == @king_id
       @goal = translate_broadcast_to_vector direction.to_i
+      if direction == 0
+        puts "CURRENTLY IN PLACE"
+        @with_king = true
+      end
       puts "#{@self_id}: Going towards #{@goal}"
     end
   end
@@ -53,4 +65,4 @@ class Converging < Trantorien
   end
 end
 
-main Converging, ARGV[0]
+Client::main Converging, ARGV[0]
