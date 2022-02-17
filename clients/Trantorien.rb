@@ -30,10 +30,27 @@ module Client
     end
 
     def process
-      if not @dead
+      starter if not @dead
+      while not @dead
         take_decision
-      else
-        puts "i AM dead"
+      end
+    end
+
+    def starter 
+      puts "Override me!"
+    end
+
+    def update_inventory
+      inventory = do_action "inventaire"
+      inventory = inventory.split ","
+      inventory.each do |item|
+          @food = item.split[1].to_i if item.contains? "nourriture"
+          @inventaire[item_name_to_id "phiras"] = item.split[1].to_i if item.contains? "phiras"
+          @inventaire[item_name_to_id "sibur"] = item.split[1].to_i if item.contains? "sibur"
+          @inventaire[item_name_to_id "deraumere"] = item.split[1].to_i if item.contains? "deraumere"
+          @inventaire[item_name_to_id "mendiane"] = item.split[1].to_i if item.contains? "mendiane"
+          @inventaire[item_name_to_id "thystame"] = item.split[1].to_i if item.contains? "thystame"
+          @inventaire[item_name_to_id "linemate"] = item.split[1].to_i if item.contains? "linemate"
       end
     end
 
@@ -192,7 +209,7 @@ module Client
     loop do
       tt = trantorien.new options[:team] 
       if not tt.dead?
-        threads << Thread.new { loop { tt.process; break if tt.dead? } }
+        threads << Thread.new { tt.process } 
       end
       sleep options[:delay]
     end
