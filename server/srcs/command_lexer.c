@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/13 13:49:05 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/17 09:51:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,9 +162,9 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		printf("NO TEAM\n");
 		if (!add_to_team(srv, buf, i))
 		{
+			printf("%ld: Closing connection to #%d\n", srv->frame_nbr, srv->client_sck[i]);
 			ft_client_exit(srv, i);
 			red();
-			printf("%ld: Closing connection to #%d\n", srv->frame_nbr, srv->client_sck[i]);
 			reset();
 		}
 		else if (strcmp(c->team_name, "GRAPHIC"))
