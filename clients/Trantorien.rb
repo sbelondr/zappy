@@ -11,6 +11,7 @@ module Client
       @self_id = rand(100000)
       @dead = false
       @food = 126 * 10
+      @level = 1
       @inventory = [0, 0, 0, 0, 0, 0, 0]
       @socket = TCPSocket.new ip, port 
       @socket.recv(99)
@@ -44,13 +45,13 @@ module Client
       inventory = do_action "inventaire"
       inventory = inventory.split ","
       inventory.each do |item|
-          @food = item.split[1].to_i if item.contains? "nourriture"
-          @inventaire[item_name_to_id "phiras"] = item.split[1].to_i if item.contains? "phiras"
-          @inventaire[item_name_to_id "sibur"] = item.split[1].to_i if item.contains? "sibur"
-          @inventaire[item_name_to_id "deraumere"] = item.split[1].to_i if item.contains? "deraumere"
-          @inventaire[item_name_to_id "mendiane"] = item.split[1].to_i if item.contains? "mendiane"
-          @inventaire[item_name_to_id "thystame"] = item.split[1].to_i if item.contains? "thystame"
-          @inventaire[item_name_to_id "linemate"] = item.split[1].to_i if item.contains? "linemate"
+        @food = item.split[1].to_i if item.contains? "nourriture"
+        @inventaire[item_name_to_id "phiras"] = item.split[1].to_i if item.contains? "phiras"
+        @inventaire[item_name_to_id "sibur"] = item.split[1].to_i if item.contains? "sibur"
+        @inventaire[item_name_to_id "deraumere"] = item.split[1].to_i if item.contains? "deraumere"
+        @inventaire[item_name_to_id "mendiane"] = item.split[1].to_i if item.contains? "mendiane"
+        @inventaire[item_name_to_id "thystame"] = item.split[1].to_i if item.contains? "thystame"
+        @inventaire[item_name_to_id "linemate"] = item.split[1].to_i if item.contains? "linemate"
       end
     end
 
@@ -64,7 +65,6 @@ module Client
         end
         true
       else
-        puts "Pickup failed for item #{item}!! WHAT DO I DO??!!"
         false
       end
     end
@@ -85,6 +85,7 @@ module Client
     end
 
     def item_name_to_id(item_name)
+      item_name = item_name.upcase
       return 0 if item_name == "FOOD"
       return 1 if item_name == "LINEMATE"
       return 2 if item_name == "DERAUMERE"
@@ -117,7 +118,7 @@ module Client
       response = ""
       while not answered
         response = @socket.gets.chomp
-        puts "#{@self_id}: #{response}"
+        #puts "#{@self_id}: #{response}"
         if response.start_with? "message "
           tmp = response.split ','
           on_broadcast_received(tmp[1], tmp[0].split(' ')[1].to_i)
@@ -139,20 +140,24 @@ module Client
 
     #TODO: reduce the amount of action to go back
     def move_towards(coordinates)
-      if coordinates[1] < 0
-        do_action "droite"
-        do_action "droite"
-      end
-      coordinates[1].abs.times do
+      puts "#{@self_id}:Moving to #{coordinates}"
+      coordinates[1].times do
         do_action "avance"
       end
-      if (coordinates[0] > 0)
-        do_action "gauche"
-      elsif (coordinates[0] < 0)
-        do_action "droite"
-      else
-      end
+      turn_to = if (coordinates[0] > 0)
+                  "gauche"
+                elsif (coordinates[0] < 0)
+                  "droite"
+                else
+                  nil
+                end
+      do_action turn_to if not turn_to.nil?
       coordinates[0].abs.times do
+        do_action "avance"
+      end
+      coordinates[1] *= -1
+      do_action turn_to if not turn_to.nil? and coordinates[1] > 0
+      coordinates[1].times do
         do_action "avance"
       end
     end
@@ -195,6 +200,16 @@ module Client
         end
       end
       return nil 
+    end
+
+    def gather_item(item)
+      pos = find_item(item)
+      if not pos.nil?
+        move_towards(pos)
+        return pickup(item)
+      end
+      puts "#{@self_id}:COULD NOT EVEN SEE LINEMATE"
+      false
     end
 
     def available_slots
