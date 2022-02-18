@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 14:44:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/18 11:09:53 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*putdown_item(t_srv *srv, t_world_state *world, t_client *player)
 			send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
 		}
 	}
-	return (ft_strdup(success ? "OK\n" : "KO\n"));
+	return (ft_strdup(success ? "ok\n" : "ko\n"));
 }
 
 char	*pickup_item(t_srv *srv, t_world_state *world, t_client *player)
@@ -104,5 +104,5 @@ char	*pickup_item(t_srv *srv, t_world_state *world, t_client *player)
 			send_to_all_moniteur(srv, moniteur_bct(world, player->p_x, player->p_y));
 		}
 	}
-	return (ft_strdup(success ? "OK\n" : "KO\n"));
+	return (ft_strdup(success ? "ok\n" : "ko\n"));
 }

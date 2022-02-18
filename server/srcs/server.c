@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/15 10:17:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/18 11:05:45 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int main(int ac, char **av)
 		FD_ZERO(&writefds);
 		FD_SET(srv->master_sck, &readfds);
 		max_sd = ft_set_max_sd(srv, &readfds);
-		timeout = time_left(end);
+		//timeout = time_left(end);
 		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
 		{
 			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
@@ -123,7 +123,7 @@ int main(int ac, char **av)
 				ft_add_new_client(srv, &readfds); //ALORS PK CA // cherche si il a recu une nouvelle connexion
 				ft_listen_srv(srv, &readfds);
 			}
-			timeout = time_left(end);
+			//timeout = time_left(end);
 		}
 		timeout = delta_to_time(param.time_delta);
 		printf("%ld:TICK!!\n", srv->frame_nbr);
