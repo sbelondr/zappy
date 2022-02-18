@@ -1,7 +1,28 @@
 extends Spatial
 
 var level := 1
+
+const TextInventory := [
+	"Food",
+	"Linemate",
+	"Deraumere",
+	"Sibur",
+	"Mendiane",
+	"Phiras",
+	"Thystame"
+]
+
 var inventory := [0, 0, 0, 0, 0, 0, 0, 0]
+
+onready var inventory_node := [
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Food'),
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Linemate'),
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Deraumere'),
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Sibur'),
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Mendiane'),
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Phiras'),
+	get_node('NodeHUD/HUDPlayer/ItemContainer/Thystame')
+]
 
 var current_rotation : float
 var goal_rotation : float
@@ -20,18 +41,32 @@ onready var tween : Tween = get_node("Tween")
 
 signal selected(player)
 
+var gem_texture = preload("res://Texture/Gem.tscn");
+
 func set_trantorien(pteam: String, porientation: int, plevel: int):
 	team = pteam
 	orientation = porientation
 	level = plevel
-	
+
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_level(new_level: int) -> void:
 	level = new_level
 	
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_inventory(new_inventory: Array) -> void:
-	inventory = new_inventory
+	print("----------------------- ici ---------------------")
+	print(new_inventory)
+	inventory[0] = int(new_inventory[0])
+	inventory[1] = int(new_inventory[1])
+	inventory[2] = int(new_inventory[2])
+	inventory[3] = int(new_inventory[3])
+	inventory[4] = int(new_inventory[4])
+	inventory[5] = int(new_inventory[5])
+	inventory[6] = int(new_inventory[6])
+#	inventory = new_inventory
+	print(inventory)
+	load_inventory_hud()
+	print("----end----")
 
 # i don't remember but it's interresting
 # fuck you
@@ -77,13 +112,19 @@ func fork_end() -> void:
 #Handle animation and all, PLEASE CALL THIS
 func pickup(item_id: int) -> void:
 	animPlayer.queue("Pickup")
+	print(inventory)
 	inventory[item_id] += 1
+	inventory_node[item_id] = TextInventory[item_id] + ": " + str(inventory[item_id])
 
 #Put an item on the ground (no check done)
 #Handle animation and all, PLEASE CALL THIS
 func putdown(item_id: int) -> void:
 	animPlayer.play_backwards("Pickup")
+	print(inventory)
+	print(item_id)
 	inventory[item_id] -= 1
+	print(TextInventory[item_id] + ": " + str(inventory[item_id]))
+	inventory_node[item_id] = TextInventory[item_id] + ": " + str(inventory[item_id])
 
 #Start ritual animation
 #Play a different animation for each level, PLEASE CALL THIS
@@ -116,6 +157,11 @@ func dead() -> void:
 func idle() -> void:
 	animPlayer.queue("Pose")
 
+func load_inventory_hud():
+	for i in len(inventory_node):
+		print('here')
+		inventory_node[i].text = TextInventory[i] + ": " + str(inventory[i])
+
 func _ready():
 	animPlayer.get_animation("WalkCycle").set_loop(true)
 	animPlayer.get_animation("Ritual1").set_loop(true)
@@ -132,6 +178,9 @@ func _ready():
 	team = ''
 	player_id = ''
 	animPlayer.play("Idle")
+	get_node('NodeHUD/HUDPlayer/ItemContainer').visible = false
+	load_inventory_hud()
+#		NodeHUD/HUDPlayer/ItemContainer/Food
 	
 #Private function, PLEASE DO *NOT* CALL THIS
 func _death_animation_finished(animation_name: String) -> void:
@@ -149,11 +198,14 @@ func highlight():
 	if not highlighted:
 		highlighted = true
 		scale *= 2
+		get_node('NodeHUD/HUDPlayer/ItemContainer').visible = true
+		
 
 func highlight_end():
 	if highlighted:
 		highlighted = false
 		scale /= 2
+		get_node('NodeHUD/HUDPlayer/ItemContainer').visible = false
 
 func _on_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:

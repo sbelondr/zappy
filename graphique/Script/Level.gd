@@ -169,6 +169,7 @@ func command_server(arr):
 		if arr[6] != 'GRAPHIC' and arr[6] != '(null)':
 			add_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]), int(arr[5]), arr[6])
 			$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
+			_client.send_var("pin " + arr[1])
 	# move player
 	elif arr[0] == 'ppo':
 		#"ppo #n X Y O\n"
@@ -214,7 +215,15 @@ func command_server(arr):
 		var obj = list_player[arr[1]]
 		var scale = obj.scale + 0.1
 		obj.scale = scale
-		# le joueur est mort de faim.
+	# inventaire joueur
+	elif arr[0] == 'pin':
+#		pin #n X Y q q q q q q q
+		print(list_player)
+		list_player[arr[1]].set_inventory([arr[4],arr[5],arr[6],arr[7],arr[8],arr[9],arr[10]])
+		print("====================== je suis la  ========================================")
+		print(arr)
+		pass
+	# le joueur est mort de faim.
 	elif arr[0] == 'pdi':
 			die_trantorien(arr[1])
 		# le joueur jette une ressource
@@ -230,7 +239,7 @@ func command_server(arr):
 			var player = list_player[arr[1]]
 			var vec_player = player.translation
 			var color_gem = int(arr[2])
-			player.putdown(color_gem)
+			player.pickup(color_gem)
 			map[vec_player.x][vec_player.z].remove_item(color_gem)
 	# Le joueur pond un œuf.
 	elif arr[0] == 'pfk':
@@ -263,6 +272,8 @@ func command_server(arr):
 	# message serveur
 	elif arr[0] == 'smg':
 		pass
+	else:
+		print(arr)
 
 func _process(delta):
 	if Input.is_action_just_pressed("+"):
@@ -310,9 +321,7 @@ func _handle_client_error() -> void:
 
 
 
-func _on_Tree_item_selected():
-	var sel : TreeItem = tree.get_selected()
-	var id = sel.get_text(0)
+func _on_Tree_item_selected(id):
 	if not id in list_player:
 		return
 	for player in list_player:
