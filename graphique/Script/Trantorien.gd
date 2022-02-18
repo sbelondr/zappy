@@ -32,7 +32,24 @@ func set_level(new_level: int) -> void:
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_inventory(new_inventory: Array) -> void:
 	inventory = new_inventory
-	
+
+# i don't remember but it's interresting
+# fuck you
+func is_interpolate(val: int, new_val: int) -> bool:
+	if val == new_val or val + 1 == new_val or val - 1 == new_val:
+		return true
+	return false
+
+func manage_orientation_trantorien(orientation, time):
+	if (orientation == 1):
+		rotation_trantorien(180, time);
+	elif (orientation == 2):
+		rotation_trantorien(90, time);
+	elif (orientation == 3):
+		rotation_trantorien(0, time);
+	elif (orientation == 4):
+		rotation_trantorien(270, time);
+
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
 func move_trantorien(dest: Vector3, speed: float) -> void:
