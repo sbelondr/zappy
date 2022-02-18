@@ -79,7 +79,6 @@ module Client
         end
         true
       else
-        puts "Pose failed for item #{item}!! WHAT DO I DO??!!"
         false
       end
     end
@@ -113,6 +112,11 @@ module Client
       ret
     end
 
+    def quantity_of(item, vision_string)
+      items = vision_string.split ','
+      items[0].count item
+    end
+
     def listen(only_one = false)
       answered = false
       response = ""
@@ -138,9 +142,7 @@ module Client
       @food -= amount
     end
 
-    #TODO: reduce the amount of action to go back
     def move_towards(coordinates)
-      puts "#{@self_id}:Moving to #{coordinates}"
       coordinates[1].times do
         do_action "avance"
       end
@@ -163,7 +165,6 @@ module Client
     end
 
     def translate_vision_to_map(index)
-      puts "Found something at index #{index}"
       return [0, 0] if index == 0
       return [-1, 1] if index == 1
       return [0, 1] if index == 2
@@ -208,7 +209,6 @@ module Client
         move_towards(pos)
         return pickup(item)
       end
-      puts "#{@self_id}:COULD NOT EVEN SEE LINEMATE"
       false
     end
 

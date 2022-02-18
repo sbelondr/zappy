@@ -7,6 +7,7 @@
 
 ## Client Library
 - Handle level up
+- Handle initial incantation server message in `listen`
 - Handle kicking
 
 ##Server
@@ -32,12 +33,14 @@
 - `listen(only_one = false)`: Blocks while listening to server and returns answer. Only return upon receiving something other than a broadcast, unless `only_one` is `true`.
 - `find_item(item)`: Returns a vector giving the 2D direction towards `item` if found, `nil` otherwise.
 - `move_towards(coordinates)`: Move towards coordinates. Parameter is relative. Does not guarantee final orientation.
+- `gather_item(item)`: Attempt to look up for and pickup an item. Returns true if successfull, false if failed to pickup or find.
 
 ###Misc helper
 - `item_name_to_id(item_name)`: Returns the server ID corresponding to a given item name string.
 - `translate_broadcast_to_vector(direction)`: Returns a vector giving the 2D direction towards to given broadcast
 - `translate_vision_to_map(index)`: Returns a vector giving the 2D direction towards a given case from the vision string.
 - `available_slots`: Returns available slots on the server for the team.
+- `quantity_of(item, vision_string)`: Returns amount of item on the case the client is.
 - `dead?`: Returns death status.
 
 ###Class var
@@ -46,4 +49,5 @@
 - `@dead`: True if there is reason to believe the client is dead. (Such as server saying it so, for example)
 - `@inventory`: Array containing stones. Server order. 
 - `@food`: Hunger/food. Decreased automatically when calling `do_action`.
+- `@level`: Player level.
 - `@socket`: Server socket. Be careful with it.
