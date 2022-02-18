@@ -20,10 +20,8 @@ class Leveler < Client::Trantorien
     gather_item "FOOD"
     if gather_item "LINEMATE"
       do_action "broadcast #{broadcast_prefix}GATHERED LINEMATE"
-      puts "PICKED UP LINEMATE"
       @mode = :converging
     else
-      puts "#{@self_id}: Could not pick up LINEMATE."
       do_action "avance"
     end
   end
@@ -32,7 +30,9 @@ class Leveler < Client::Trantorien
     puts "Currently converging!!"
     if not @king
       if @with_king
-        puts "BECAUSE I REACHED MY GOAL!"
+        if @inventory[1] > 0
+          do_action "pose LINEMATE"
+        end
         listen true
       else
         if @goal != [0, 0]
@@ -44,6 +44,15 @@ class Leveler < Client::Trantorien
       end
     else
       do_action("broadcast #{@self_id}: I AM HERE")
+      if @inventory[1] > 0
+        pose "LINEMATE"
+      else
+        vision = do_action "voir"
+        if quantity_of("PLAYER", vision) > 3 and quantity_of("LINEMATE", vision) > 0
+          puts "INCANTATIIIOOON"
+          do_action "incantation"
+        end
+      end
       puts "#{@self_id} sent a broadcast!"
     end
   end
@@ -77,9 +86,7 @@ class Leveler < Client::Trantorien
         @with_king = true
       end
     end
-    puts ">>>>> #{info[2]}"
     if info[2] == "GATHERED LINEMATE"
-      puts "FOOOUUUND"
       @communal_inventory[1] += 1
       @mode = :converging
     end
