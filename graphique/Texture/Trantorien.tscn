@@ -27,4 +27,54 @@ fov = 61.875
 [node name="CollisionShape" type="CollisionShape" parent="Area" index="0"]
 shape = SubResource( 1 )
 
+[node name="NodeHUD" type="Node2D" parent="." index="7"]
+
+[node name="HUDPlayer" type="CanvasLayer" parent="NodeHUD" index="0"]
+
+[node name="info_player" type="Panel" parent="NodeHUD/HUDPlayer" index="0"]
+margin_left = 734.0
+margin_top = 868.0
+margin_right = 1057.0
+margin_bottom = 1056.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemContainer" type="GridContainer" parent="NodeHUD/HUDPlayer" index="1"]
+margin_left = 1080.0
+margin_top = 842.0
+margin_right = 1482.0
+margin_bottom = 1056.0
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+
+[node name="Food" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="0"]
+margin_bottom = 14.0
+
+[node name="Linemate" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="1"]
+margin_top = 18.0
+margin_bottom = 32.0
+
+[node name="Deraumere" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="2"]
+margin_top = 36.0
+margin_bottom = 50.0
+
+[node name="Sibur" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="3"]
+margin_top = 54.0
+margin_bottom = 68.0
+
+[node name="Mendiane" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="4"]
+margin_top = 72.0
+margin_bottom = 86.0
+
+[node name="Phiras" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="5"]
+margin_top = 90.0
+margin_bottom = 104.0
+
+[node name="Thystame" type="Label" parent="NodeHUD/HUDPlayer/ItemContainer" index="6"]
+margin_top = 108.0
+margin_bottom = 122.0
+
 [connection signal="input_event" from="Area" to="." method="_on_input_event"]
