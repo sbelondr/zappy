@@ -64,6 +64,121 @@ const color: Array = [
 	'white'
 ]
 
+var lastname := [
+	"Dickerson",
+	"Madden",
+	"Ball",
+	"Hahn",
+	"Cole",
+	"Wagner",
+	"Ross",
+	"Peters",
+	"Molina",
+	"Maynard",
+	"Chase",
+	"Randolph",
+	"Henderson",
+	"Meza",
+	"Nicholson",
+	"Morton",
+	"Stevens",
+	"Mcneil",
+	"Duncan",
+	"Barnes",
+	"Guerrero",
+	"Barton",
+	"Deleon",
+	"Robinson",
+	"Hamilton",
+	"Fitzgerald",
+	"Eaton",
+	"Dickson",
+	"Newman",
+	"Macdonald",
+	"Silva",
+	"Hawkins",
+	"Gould",
+	"Adkins",
+	"Elliott",
+	"Ayache",
+	"Belondrade",
+	"Leonard",
+	"Miller",
+	"Taylor",
+	"Key",
+	"Wyatt",
+	"Benjamin",
+	"Wright",
+	"Lewis",
+	"Sanchez",
+	"Waters",
+	"Lang",
+	"Stephens",
+	"Meyer",
+	"Stanton",
+	"Salas"
+]
+
+var firstname := [
+	"Kristopher",
+	"Brice",
+	"Carlton",
+	"Rusty",
+	"Samuel",
+	"Jordan",
+	"Janice",
+	"Jeannine",
+	"Patti",
+	"Agnes",
+	"Hershel",
+	"Corina",
+	"Alvin",
+	"Bettye",
+	"Carrie",
+	"Cyrus",
+	"Cornell",
+	"Zack",
+	"Sanford",
+	"Jasper",
+	"Elmo",
+	"Stacey",
+	"Effie",
+	"Thanh",
+	"Greg",
+	"Fredric",
+	"Carey",
+	"Truman",
+	"Lanny",
+	"Gaylord",
+	"Clifton",
+	"German",
+	"Abel",
+	"Robbie",
+	"Minh",
+	"Lottie",
+	"Sue",
+	"Lorna",
+	"Odessa",
+	"Reyna",
+	"Mauricio",
+	"Vicki",
+	"Norris",
+	"Israel",
+	"Jacques",
+	"Marion",
+	"Toney",
+	"Marisa",
+	"Boyce",
+	"Marcelino",
+	"Lina",
+	"Kevin"
+]
+
+func generate_names():
+	var fname = firstname[randi()%51]
+	var lname = lastname[randi()%51]
+	return fname + " " + lname
+
 # add block
 # Args:
 # 	texture: texture block
@@ -88,15 +203,16 @@ func create_map() -> void:
 #	name: name for Trantorien
 #	vec: Vector to indicate the position of Trantorien
 # add new Trantorien
-func add_trantorien(name: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
+func add_trantorien(id_trantorien: String, vec: Vector3, orientation: int, level: int, teams: String) -> void:
 	var obj = add_block(trantorien, vec, Vector3(0.1, 0.1, 0.1))
-	list_player[name] = obj #[obj, vec, orientation, level, teams]
-	obj.set_trantorien(teams, orientation, level)
+	list_player[id_trantorien] = obj
+	var name = generate_names()
+	obj.set_trantorien(name, id_trantorien, teams, orientation, level)
 	manage_orientation_trantorien(obj, orientation)
 	# add user in HUD
 	if teams in list_team:
 		var subchild1 = tree.create_item(list_team[teams])
-		subchild1.set_text(0, name)
+		subchild1.set_text(0, id_trantorien)
 
 # i don't remember but it's interresting
 # fuck you
@@ -215,18 +331,16 @@ func command_server(arr):
 		var obj = list_player[arr[1]]
 		var scale = obj.scale + 0.1
 		obj.scale = scale
+		obj.set_level(int(arr[2]))
 	# inventaire joueur
 	elif arr[0] == 'pin':
 #		pin #n X Y q q q q q q q
-		print(list_player)
-		list_player[arr[1]].set_inventory([arr[4],arr[5],arr[6],arr[7],arr[8],arr[9],arr[10]])
-		print("====================== je suis la  ========================================")
-		print(arr)
-		pass
+		if arr[1] in list_player:
+			list_player[arr[1]].set_inventory([arr[4],arr[5],arr[6],arr[7],arr[8],arr[9],arr[10]])
 	# le joueur est mort de faim.
 	elif arr[0] == 'pdi':
 			die_trantorien(arr[1])
-		# le joueur jette une ressource
+	# le joueur jette une ressource
 	elif arr[0] == 'pdr':
 		if arr[1] in list_player:
 			var player = list_player[arr[1]]
@@ -273,7 +387,8 @@ func command_server(arr):
 	elif arr[0] == 'smg':
 		pass
 	else:
-		print(arr)
+		if len(arr) > 1:
+			print(arr)
 
 func _process(delta):
 	if Input.is_action_just_pressed("+"):
@@ -284,6 +399,8 @@ func _process(delta):
 		TIME += 0.2
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
+	if Input.is_action_just_pressed("reload"):
+		get_tree().reload_current_scene()
 
 func _ready():
 	# manage connection socket
@@ -318,13 +435,18 @@ func _handle_client_error() -> void:
 	print("Client error.")
 	_connect_after_timeout(RECONNECT_TIMEOUT)
 
-
-
+func _on_Tree_item_deselected(id):
+	for player in list_player:
+		list_player[player].highlight_end()
 
 func _on_Tree_item_selected(id):
 	if not id in list_player:
 		return
+	$Camera.current = false
 	for player in list_player:
-		list_player[player].highlight_end()
-	list_player[id].highlight()
-	print(id)
+		if player != id:
+			list_player[player].highlight_end()
+	var status = list_player[id].highlight()
+	print(status)
+	if not status:
+		$Camera.make_current()
