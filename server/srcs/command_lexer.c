@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/17 09:51:24 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 10:50:44 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 				simple_send(srv, c->id, moniteur_plv(c));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));
-					free(args[0]);
+			free(args[0]);
 			free(args[1]);
 			free(args);
 		}
@@ -152,6 +152,28 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		simple_send(srv, c->id, ft_strdup("suc\n"));
 }
 
+void	command_tester(t_srv *srv, t_client *client, char *buf)
+{
+	
+}
+
+void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
+{
+	printf("NO TEAM\n");
+	if (!add_to_team(srv, buf, i))
+	{
+		red();
+		printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i]);
+		reset();
+		ft_client_exit(srv, i);
+	}
+	else if (strcmp(client->team_name, "GRAPHIC"))
+	{
+		printf("%ld: %s successfully connected \n", srv->frame_nbr, client->team_name);
+		send_to_all_moniteur(srv, moniteur_pnw(client));
+	}
+}
+
 void	ft_lexer(t_srv *srv, char *buf, int i)
 {
 	t_client	*c;
@@ -159,19 +181,7 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 	c = get_client_by_id(srv, i);
 	if (c->team_name == NULL)
 	{
-		printf("NO TEAM\n");
-		if (!add_to_team(srv, buf, i))
-		{
-			printf("%ld: Closing connection to #%d\n", srv->frame_nbr, srv->client_sck[i]);
-			ft_client_exit(srv, i);
-			red();
-			reset();
-		}
-		else if (strcmp(c->team_name, "GRAPHIC"))
-		{
-			printf("%ld: %s successfully connected \n", srv->frame_nbr, c->team_name);
-			send_to_all_moniteur(srv, moniteur_pnw(c));
-		}
+		connect_client(srv, buf, c, i);
 	}
 	else if (!strcmp(c->team_name, "MONITEUR"))
 		parse_command_moniteur(srv, c, buf);

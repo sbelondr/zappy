@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/11 12:45:39 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/02/19 09:16:52 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,9 @@ void ft_client_exit(t_srv *srv, int i)
 	t_client	*client;
 	t_team		*team;
 
-	int	mcmp(t_client *a, t_client *b)
-	{
-		return a->id - b->id;
-	}
+	int	mcmp(t_client *a, t_client *b) { return a->id - b->id; }
 	void	mdel(t_client *a) { (void)a; }
+
 	client = get_client_by_id(srv, i);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
 	if (client->team_name && ft_strcmp(client->team_name, "GRAPHIC"))
@@ -58,11 +56,7 @@ void ft_client_exit(t_srv *srv, int i)
 		team = get_team_by_name(srv->world, client->team_name);
 		ft_lstdelbyval(&team->team_clients, client, mcmp, mdel);
 	}
-	for (int i = 0; i < 10; ++i)
-	{
-		if (client->buffer[i].arg)
-			free(client->buffer[i].arg);
-	}
+	clear_commands(client);
 	if (client->team_name && strcmp(client->team_name, "GRAPHIC"))
 		free(client->team_name);
 	free(client);

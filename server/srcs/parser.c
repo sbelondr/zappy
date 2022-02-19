@@ -6,22 +6,23 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 13:44:40 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 10:18:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "struct.h"
+#include "functions.h"
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 t_world_state init_world(t_param params);
 
 void	usage(void)
 {
-	printf("Usage: ./serveur -p <port> -x <width> -y <height> -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n");
-	printf("-p numero de port\n-x largeur du Monden\n-y hauteur du Monde\n-n nom_equipe_1 nom_equipe_2 ...\n");
-	printf("-c nombre de client autorises au commencement du jeu\n-t diviseur de l'unite de temps (plus t est grand, plus le jeu va vite)\n");
+	printf(USAGE);
 	exit(1);
 }
 
@@ -51,7 +52,12 @@ long	get_numeric_parameter(char *numstr, int min, int max)
 
 int		is_input_complete(t_param param)
 {
-	if (!param.port || !param.world_width || !param.world_height)
+	if (!param.port)
+	{
+		printf("Missing port\n");
+		usage();
+	}
+	if (!param.world_width || !param.world_height)
 	{
 		printf("Missing parameters\n");
 		usage();
@@ -61,7 +67,7 @@ int		is_input_complete(t_param param)
 		printf("Missing parameters\n");
 		usage();
 	}
-	if (!param.team_list || !param.team_list->next)
+	if (!param.team_list)
 	{
 		printf("Missing parameters\n");
 		usage();
@@ -84,11 +90,18 @@ t_param	parse_input(int ac, char **av)
 	t_param param;
 
 	bzero(&param, sizeof(t_param));
+	param.team_hard_limit = 500;
+	param.generate_function = generate_ressource_standard;
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
 	{
-		if (i + 1 >= ac)
+		if (!strcmp(av[i], "-v"))
+			param.flags |= FLAG_TESTER;
+		else if (!strcmp(av[i], "-h"))
+			usage();
+		else if (i + 1 >= ac)
 		{
 			printf("Error: unexpected end of argument: %s\n", av[i]);
+			usage();
 			exit(1);
 		}
 		if (!strcmp(av[i], "-t"))
@@ -107,13 +120,31 @@ t_param	parse_input(int ac, char **av)
 		{
 			param.allowed_clients_amount = get_numeric_parameter(av[++i], 1, 150);
 		}
+		else if (!strcmp(av[i], "-m"))
+		{
+			param.team_hard_limit = get_numeric_parameter(av[++i], 1, 1000);
+		}
 		else if (!strcmp(av[i], "-n"))
 		{
-			t_team tmp = new_team(av[++i]);
-			ft_lstadd(&param.team_list, ft_lstnew(&tmp, sizeof(t_team)));
+			do
+			{
+				t_team tmp = new_team(av[++i]);
+				ft_lstadd(&param.team_list, ft_lstnew(&tmp, sizeof(t_team)));
+			} while (ac > i + 1 && av[i + 1][0] != '-');
+		}
+		else if (!strcmp(av[i], "-g"))
+		{
+			++i;
+			if (!strcmp(av[i], "STANDARD")) {
+				param.generate_function = generate_ressource_standard;
+			}
+			else if (!strcmp(av[i], "UNIFORM")) {
+				param.generate_function = generate_ressource_uniform;
+			}
+			else
+				usage();
 		}
 	}
 	is_input_complete(param);
-	param.team_hard_limit = 500; //TODO: give command line option
 	return (param);
 }

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/12 10:46:38 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 11:04:01 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,11 +160,16 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 	t_team		*team;
 
 	c = get_client_by_id(srv, id);
-	if (!ft_strcmp(team_name, "GRAPHIC"))
+	if (!ft_strcmp(team_name, GRAPHIC_TEAM))
 	{
 		welcome_moniteur(srv, id);
 		return (1);
 	}	
+	else if (!ft_strcmp(team_name, TESTER_TEAM) && srv->param.flags & FLAG_TESTER)
+	{
+		//send welcome tester
+		return (1);
+	}
 	current = srv->param->team_list;
 	while (current)
 	{

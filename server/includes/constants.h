@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/02/04 09:24:09 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 10:41:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,20 @@
 #define ERROR_CLIENT_EXIT	"Le client %d s'est barré sans payer\n"
 
 #define MAX_HUNGER			126;
+
+#define GRAPHIC_TEAM		"GRAPHIC"
+#define TESTER_TEAM			"TESTER"
+
+#define USAGE	"Usage: ./serveur -p <port> -x <width> -y <height> -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n" \
+	"-p numero de port\n" \
+	"-x largeur du Monden\n"\
+	"-y hauteur du Monde\n"\
+	"-n nom_equipe_1 nom_equipe_2 ...\n"\
+	"-c nombre de client autorises au commencement du jeu\n-t diviseur de l'unite de temps (plus t est grand, plus le jeu va vite)\n"\
+	"-m nombre maximum de clients par equipe (300 par defaut)\n" \
+	"-h affiche l'usage\n"
+
+#define FLAG_TESTER			1
 
 typedef enum	e_ressources {
 	FOOD,
@@ -56,5 +70,7 @@ typedef enum	e_orientation
 	WEST
 }				t_orientation;
 
+struct	s_world_state;
+typedef void	(*t_generate)(struct s_world_state);
 
 #endif
