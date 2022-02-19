@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/12 10:36:40 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 10:25:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ char			*connect_nbr(t_srv *srv, t_world_state *world, t_client *player);
 
 void			append_command(t_client *client, t_command to_append);
 void			shift_command(t_client *client);
+void			clear_commands(t_client *client);
 t_command		new_command(t_command_type command, char *arg, int cooldown);
 t_game_action	get_action_from_enum(t_command_type command);
 void			simple_send(t_srv *srv, int id, char *msg);
@@ -58,7 +59,6 @@ int				add_egg_to_team(t_world_state *wld, char *team_name, int egg_id);
 t_team			*get_team_by_name(t_world_state *world, char *team_name);
 void			rotten_egg(t_srv *srv, t_egg *egg);
 int				available_slots(t_srv *srv, t_team *team);
-void			generate_ressource(t_world_state world);
 
 /*
  * GAME
@@ -66,6 +66,13 @@ void			generate_ressource(t_world_state world);
 
 void			game_tick(t_srv *srv);
 void			ft_lexer(t_srv *srv, char *buf, int i);
+
+/*
+ * RESSOURCE GENERATION
+ */
+
+void			generate_ressource_standard(t_world_state world);
+void			generate_ressource_uniform(t_world_state world);
 
 /*
  * MONITEUR
