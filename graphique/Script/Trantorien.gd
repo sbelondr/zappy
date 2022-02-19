@@ -12,17 +12,19 @@ const TextInventory := [
 	"Thystame"
 ]
 
-var inventory := [0, 0, 0, 0, 0, 0, 0, 0]
+var inventory: Array = [0, 0, 0, 0, 0, 0, 0]
 
 onready var inventory_node := [
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Food'),
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Linemate'),
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Deraumere'),
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Sibur'),
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Mendiane'),
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Phiras'),
-	get_node('NodeHUD/HUDPlayer/ItemContainer/Thystame')
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Food'),
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Linemate'),
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Deraumere'),
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Sibur'),
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Mendiane'),
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Phiras'),
+	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Thystame')
 ]
+
+onready var camera_trantorien = $Camera #get_node("Control/ViewportContainer/Viewport/Camera")
 
 var current_rotation : float
 var goal_rotation : float
@@ -30,9 +32,9 @@ var rotation_speed : float
 var rotation_progress : float
 
 var speed : float
-var highlighted := false
-
+var highlighted: bool
 var player_id: String
+var player_name: String
 var orientation: int
 var team: String
 
@@ -43,15 +45,23 @@ signal selected(player)
 
 var gem_texture = preload("res://Texture/Gem.tscn");
 
-func set_trantorien(pteam: String, porientation: int, plevel: int):
+func set_trantorien(pname: String, pid, pteam: String, porientation: int, plevel: int):
+	player_name = pname
+	player_id = pid
 	team = pteam
 	orientation = porientation
-	level = plevel
+	set_level(plevel)
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_id").text = "Num: " + pid
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_name").text = "Name: " + pname
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_team").text = "Team: " + pteam
+	
 
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_level(new_level: int) -> void:
 	level = new_level
-	
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_level").text = "Level: " + str(new_level)
+	get_node("NodeHUD/HUDPlayer/info_player/pb_level").value = new_level
+
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_inventory(new_inventory: Array) -> void:
 	print("----------------------- ici ---------------------")
@@ -112,9 +122,10 @@ func fork_end() -> void:
 #Handle animation and all, PLEASE CALL THIS
 func pickup(item_id: int) -> void:
 	animPlayer.queue("Pickup")
+	print("item_id: %d" % item_id )
 	print(inventory)
 	inventory[item_id] += 1
-	inventory_node[item_id] = TextInventory[item_id] + ": " + str(inventory[item_id])
+	inventory_node[item_id].text = TextInventory[item_id] + ": " + str(inventory[item_id])
 
 #Put an item on the ground (no check done)
 #Handle animation and all, PLEASE CALL THIS
@@ -124,7 +135,7 @@ func putdown(item_id: int) -> void:
 	print(item_id)
 	inventory[item_id] -= 1
 	print(TextInventory[item_id] + ": " + str(inventory[item_id]))
-	inventory_node[item_id] = TextInventory[item_id] + ": " + str(inventory[item_id])
+	inventory_node[item_id].text = TextInventory[item_id] + ": " + str(inventory[item_id])
 
 #Start ritual animation
 #Play a different animation for each level, PLEASE CALL THIS
@@ -177,10 +188,12 @@ func _ready():
 	orientation = 0
 	team = ''
 	player_id = ''
+	highlighted = false
 	animPlayer.play("Idle")
-	get_node('NodeHUD/HUDPlayer/ItemContainer').visible = false
+#	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire').visible = false
+	get_node("NodeHUD/HUDPlayer/info_player").visible = false
 	load_inventory_hud()
-#		NodeHUD/HUDPlayer/ItemContainer/Food
+#		NodeHUD/HUDPlayer/GC_inventaire/Food
 	
 #Private function, PLEASE DO *NOT* CALL THIS
 func _death_animation_finished(animation_name: String) -> void:
@@ -195,20 +208,32 @@ func _process(delta: float):
 		rotation_progress += (1 / rotation_speed) * delta
 
 func highlight():
+	print("highlight")
+	print(highlighted)
 	if not highlighted:
 		highlighted = true
+		print("coucou")
 		scale *= 2
-		get_node('NodeHUD/HUDPlayer/ItemContainer').visible = true
-		
+		camera_trantorien.visible = true
+		camera_trantorien.make_current()
+#		get_node("NodeHUD/HUDPlayer/info_player").visible = true
+		return true
+	else:
+		print('here')
+		highlight_end()
+		return false
 
 func highlight_end():
 	if highlighted:
+		print("Trantorien id - %s" % player_id)
 		highlighted = false
 		scale /= 2
-		get_node('NodeHUD/HUDPlayer/ItemContainer').visible = false
+		camera_trantorien.current = false
+#		get_node('NodeHUD/HUDPlayer/GC_inventaire').visible = false
+		get_node("NodeHUD/HUDPlayer/info_player").visible = false
 
 func _on_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed:
+		if event.button_index == BUTTON_LEFT:# and event.pressed:
 			emit_signal("selected", self)
 			print("Selected")
