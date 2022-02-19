@@ -126,6 +126,12 @@ module Client
         if response.start_with? "message "
           tmp = response.split ','
           on_broadcast_received(tmp[1], tmp[0].split(' ')[1].to_i)
+        elsif response.start_with? "elevation en cours"
+          on_ritual_started
+        elsif response.start_with? "niveau_actual :"
+          on_ritual_completed response.split(':')[1].to_i
+          @level += 1
+          answered = true
         else
           answered = true
         end
@@ -134,8 +140,16 @@ module Client
       response
     end
 
+    def on_ritual_started
+      puts "#{@self_id}:Started ritual!!"
+    end
+
+    def on_ritual_completed(new_level)
+      puts "#{@self_id}:I am now level #{new_level}!"
+    end
+
     def on_broadcast_received(msg, direction)
-      puts "I received #{msg} from #{direction} !!"
+      puts "#{@self_id}: I received #{msg} from #{direction} !!"
     end
 
     def reduce_hunger(amount)

@@ -48,8 +48,8 @@ class Leveler < Client::Trantorien
         pose "LINEMATE"
       else
         vision = do_action "voir"
-        if quantity_of("PLAYER", vision) > 3 and quantity_of("LINEMATE", vision) > 0
-          puts "INCANTATIIIOOON"
+        if quantity_of("PLAYER", vision) > 5 and quantity_of("LINEMATE", vision) > 0
+          puts "#{@self_id}: Starting incantation !!"
           do_action "incantation"
         end
       end
