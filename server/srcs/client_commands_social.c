@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/14 09:56:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 08:53:22 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,18 @@ static int	is_enough_for_ritual(int level, int players, int *objs)
 	else if (level == 2 && players >= 2 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 && objs[SIBUR] >= 1)
 		return (1);
 	else if (level == 3 && players >= 2 && objs[LINEMATE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1)
+		return (1);
+	else if (level == 4 && players >= 4 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 
+			&& objs[SIBUR] >= 2 && objs[PHIRAS] >= 1 && objs[SIBUR] >= 1 )
+		return (1);
+	else if (level == 5 && players >= 4 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 2 
+			&& objs[SIBUR] >= 1 && objs[LAMENDIANE] >= 3 && objs[SIBUR] >= 1 )
+		return (1);
+	else if (level == 6 && players >= 6 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 2 
+			&& objs[SIBUR] >= 3 && objs[PHIRAS] >= 1 && objs[SIBUR] >= 1 )
+		return (1);
+	else if (level == 7 && players >= 6 && objs[LINEMATE] >= 2 && objs[DERAUMERE] >= 2 
+			&& objs[SIBUR] >= 2 && objs[LAMENDIANE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1 && objs[THYSTAME] >= 1)
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/18 10:41:15 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 09:23:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,21 @@ void	egg_tick(t_srv *srv, t_list *egg_list)
 	}
 }
 
+void	setup_ritual_client(t_srv *srv, t_client *client, t_client *client_bis)
+{
+	int	ret;
+
+	if (client_bis->p_x == client->p_x && client_bis->p_y == client->p_y && client->lvl == client_bis->lvl)
+	{
+		printf("[%d] <- %s\n", srv->client_sck[client_bis->id], "elevation en cours\n");
+		if (client_bis->buffer[0].command != COMMAND_INCANTATION)
+			client_bis->in_incantation = 1;
+		ret = send(srv->client_sck[client_bis->id], "elevation en cours\n", 19, MSG_DONTWAIT);
+		if (ret != 19)
+			printf("ERROR!! send n'a pas tout envoyé");
+	}
+}
+
 void	client_tick(t_srv *srv, t_list *player_list)
 {
 	t_list		*current;
@@ -63,10 +78,10 @@ void	client_tick(t_srv *srv, t_list *player_list)
 		client = current->content;
 		if (client->buffer[0].command == COMMAND_INCANTATION && client->buffer[0].cooldown == 300)
 		{
-			printf("[%d] <- %s\n", i, "elevation en cours\n");
-			ret = send(srv->client_sck[i], "elevation en cours\n", 19, MSG_DONTWAIT);
-			if (ret != 19)
-				printf("ERROR!! send n'a pas tout envoyé");
+			for (t_list *cc = player_list; cc; cc = cc->next)
+			{
+				setup_ritual_client(srv, client, cc->content);
+			}
 			send_to_all_moniteur(srv, moniteur_pic(srv->world, client));
 		}
 		else if (client->buffer[0].command == COMMAND_FORK && client->buffer[0].cooldown == 42)
@@ -92,7 +107,7 @@ void	game_tick(t_srv *srv)
 	client_tick(srv, srv->world->client_list);
 	if (srv->frame_nbr % 10000 > 0) //TODO: make this a command line parameter
 	{
-//		generate_ressource(*srv->world);
+		//		generate_ressource(*srv->world);
 	}
 	egg_tick(srv, srv->world->egg_list);
 }

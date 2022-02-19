@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/02/12 10:38:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 10:16:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ typedef struct	s_command
 typedef struct	s_client
 {
 	t_command		buffer[10];
-	char				lvl;
+	char			lvl;
+	char			in_incantation;
 	int				life;
 	int				p_x;
 	int				p_y;
@@ -78,6 +79,7 @@ typedef struct	s_param
 	int			time_delta;
 	int			allowed_clients_amount;
 	int			team_hard_limit;
+	t_generate	generate_function;
 	t_list		*team_list;	
 }				t_param;
 
@@ -100,6 +102,6 @@ typedef struct	s_srv
 	uint64_t				frame_nbr;
 }				t_srv;
 
-typedef char* (*t_game_action)(t_srv*, t_world_state*, t_client*);
+typedef char*	(*t_game_action)(t_srv*, t_world_state*, t_client*);
 
 #endif
