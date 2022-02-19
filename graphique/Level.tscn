@@ -67,4 +67,4 @@ draw_pass_1 = SubResource( 15 )
 visible = false
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
-[connection signal="item_selected" from="CanvasLayer/Tree" to="." method="_on_Tree_item_selected"]
+[connection signal="player_selected" from="HUD" to="." method="_on_Tree_item_selected"]
