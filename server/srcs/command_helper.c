@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:02:30 by selver            #+#    #+#             */
-/*   Updated: 2022/01/11 09:32:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 09:16:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,14 @@ void	shift_command(t_client *client)
 		free(client->buffer[0].arg);
 	ft_memcpy(client->buffer, client->buffer + 1, sizeof(t_command) * 9);
 	client->buffer[9] = new_command(COMMAND_NONE, NULL, 0);
+}
+
+void clear_commands(t_client *client)
+{
+	for (int i = 0; i < 10; ++i)
+	{
+		if (client->buffer[i].arg)
+			free(client->buffer[i].arg);
+		client->buffer[i].arg = NULL;
+	}
 }
