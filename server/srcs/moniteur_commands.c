@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/08 09:08:56 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/19 08:52:43 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,8 +228,8 @@ char	*moniteur_pin(t_client *client)
 
 	inv = client->ressource;
 	error = asprintf(&ret, "pin #%d %d %d %d %d %d %d %d %d %d\n", 
-			client->id, client->p_x, client->p_y, inv[0], inv[1], inv[2],
-			inv[3], inv[4], inv[5], inv[6]);
+			client->id, client->p_x, client->p_y, inv[FOOD], inv[SIBUR], inv[PHIRAS],
+			inv[LINEMATE], inv[THYSTAME], inv[LAMENDIANE], inv[DERAUMERE]);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
