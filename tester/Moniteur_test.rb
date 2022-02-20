@@ -20,7 +20,9 @@ class MoniteurCommandTester < Test::Unit::TestCase
 
   def teardown
     @tester.puts "set pdi #1"
+    puts "set pdi #1"
     @tester.gets
+    puts "set pdi #0"
     @tester.puts "set pdi #0"
   end
 
@@ -39,12 +41,18 @@ class MoniteurCommandTester < Test::Unit::TestCase
 
   def test_pin_simple
     @tester.puts "set pin #1 clear"
+    assert_equal "ok\n", @tester.gets
     @tester.puts "get pin #1"
-    @tester.puts "get ppo #1"
-    assert_equal @tester.gets, "ok\n"
     inv = @tester.gets
+    @tester.puts "get ppo #1"
     pos = @tester.gets.chomp.split
-    assert_equal inv, "pin #1 #{pos[2]} #{pos[3]} 0 0 0 0 0 0 0\n"
+    assert_equal "pin #1 #{pos[2]} #{pos[3]} 0 0 0 0 0 0 0\n", inv
+
+    @tester.puts "set pin #1 1 2 3 4 5 6 7"
+    assert_equal @tester.gets, "ok\n"
+    @tester.puts "get pin #1"
+    inv = @tester.gets
+    assert_equal "pin #1 #{pos[2]} #{pos[3]} 1 2 3 4 5 6 7\n", inv
   end
 
 end
