@@ -1,16 +1,6 @@
 extends Spatial
 
-var level := 1
-
-const TextInventory := [
-	"Food",
-	"Linemate",
-	"Deraumere",
-	"Sibur",
-	"Mendiane",
-	"Phiras",
-	"Thystame"
-]
+var level: int = 1
 
 var inventory: Array = [0, 0, 0, 0, 0, 0, 0]
 
@@ -51,21 +41,19 @@ func set_trantorien(pname: String, pid, pteam: String, porientation: int, plevel
 	team = pteam
 	orientation = porientation
 	set_level(plevel)
-	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_id").text = "Num: " + pid
-	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_name").text = "Name: " + pname
-	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_team").text = "Team: " + pteam
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_id").text = pid
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_name").text = pname
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_team").text = pteam
 	
 
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_level(new_level: int) -> void:
 	level = new_level
-	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_level").text = "Level: " + str(new_level)
+	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_level").text = str(new_level)
 	get_node("NodeHUD/HUDPlayer/info_player/pb_level").value = new_level
 
 #Much better than using attributes as globals, PLEASE CALL THIS
 func set_inventory(new_inventory: Array) -> void:
-	print("----------------------- ici ---------------------")
-	print(new_inventory)
 	inventory[0] = int(new_inventory[0])
 	inventory[1] = int(new_inventory[1])
 	inventory[2] = int(new_inventory[2])
@@ -74,9 +62,7 @@ func set_inventory(new_inventory: Array) -> void:
 	inventory[5] = int(new_inventory[5])
 	inventory[6] = int(new_inventory[6])
 #	inventory = new_inventory
-	print(inventory)
 	load_inventory_hud()
-	print("----end----")
 
 # i don't remember but it's interresting
 # fuck you
@@ -85,7 +71,7 @@ func is_interpolate(val: int, new_val: int) -> bool:
 		return true
 	return false
 
-func manage_orientation_trantorien(orientation, time):
+func manage_orientation_trantorien(orientation: int, time: int):
 	if (orientation == 1):
 		rotation_trantorien(180, time);
 	elif (orientation == 2):
@@ -111,7 +97,6 @@ func rotation_trantorien(dest: int, speed: float) -> void:
 
 #Handle fork animation and fade into fork loop, PLEASE CALL THIS
 func fork_start() -> void:
-	print("IL se fout de ma gueule")
 	animPlayer.queue("Ponte")
 
 #Handles animation end, PLEASE CALL THIS
@@ -122,20 +107,15 @@ func fork_end() -> void:
 #Handle animation and all, PLEASE CALL THIS
 func pickup(item_id: int) -> void:
 	animPlayer.queue("Pickup")
-	print("item_id: %d" % item_id )
-	print(inventory)
 	inventory[item_id] += 1
-	inventory_node[item_id].text = TextInventory[item_id] + ": " + str(inventory[item_id])
+	inventory_node[item_id].text = str(inventory[item_id])
 
 #Put an item on the ground (no check done)
 #Handle animation and all, PLEASE CALL THIS
 func putdown(item_id: int) -> void:
 	animPlayer.play_backwards("Pickup")
-	print(inventory)
-	print(item_id)
 	inventory[item_id] -= 1
-	print(TextInventory[item_id] + ": " + str(inventory[item_id]))
-	inventory_node[item_id].text = TextInventory[item_id] + ": " + str(inventory[item_id])
+	inventory_node[item_id].text = str(inventory[item_id])
 
 #Start ritual animation
 #Play a different animation for each level, PLEASE CALL THIS
@@ -170,8 +150,7 @@ func idle() -> void:
 
 func load_inventory_hud():
 	for i in len(inventory_node):
-		print('here')
-		inventory_node[i].text = TextInventory[i] + ": " + str(inventory[i])
+		inventory_node[i].text = str(inventory[i])
 
 func _ready():
 	animPlayer.get_animation("WalkCycle").set_loop(true)
@@ -208,24 +187,19 @@ func _process(delta: float):
 		rotation_progress += (1 / rotation_speed) * delta
 
 func highlight():
-	print("highlight")
-	print(highlighted)
 	if not highlighted:
 		highlighted = true
-		print("coucou")
 		scale *= 2
 		camera_trantorien.visible = true
 		camera_trantorien.make_current()
-#		get_node("NodeHUD/HUDPlayer/info_player").visible = true
+		get_node("NodeHUD/HUDPlayer/info_player").visible = true
 		return true
 	else:
-		print('here')
 		highlight_end()
 		return false
 
 func highlight_end():
 	if highlighted:
-		print("Trantorien id - %s" % player_id)
 		highlighted = false
 		scale /= 2
 		camera_trantorien.current = false
@@ -236,4 +210,3 @@ func _on_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:# and event.pressed:
 			emit_signal("selected", self)
-			print("Selected")
