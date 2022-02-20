@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:39:48 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 10:46:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,10 @@ t_param	parse_input(int ac, char **av)
 		else if (!strcmp(av[i], "-y"))
 		{
 			param.world_height = get_numeric_parameter(av[++i], 5, 15000);
+		}
+		else if (!strcmp(av[i], "-T"))
+		{
+			param.generation_frequency = get_numeric_parameter(av[++i], 1, 100000);
 		}
 		else if (!strcmp(av[i], "-c"))
 		{
