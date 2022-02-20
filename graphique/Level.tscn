@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Script/Level.gd" type="Script" id=1]
 [ext_resource path="res://Script/Camera_lvl.gd" type="Script" id=2]
 [ext_resource path="res://Scene/HUD.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scene/GameOver.tscn" type="PackedScene" id=4]
+[ext_resource path="res://env.tres" type="Environment" id=5]
 
 [sub_resource type="BoxShape" id=1]
 
@@ -40,6 +41,7 @@ material/0 = null
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 5, 48.7962 )
+environment = ExtResource( 5 )
 script = ExtResource( 2 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
@@ -67,4 +69,5 @@ draw_pass_1 = SubResource( 15 )
 visible = false
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="player_deselected" from="HUD" to="." method="_on_Tree_item_deselected"]
 [connection signal="player_selected" from="HUD" to="." method="_on_Tree_item_selected"]
