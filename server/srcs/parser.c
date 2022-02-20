@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 10:18:24 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 10:39:48 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ t_param	parse_input(int ac, char **av)
 			param.flags |= FLAG_TESTER;
 		else if (!strcmp(av[i], "-h"))
 			usage();
+		else if (!strcmp(av[i], "-H"))
+			param.flags |= FLAG_NOHUNGER;
 		else if (i + 1 >= ac)
 		{
 			printf("Error: unexpected end of argument: %s\n", av[i]);

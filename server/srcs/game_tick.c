@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 09:41:43 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 10:43:29 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,18 @@ void	client_tick(t_srv *srv, t_list *player_list)
 			}
 		}
 		current = current->next;
+		if (!is_special_team_member(client) && !(srv->param->flags & FLAG_NOHUNGER))
+		{
+			if (client->hunger > 0)
+				client->hunger--;
+			else if (client->ressource[FOOD])
+			{
+				client->ressource[FOOD]--;
+				client->hunger = MAX_HUNGER;
+			}
+			else
+				kill_player(srv, client);
+		}
 		++i;
 	}
 

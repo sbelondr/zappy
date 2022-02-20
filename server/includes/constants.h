@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 10:41:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 10:40:07 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 	"-h affiche l'usage\n"
 
 #define FLAG_TESTER			1
+#define FLAG_NOHUNGER		2
 
 typedef enum	e_ressources {
 	FOOD,
