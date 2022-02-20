@@ -108,6 +108,10 @@ module Client
       rescue Errno::ECONNREFUSED 
         puts "#{@self_id}: Server booted me!!"
         @dead = true
+        Thread.exit
+      rescue
+        @dead = true
+        Thread.exit
       end
       ret
     end
@@ -132,6 +136,9 @@ module Client
           on_ritual_completed response.split(':')[1].to_i
           @level += 1
           answered = true
+        elsif response == "mort"
+          @dead = true
+          Thread.exit
         else
           answered = true
         end
