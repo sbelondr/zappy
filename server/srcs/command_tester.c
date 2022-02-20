@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/20 09:59:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 16:24:33 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,31 @@
 void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 {
 	t_client	*target;
-	int			arg;
+	int			target_id;
+	int			arg[10];
+	int			error;
+
 	if (!strncmp("pdi #", command, 5))
 	{
 		//TODO: check args
-		arg = atoi(command + 5);
-		target = get_client_by_id(srv, arg);
+		target_id = atoi(command + 5);
+		target = get_client_by_id(srv, target_id);
 		if (target)
 		{
 			if (!is_special_team_member(target))
+			{
 				kill_player(srv, target);
+				simple_send(srv, tester->id, strdup("ok\n"));
+			}
 			else if (target->id != tester->id)
+			{
 				ft_client_exit(srv, target->id);
-			simple_send(srv, tester->id, strdup("ok\n"));
-			if (target->id == tester->id)
+				simple_send(srv, tester->id, strdup("ok\n"));
+			}
+			else
+			{
 				ft_client_exit(srv, target->id);
+			}
 		}
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
@@ -37,8 +47,8 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	if (!strncmp("pin #", command, 5))
 	{
 		//TODO: check args
-		arg = atoi(command + 5);
-		target = get_client_by_id(srv, arg);
+		target_id = atoi(command + 5);
+		target = get_client_by_id(srv, target_id);
 		if (target)
 		{
 			if (strstr(command, " clear"))
@@ -48,7 +58,22 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 				simple_send(srv, tester->id, strdup("ok\n"));
 			}
 			else
-				simple_send(srv, tester->id, strdup("sbp\n"));
+			{
+				error = sscanf(command, "pin #%d %d %d %d %d %d %d %d", &arg[0], &arg[1], &arg[2], &arg[3], &arg[4], &arg[5], &arg[6], &arg[7]);
+				if (error < 0)
+				{
+					simple_send(srv, tester->id, strdup("sbp\n"));
+					return ;
+				}
+				target->ressource[FOOD] = arg[1];
+				target->ressource[LINEMATE] = arg[2];
+				target->ressource[DERAUMERE] = arg[3];
+				target->ressource[SIBUR] = arg[4];
+				target->ressource[LAMENDIANE] = arg[5];
+				target->ressource[PHIRAS] = arg[6];
+				target->ressource[THYSTAME] = arg[7];
+				simple_send(srv, tester->id, strdup("ok\n"));
+			}
 		}
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
@@ -56,11 +81,12 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	if (!strncmp("ppo #", command, 5))
 	{
 		//TODO: check args
-		arg = atoi(command + 5);
+		target_id = atoi(command + 5);
 		char **args = split_args(command, 3);
+
 		if (args)
 		{
-			target = get_client_by_id(srv, arg);
+			target = get_client_by_id(srv, target_id);
 			if (target)
 			{
 				target->p_x = atoi(args[2]) % srv->param->world_width;

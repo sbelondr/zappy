@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/20 09:59:28 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 16:14:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		args = split_args(buf, 1);
 		if (args)
 		{
-			arg1 = atoi(args[1]);
+			arg1 = atoi(args[1] + 1);
 			target = get_client_by_id(srv, arg1);
 			if (arg1 >= 0 && target)
 				simple_send(srv, c->id, moniteur_pin(target));
