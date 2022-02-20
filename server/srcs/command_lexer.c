@@ -6,46 +6,20 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/19 10:50:44 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 09:59:28 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 #include "server.h"
 
-//Returns an array of string, with check to ensure it has expected elements
-//If it is impossible, returns NULL
-static char	**split_args(char *str, int expected)
-{
-	int		cnt;
-	char	**ret;
-
-	cnt = 0;
-	for (int i = 0; str[i]; ++i)
-		cnt += (str[i] == ' ');
-	if (cnt != expected)
-	{
-		return (NULL);
-	}
-	ret = ft_strsplit(str, ' ');
-	if (!ret)
-		return (NULL);
-	for (int i = 0; i < expected + 1; ++i)
-	{
-		if (!ret[i])
-		{
-			//TODO: free
-			return (NULL);
-		}
-	}
-	return (ret);
-}
 
 void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 {
-	char	**args;
-	int		arg1;
-	int		arg2;
+	t_client	*target;
+	char		**args;
+	int			arg1;
+	int			arg2;
 
 	if (!strcmp(buf, "msz"))
 		simple_send(srv, c->id, moniteur_msz(srv->world));
@@ -100,9 +74,9 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		if (args)
 		{
 			arg1 = atoi(args[1]);
-			c = get_client_by_id(srv, arg1);
-			if (arg1 >= 0 && c)
-				simple_send(srv, c->id, moniteur_pin(c));
+			target = get_client_by_id(srv, arg1);
+			if (arg1 >= 0 && target)
+				simple_send(srv, c->id, moniteur_pin(target));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
 			free(args[0]);
@@ -118,9 +92,9 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		if (args)
 		{
 			arg1 = atoi(args[1]);
-			c = get_client_by_id(srv, arg1);
-			if (arg1 >= 0 && c)
-				simple_send(srv, c->id, moniteur_plv(c));
+			target = get_client_by_id(srv, arg1);
+			if (arg1 >= 0 && target)
+				simple_send(srv, c->id, moniteur_plv(target));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));
 			free(args[0]);
@@ -135,10 +109,10 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		args = split_args(buf, 1);
 		if (args)
 		{
-			arg1 = atoi(args[1]);
-			c = get_client_by_id(srv, arg1);
-			if (arg1 >= 0 && c)
-				simple_send(srv, c->id, moniteur_ppo(c));
+			arg1 = atoi(args[1] + 1);
+			target = get_client_by_id(srv, arg1);
+			if (arg1 >= 0 && target)
+				simple_send(srv, c->id, moniteur_ppo(target));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
 			free(args[0]);
@@ -152,11 +126,6 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		simple_send(srv, c->id, ft_strdup("suc\n"));
 }
 
-void	command_tester(t_srv *srv, t_client *client, char *buf)
-{
-	
-}
-
 void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 {
 	printf("NO TEAM\n");
@@ -167,11 +136,22 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 		reset();
 		ft_client_exit(srv, i);
 	}
-	else if (strcmp(client->team_name, "GRAPHIC"))
+	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) && srv->param->flags & FLAG_TESTER))
 	{
 		printf("%ld: %s successfully connected \n", srv->frame_nbr, client->team_name);
 		send_to_all_moniteur(srv, moniteur_pnw(client));
 	}
+}
+
+void	parse_command_tester(t_srv *srv, t_client *tester, char *buf)
+{
+	if (!strncmp(buf, "get ", 4))
+		parse_command_moniteur(srv, tester, buf + 4);
+	else if (!strncmp(buf, "set ", 4))
+		parse_command_set(srv, tester, buf + 4);
+	else
+		simple_send(srv, tester->id, ft_strdup("suc\n"));
+
 }
 
 void	ft_lexer(t_srv *srv, char *buf, int i)
@@ -180,11 +160,11 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 
 	c = get_client_by_id(srv, i);
 	if (c->team_name == NULL)
-	{
 		connect_client(srv, buf, c, i);
-	}
-	else if (!strcmp(c->team_name, "MONITEUR"))
+	else if (!strcmp(c->team_name, GRAPHIC_TEAM))
 		parse_command_moniteur(srv, c, buf);
+	else if (!strcmp(c->team_name, TESTER_TEAM))
+		parse_command_tester(srv, c, buf);
 	else if (!strcmp(buf, "droite"))
 		append_command(c, new_command(COMMAND_DROITE, NULL, 7));
 	else if (!strcmp(buf, "gauche"))

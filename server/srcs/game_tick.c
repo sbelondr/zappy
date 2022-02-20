@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 09:23:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 09:41:43 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	client_tick(t_srv *srv, t_list *player_list)
 	t_list		*current;
 	t_client	*client;
 	int			i;
-	int			ret;
 
 	i = 0;
 	current = player_list;
