@@ -31,7 +31,6 @@ func state_connection(new_status):
 func srv_send_msg():
 	var available_bytes: int = client.get_available_bytes()
 	if available_bytes > 0:
-#		print("available bytes: ", available_bytes)
 		var data: Array = client.get_partial_data(available_bytes)
 		# Check for read error.
 		if data[0] != OK:

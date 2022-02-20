@@ -3,17 +3,6 @@ extends Spatial
 const texture_block: PackedScene = preload("res://Texture/block.tscn")
 const trantorien: PackedScene = preload("res://Texture/Trantorien.tscn")
 
-# get all gems texture
-const array_gem: Array = [
-	preload("res://Texture/Gem.tscn"),
-	preload("res://Texture/Gem2.tscn"),
-	preload("res://Texture/Gem3.tscn"),
-	preload("res://Texture/Gem4.tscn"),
-	preload("res://Texture/Gem5.tscn"),
-	preload("res://Texture/Gem6.tscn"),
-	preload("res://Texture/Gem7.tscn")
-]
-
 # get egg texture
 const egg: PackedScene = preload("res://Texture/Egg.tscn");
 
@@ -64,6 +53,7 @@ const color: Array = [
 	'white'
 ]
 
+# list lastname and firstname to generate Trantorien
 var lastname := [
 	"Dickerson",
 	"Madden",
@@ -174,7 +164,8 @@ var firstname := [
 	"Kevin"
 ]
 
-func generate_names():
+# Generate new name
+func generate_names() -> String:
 	var fname = firstname[randi()%51]
 	var lname = lastname[randi()%51]
 	return fname + " " + lname
@@ -208,38 +199,32 @@ func add_trantorien(id_trantorien: String, vec: Vector3, orientation: int, level
 	list_player[id_trantorien] = obj
 	var name = generate_names()
 	obj.set_trantorien(name, id_trantorien, teams, orientation, level)
-	manage_orientation_trantorien(obj, orientation)
+	obj.manage_orientation_trantorien(orientation, TIME)
 	# add user in HUD
 	if teams in list_team:
 		var subchild1 = tree.create_item(list_team[teams])
 		subchild1.set_text(0, id_trantorien)
 
-# i don't remember but it's interresting
+# I don't remember but it's interresting
 # fuck you
+# edit: permet de savoir si on est sur le bord ou non, donc savoir si on utilise
+# la fonction interpolate ou non
 func is_interpolate(val: int, new_val: int) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
 	return false
 
-func manage_orientation_trantorien(obj, orientation):
-	if (orientation == 1):
-		obj.rotation_trantorien(180, TIME);
-	elif (orientation == 2):
-		obj.rotation_trantorien(90, TIME);
-	elif (orientation == 3):
-		obj.rotation_trantorien(0, TIME);
-	elif (orientation == 4):
-		obj.rotation_trantorien(270, TIME);
-
 # deplace Trantorien
 # Args:
 #	name: name of Trantorien
 #	vec: new position of Trantorien
+#	orientation: orientation of Trantorien (1: N, 2: E, 3: S, 4: O)
 func move_trantorien(name: String, vec: Vector3, orientation: int) -> void:
 	if name in list_player:
 		var player = list_player.get(name)
-		manage_orientation_trantorien(player, orientation)
-		if is_interpolate(player.translation.x, vec.x) and is_interpolate(player.translation.y, vec.y) \
+		player.manage_orientation_trantorien(orientation, TIME)
+		if is_interpolate(player.translation.x, vec.x) \
+			and is_interpolate(player.translation.y, vec.y) \
 			and is_interpolate(player.translation.z, vec.z):
 			player.move_trantorien(vec, TIME)
 		else:
@@ -252,10 +237,11 @@ func die_trantorien(name: String) -> void:
 	if name in list_player:
 		var obj = list_player[name]
 		obj.dead()
-		obj.queue_free()
 		list_player.erase(name)
 
 # remove ressource egg with name
+# Arg:
+#	name: name of egg
 func die_egg(name: String) -> void:
 	if name in list_egg:
 		var obj = list_egg[name][EGG.OBJ]
@@ -263,7 +249,7 @@ func die_egg(name: String) -> void:
 		list_egg.erase(name)
 
 # add gem when bct is send by the server
-func add_all_gem(arr):
+func add_all_gem(arr) -> void:
 	var vec: Vector3 = Vector3(int(arr[1]), 1, int(arr[2]))
 	var gems = [int(arr[3]), int(arr[4]), int(arr[5]), int(arr[6]), int(arr[7]), int(arr[8]), int(arr[9])]
 	map[vec.x][vec.z].set_inventory(gems)
@@ -281,7 +267,7 @@ func command_server(arr):
 	# new player
 	elif arr[0] == 'pnw':
 		# pnw #n X Y O L N
-		print('new player: ' + arr[6])
+		print(arr)
 		if arr[6] != 'GRAPHIC' and arr[6] != '(null)':
 			add_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]), int(arr[5]), arr[6])
 			$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
@@ -309,29 +295,32 @@ func command_server(arr):
 		obj_player.kick()
 	# un joueur fait un broadcast
 	elif arr[0] == 'pbc':
+		var msg = ''
+		for i in range(2, len(arr)):
+			msg += " " + arr[i]
+		$HUD/logs.text = arr[1] + ': ' + msg + '\n'
 		pass
 	# lance incantation
 	elif arr[0] == 'pic':
 #		"pic X Y L #n #n …\n"
 		var len_arr = len(arr)
-		var i = 3
+		var i = 4
 		while i < len_arr:
-			var obj = list_player[arr[i]]
-			obj.start_incantation()
+			if arr[i] in list_player and list_player[arr[i]]:
+				var obj = list_player[arr[i]]
+				obj.start_incantation()
 			i += 1
 	# fin de l’incantation sur la case donnée avec le résultat R
 	elif arr[0] == 'pie':
-		var len_arr = len(arr)
-		var i = 3
-		while i < len_arr:
-			var obj = list_player[arr[i]]
-			obj.start_incantation()
-			i += 1
+		pass
 	elif arr[0] == 'plv':
-		var obj = list_player[arr[1]]
-		var scale = obj.scale + 0.1
-		obj.scale = scale
-		obj.set_level(int(arr[2]))
+		var player = list_player[arr[1]]
+		player.idle()
+		var level: int = int(arr[2])
+		if player.level != level:
+			var scale = player.scale + 0.1
+			player.scale = scale
+			player.set_level(level)
 	# inventaire joueur
 	elif arr[0] == 'pin':
 #		pin #n X Y q q q q q q q
@@ -339,7 +328,7 @@ func command_server(arr):
 			list_player[arr[1]].set_inventory([arr[4],arr[5],arr[6],arr[7],arr[8],arr[9],arr[10]])
 	# le joueur est mort de faim.
 	elif arr[0] == 'pdi':
-			die_trantorien(arr[1])
+		die_trantorien(arr[1])
 	# le joueur jette une ressource
 	elif arr[0] == 'pdr':
 		if arr[1] in list_player:
@@ -357,15 +346,16 @@ func command_server(arr):
 			map[vec_player.x][vec_player.z].remove_item(color_gem)
 	# Le joueur pond un œuf.
 	elif arr[0] == 'pfk':
-		list_player[arr[1]].fork_start()
+		if arr[1] in list_player:
+			list_player[arr[1]].fork_start()
 		# animation
 		pass
 	# loeuf a ete pondu
 	elif arr[0] == 'enw':
 		# enw #e #n X Y
-		list_player[arr[2]].fork_end()
 		# fin animation
 		if arr[2] in list_player:
+			list_player[arr[2]].fork_end()
 			var vec_player =  Vector3(int(arr[3]), 0.5, int(arr[4]))
 			var obj = add_block(egg, vec_player);
 			list_egg[arr[1]] = [obj, vec_player, arr[2]]
@@ -385,7 +375,7 @@ func command_server(arr):
 		$End/GameOver.visible = true
 	# message serveur
 	elif arr[0] == 'smg':
-		pass
+		$HUD/logs.text = "Message server: " + arr[1]
 	else:
 		if len(arr) > 1:
 			print(arr)
@@ -401,6 +391,8 @@ func _process(delta):
 		get_tree().quit()
 	if Input.is_action_just_pressed("reload"):
 		get_tree().reload_current_scene()
+
+# Manage connection server
 
 func _ready():
 	# manage connection socket
@@ -435,11 +427,13 @@ func _handle_client_error() -> void:
 	print("Client error.")
 	_connect_after_timeout(RECONNECT_TIMEOUT)
 
-func _on_Tree_item_deselected(id):
+# Signal
+
+func _on_Tree_item_deselected(id) -> void:
 	for player in list_player:
 		list_player[player].highlight_end()
 
-func _on_Tree_item_selected(id):
+func _on_Tree_item_selected(id) -> void:
 	if not id in list_player:
 		return
 	$Camera.current = false
@@ -447,6 +441,5 @@ func _on_Tree_item_selected(id):
 		if player != id:
 			list_player[player].highlight_end()
 	var status = list_player[id].highlight()
-	print(status)
 	if not status:
 		$Camera.make_current()

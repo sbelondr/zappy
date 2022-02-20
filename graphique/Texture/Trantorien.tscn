@@ -1,11 +1,37 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Player/Marvin.glb" type="PackedScene" id=1]
 [ext_resource path="res://Script/Trantorien.gd" type="Script" id=2]
 [ext_resource path="res://env.tres" type="Environment" id=3]
+[ext_resource path="res://fonts/batman_forever_black.ttf" type="DynamicFontData" id=4]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 3.43309, 5.27123, 1.94063 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_left = 50.0
+content_margin_right = 50.0
+content_margin_top = 50.0
+content_margin_bottom = 50.0
+bg_color = Color( 0.278431, 0.486275, 0.929412, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+shadow_size = 10
+anti_aliasing_size = 1.95
+
+[sub_resource type="DynamicFont" id=4]
+size = 32
+font_data = ExtResource( 4 )
+
+[sub_resource type="ViewportTexture" id=2]
+viewport_path = NodePath("Viewport")
 
 [node name="Marvin" instance=ExtResource( 1 )]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
@@ -18,7 +44,7 @@ visible = false
 visible = false
 
 [node name="Camera" type="Camera" parent="." index="3"]
-transform = Transform( -5.3805, 0, 8.42913, 0, 10, 0, -8.42913, 0, -5.3805, 8.96505, 7.56177, 0 )
+transform = Transform( 9.89016, 0, 1.47809, -0.323166, 9.75806, 2.16236, -1.44233, -2.18637, 9.65088, 3.1974, 10.9453, 16.3526 )
 environment = ExtResource( 3 )
 fov = 61.875
 
@@ -46,10 +72,10 @@ __meta__ = {
 }
 
 [node name="GC_player" type="GridContainer" parent="NodeHUD/HUDPlayer/info_player" index="0"]
-margin_left = 15.0
+margin_left = 75.0
 margin_top = 10.0
-margin_right = 199.0
-margin_bottom = 139.0
+margin_right = 190.0
+margin_bottom = 83.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -69,7 +95,39 @@ margin_bottom = 50.0
 margin_top = 54.0
 margin_bottom = 68.0
 
-[node name="pb_level" type="ProgressBar" parent="NodeHUD/HUDPlayer/info_player" index="1"]
+[node name="GC_player_label" type="GridContainer" parent="NodeHUD/HUDPlayer/info_player" index="1"]
+margin_left = 15.0
+margin_top = 10.0
+margin_right = 66.0
+margin_bottom = 139.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lab_id" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_player_label" index="0"]
+margin_right = 38.0
+margin_bottom = 14.0
+text = "Id"
+
+[node name="lab_name" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_player_label" index="1"]
+margin_top = 18.0
+margin_right = 38.0
+margin_bottom = 32.0
+text = "Name"
+
+[node name="lab_team" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_player_label" index="2"]
+margin_top = 36.0
+margin_right = 38.0
+margin_bottom = 50.0
+text = "Team"
+
+[node name="lab_level" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_player_label" index="3"]
+margin_top = 54.0
+margin_right = 38.0
+margin_bottom = 68.0
+text = "Level"
+
+[node name="pb_level" type="ProgressBar" parent="NodeHUD/HUDPlayer/info_player" index="2"]
 margin_top = 145.0
 margin_right = 399.0
 margin_bottom = 182.0
@@ -79,10 +137,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GC_inventaire" type="GridContainer" parent="NodeHUD/HUDPlayer/info_player" index="2"]
-margin_left = 238.0
+[node name="GC_inventaire" type="GridContainer" parent="NodeHUD/HUDPlayer/info_player" index="3"]
+margin_left = 341.0
 margin_top = 10.0
-margin_right = 389.0
+margin_right = 391.0
 margin_bottom = 134.0
 __meta__ = {
 "_edit_use_anchors_": false,
@@ -116,7 +174,58 @@ margin_bottom = 104.0
 margin_top = 108.0
 margin_bottom = 122.0
 
-[node name="VSeparator" type="VSeparator" parent="NodeHUD/HUDPlayer/info_player" index="3"]
+[node name="GC_inventaire_label" type="GridContainer" parent="NodeHUD/HUDPlayer/info_player" index="4"]
+margin_left = 227.0
+margin_top = 10.0
+margin_right = 322.0
+margin_bottom = 134.0
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+
+[node name="Food" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="0"]
+margin_right = 72.0
+margin_bottom = 14.0
+text = "Food"
+
+[node name="Linemate" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="1"]
+margin_top = 18.0
+margin_right = 72.0
+margin_bottom = 32.0
+text = "Linemate"
+
+[node name="Deraumere" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="2"]
+margin_top = 36.0
+margin_right = 72.0
+margin_bottom = 50.0
+text = "Deraumere"
+
+[node name="Sibur" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="3"]
+margin_top = 54.0
+margin_right = 72.0
+margin_bottom = 68.0
+text = "Sibur"
+
+[node name="Mendiane" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="4"]
+margin_top = 72.0
+margin_right = 72.0
+margin_bottom = 86.0
+text = "Mendiane"
+
+[node name="Phiras" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="5"]
+margin_top = 90.0
+margin_right = 72.0
+margin_bottom = 104.0
+text = "Phiras"
+
+[node name="Thystame" type="Label" parent="NodeHUD/HUDPlayer/info_player/GC_inventaire_label" index="6"]
+margin_top = 108.0
+margin_right = 72.0
+margin_bottom = 122.0
+text = "Thystame"
+
+[node name="VSeparator" type="VSeparator" parent="NodeHUD/HUDPlayer/info_player" index="5"]
 margin_left = 206.0
 margin_top = 4.0
 margin_right = 219.0
@@ -124,5 +233,39 @@ margin_bottom = 142.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="lab_description" type="Label" parent="NodeHUD/HUDPlayer/info_player" index="6"]
+margin_left = 16.0
+margin_top = 85.0
+margin_right = 197.0
+margin_bottom = 141.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="." index="8"]
+size = Vector2( 500, 250 )
+transparent_bg = true
+render_target_v_flip = true
+
+[node name="Panel" type="Panel" parent="Viewport" index="0"]
+show_behind_parent = true
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 410.0
+margin_bottom = 110.0
+custom_styles/panel = SubResource( 3 )
+
+[node name="Label" type="Label" parent="Viewport/Panel" index="0"]
+margin_left = 75.0
+margin_top = 30.0
+margin_right = 161.0
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 4 )
+text = "It's me mario"
+
+[node name="Sprite3D" type="Sprite3D" parent="." index="9"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.0042, 0 )
+texture = SubResource( 2 )
 
 [connection signal="input_event" from="Area" to="." method="_on_input_event"]
