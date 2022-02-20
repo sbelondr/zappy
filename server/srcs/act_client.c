@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/19 09:16:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 09:24:28 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void ft_client_exit(t_srv *srv, int i)
 
 	client = get_client_by_id(srv, i);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
-	if (client->team_name && ft_strcmp(client->team_name, "GRAPHIC"))
+	if (client->team_name && !is_special_team_member(client))
 	{
 		team = get_team_by_name(srv->world, client->team_name);
 		ft_lstdelbyval(&team->team_clients, client, mcmp, mdel);
 	}
 	clear_commands(client);
-	if (client->team_name && strcmp(client->team_name, "GRAPHIC"))
+	if (client->team_name && !is_special_team_member(client))
 		free(client->team_name);
 	free(client);
 	printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));

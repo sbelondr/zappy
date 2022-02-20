@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 11:04:01 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 08:49:31 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	t_list		*current;
 
 	c = get_client_by_id(srv, id);
-	c->team_name = "GRAPHIC";
+	c->team_name = GRAPHIC_TEAM;
 	simple_send(srv, id, moniteur_msz(srv->world));
 	msg = moniteur_sgt(srv->world);
 	simple_send(srv, id, msg);
@@ -165,9 +165,10 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 		welcome_moniteur(srv, id);
 		return (1);
 	}	
-	else if (!ft_strcmp(team_name, TESTER_TEAM) && srv->param.flags & FLAG_TESTER)
+	else if (!ft_strcmp(team_name, TESTER_TEAM) && srv->param->flags & FLAG_TESTER)
 	{
-		//send welcome tester
+		c->team_name = TESTER_TEAM;
+		simple_send(srv, c->id, ft_strdup("Test mode enabled. Welcome.\n"));
 		return (1);
 	}
 	current = srv->param->team_list;

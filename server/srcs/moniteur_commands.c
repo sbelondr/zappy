@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 08:52:43 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 09:35:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,6 +269,17 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 	return (ret);
 }
 
+//Death
+char	*moniteur_pdi(t_client *client)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "pdi #%d\n", client->id);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
 //Kick
 char	*moniteur_pex(t_client *client)
 {

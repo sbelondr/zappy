@@ -6,11 +6,44 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 14:32:35 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 09:59:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+//Returns an array of string, with check to ensure it has expected elements
+//If it is impossible, returns NULL
+char	**split_args(char *str, int expected)
+{
+	int		cnt;
+	char	**ret;
+
+	cnt = 0;
+	for (int i = 0; str[i]; ++i)
+		cnt += (str[i] == ' ');
+	if (cnt != expected)
+	{
+		return (NULL);
+	}
+	ret = ft_strsplit(str, ' ');
+	if (!ret)
+		return (NULL);
+	for (int i = 0; i < expected + 1; ++i)
+	{
+		if (!ret[i])
+		{
+			//TODO: free
+			return (NULL);
+		}
+	}
+	return (ret);
+}
+int		is_special_team_member(t_client *client)
+{
+	return (!strcmp(client->team_name, GRAPHIC_TEAM) ||
+			!strcmp(client->team_name, TESTER_TEAM));
+}
 
 /*
  * Simplified way to call send
@@ -87,4 +120,12 @@ void	rotten_egg(t_srv *srv, t_egg *egg)
 	free(egg->team_name);
 	free(egg);
 	printf("An egg died!\n");
+}
+
+void	kill_player(t_srv *srv, t_client *client)
+{
+	printf("Client #%d died!\n", client->id);
+	simple_send(srv, client->id, strdup("mort\n"));
+	send_to_all_moniteur(srv, moniteur_pdi(client));
+
 }

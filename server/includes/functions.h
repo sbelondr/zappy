@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 10:25:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 10:00:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char			*connect_nbr(t_srv *srv, t_world_state *world, t_client *player);
  * HELPERS
  */
 
+char			**split_args(char *str, int expected);
+int				is_special_team_member(t_client *client);
 void			append_command(t_client *client, t_command to_append);
 void			shift_command(t_client *client);
 void			clear_commands(t_client *client);
@@ -59,6 +61,7 @@ int				add_egg_to_team(t_world_state *wld, char *team_name, int egg_id);
 t_team			*get_team_by_name(t_world_state *world, char *team_name);
 void			rotten_egg(t_srv *srv, t_egg *egg);
 int				available_slots(t_srv *srv, t_team *team);
+void			kill_player(t_srv *srv, t_client *player);
 
 /*
  * GAME
@@ -66,6 +69,13 @@ int				available_slots(t_srv *srv, t_team *team);
 
 void			game_tick(t_srv *srv);
 void			ft_lexer(t_srv *srv, char *buf, int i);
+
+/*
+ * CLIENT COMMUNICATION
+ */
+
+void			parse_command_set(t_srv *srv, t_client *tester, char *command);
+void			ft_client_exit(t_srv *srv, int id);
 
 /*
  * RESSOURCE GENERATION
@@ -92,6 +102,7 @@ char			*moniteur_ebo(t_egg *egg);
 char			*moniteur_pin(t_client *client);
 char			*moniteur_pfk(t_client *client);
 char			*moniteur_pex(t_client *client);
+char			*moniteur_pdi(t_client *client);
 char			*moniteur_plv(t_client *client);
 char			*moniteur_pbc(int id, char *msg);
 char			*moniteur_pic(t_world_state *wld, t_client *client);
