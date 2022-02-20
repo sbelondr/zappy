@@ -17,6 +17,10 @@
 ## Graphics
 - When using the graphics, both server and clients slows down massively.
 
+## Units tests
+- Create more unit tests
+- Develop more commands for the TESTER group.
+
 # Client library
 ## Functions:
 
@@ -51,3 +55,10 @@
 - `@food`: Hunger/food. Decreased automatically when calling `do_action`.
 - `@level`: Player level.
 - `@socket`: Server socket. Be careful with it.
+
+# Unit Test
+## Graphic commands
+- If you suspect a bug, please write a precise description of it / make a ticket. We don't have enough TODOs.
+- You can use manual client with group TESTER to alter the behavior of the game however you want. You need the flag -v on the server for it to work.
+
+
