@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/20 16:14:08 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 16:57:13 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@
 void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 {
 	t_client	*target;
-	char		**args;
-	int			arg1;
-	int			arg2;
+	int			args[10];
+	int			error;
 
 	if (!strcmp(buf, "msz"))
 		simple_send(srv, c->id, moniteur_msz(srv->world));
@@ -29,95 +28,73 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		simple_send(srv, c->id, moniteur_tna(srv->world));
 	else if  (!strcmp(buf, "sgt"))
 		simple_send(srv, c->id, moniteur_sgt(srv->world));
-	else if  (!strncmp(buf, "sst", 3))
+	else if  (!strncmp(buf, "sst ", 4))
 	{
-		args = split_args(buf, 1);
-		if (args)
+		error = sscanf(buf, "sst %d", &args[0]);
+		if (error >= 0)
 		{
-			arg1 = atoi(args[1]);
-			if (arg1 > 0)
+			if (args[0] > 0)
 			{
-				srv->world->params.time_delta = atoi(args[1]);
+				srv->world->params.time_delta = args[0];
 				simple_send(srv, c->id, moniteur_sgt(srv->world));
 			}
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
-			free(args[0]);
-			free(args[1]);
-			free(args);
 		}
 		else
 			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
-	else if  (!strncmp(buf, "bct", 3))
+	else if  (!strncmp(buf, "bct ", 4))
 	{
-		args = split_args(buf, 2);
-		if (args)
+		error = sscanf(buf, "bct %d %d", &args[0], &args[1]);
+		if (error >= 0)
 		{
-			arg1 = atoi(args[1]);
-			arg2 = atoi(args[2]);
-			if (arg1 >= 0 && arg2 >= 0 && arg1 < srv->param->world_width && arg2 < srv->param->world_height)
-				simple_send(srv, c->id, moniteur_bct(srv->world, atoi(args[1]), atoi(args[2])));
+			if (args[0] >= 0 && args[1] >= 0 && args[0] < srv->param->world_width && args[2] < srv->param->world_height)
+				simple_send(srv, c->id, moniteur_bct(srv->world, args[0], args[1]));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
-			free(args[0]);
-			free(args[1]);
-			free(args[2]);
 		}
 		else
 			simple_send(srv, c->id, strdup("sbp\n"));	
-		free(args);
 	}
-	else if  (!strncmp(buf, "pin", 3))
+	else if  (!strncmp(buf, "pin ", 4))
 	{
-		args = split_args(buf, 1);
-		if (args)
+		error = sscanf(buf, "pin #%d", &args[0]);
+		if (error >= 0)
 		{
-			arg1 = atoi(args[1] + 1);
-			target = get_client_by_id(srv, arg1);
-			if (arg1 >= 0 && target)
+			target = get_client_by_id(srv, args[0]);
+			if (args[0] >= 0 && target)
 				simple_send(srv, c->id, moniteur_pin(target));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
-			free(args[0]);
-			free(args[1]);
-			free(args);
 		}
 		else
 			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
-	else if  (!strncmp(buf, "plv", 3))
+	else if  (!strncmp(buf, "plv ", 4))
 	{
-		args = split_args(buf, 1);
-		if (args)
+		error = sscanf(buf, "plv #%d", &args[0]);
+		if (error >= 0)
 		{
-			arg1 = atoi(args[1]);
-			target = get_client_by_id(srv, arg1);
-			if (arg1 >= 0 && target)
+			target = get_client_by_id(srv, args[0]);
+			if (args[0] >= 0 && target)
 				simple_send(srv, c->id, moniteur_plv(target));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));
-			free(args[0]);
-			free(args[1]);
-			free(args);
 		}
 		else
 			simple_send(srv, c->id, strdup("sbp\n"));	
 	}
-	else if  (!strncmp(buf, "ppo", 3))
+	else if  (!strncmp(buf, "ppo ", 4))
 	{
-		args = split_args(buf, 1);
-		if (args)
+		error = sscanf(buf, "ppo #%d", &args[0]);
+		if (error >= 0)
 		{
-			arg1 = atoi(args[1] + 1);
-			target = get_client_by_id(srv, arg1);
-			if (arg1 >= 0 && target)
+			target = get_client_by_id(srv, args[0]);
+			if (args[0] >= 0 && target)
 				simple_send(srv, c->id, moniteur_ppo(target));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
-			free(args[0]);
-			free(args[1]);
-			free(args);
 		}
 		else
 			simple_send(srv, c->id, strdup("sbp\n"));	

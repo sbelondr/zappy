@@ -16,13 +16,12 @@ class MoniteurCommandTester < Test::Unit::TestCase
     @client.puts "TOTO"
     @client.gets
     @client.gets
+    @commands = ["pin", "ppo", "plv"]
   end
 
   def teardown
     @tester.puts "set pdi #1"
-    puts "set pdi #1"
     @tester.gets
-    puts "set pdi #0"
     @tester.puts "set pdi #0"
   end
 
@@ -33,7 +32,7 @@ class MoniteurCommandTester < Test::Unit::TestCase
     ret2 = @tester.gets
     assert_equal ret, ret2
     @client.puts "avance"
-    sleep 1
+    @client.gets
     @tester.puts "get ppo #1"
     ret = @tester.gets
     assert_not_equal ret, ret2
@@ -55,4 +54,71 @@ class MoniteurCommandTester < Test::Unit::TestCase
     assert_equal "pin #1 #{pos[2]} #{pos[3]} 1 2 3 4 5 6 7\n", inv
   end
 
+  def test_ppo_orientation
+    @tester.puts "set ppo #1 0 0 2"
+    assert_equal "ok\n", @tester.gets
+    
+    @tester.puts "get ppo #1"
+    assert_equal "ppo #1 0 0 2\n", @tester.gets
+    @client.puts "gauche"
+    @client.gets
+    @tester.puts "get ppo #1"
+    assert_equal "ppo #1 0 0 1\n", @tester.gets
+
+    @client.puts "gauche"
+    @client.gets
+    @tester.puts "get ppo #1"
+    assert_equal "ppo #1 0 0 4\n", @tester.gets
+
+    @client.puts "gauche"
+    @client.gets
+    @tester.puts "get ppo #1"
+    assert_equal "ppo #1 0 0 3\n", @tester.gets
+
+    @client.puts "gauche"
+    @client.gets
+    @tester.puts "get ppo #1"
+    assert_equal "ppo #1 0 0 2\n", @tester.gets
+
+    @client.puts "droite"
+    @client.gets
+    @tester.puts "get ppo #1"
+    assert_equal "ppo #1 0 0 3\n", @tester.gets
+  end
+
+  def test_unknown_command
+    @tester.puts "get cc"
+    assert_equal "suc\n", @tester.gets
+    @tester.puts "get titi"
+    assert_equal "suc\n", @tester.gets
+    @tester.puts "get "
+    assert_equal "suc\n", @tester.gets
+    @tester.puts "get poupou"
+    assert_equal "suc\n", @tester.gets
+    @tester.puts "get owrgbwoubgwr"
+    assert_equal "suc\n", @tester.gets
+    @tester.puts "get pini"
+    assert_equal "suc\n", @tester.gets
+    @tester.puts "get ppoopp"
+    assert_equal "suc\n", @tester.gets
+  end
+
+  def test_bad_parameters
+    @commands.each do |command|
+    @tester.puts "get #{command} #5"
+    assert_equal "sbp\n", @tester.gets
+
+    @tester.puts "get #{command} 5"
+    assert_equal "sbp\n", @tester.gets
+
+    @tester.puts "get #{command} #-1"
+    assert_equal "sbp\n", @tester.gets
+
+    @tester.puts "get #{command} toto"
+    assert_equal "sbp\n", @tester.gets
+
+    @tester.puts "get #{command} #+5"
+    assert_equal "sbp\n", @tester.gets
+    end
+  end
 end
