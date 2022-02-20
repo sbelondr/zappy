@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:43:29 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 10:50:26 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	game_tick(t_srv *srv)
 {
 	srv->frame_nbr += 1;
 	client_tick(srv, srv->world->client_list);
-	if (srv->frame_nbr % 10000 > 0) //TODO: make this a command line parameter
+	if (srv->frame_nbr % srv->param->generation_frequency > 0) //TODO: activate it and fix the issue 
 	{
 		//		generate_ressource(*srv->world);
 	}
