@@ -3,17 +3,17 @@ extends Camera
 var g_move = 0.1
 
 func _process(delta: float) -> void:
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed("cam_left"):
 		var h = get_h_offset()
 		set_h_offset(h - g_move)
-	if Input.is_action_pressed("ui_right"):
+	if Input.is_action_pressed("cam_right"):
 		var h = get_h_offset()
 		set_h_offset(h + g_move)
-	if Input.is_action_pressed("ui_up"):
+	if Input.is_action_pressed("cam_up"):
 		translation.z -= 30 * delta
 #		var v = get_v_offset()
 #		set_v_offset(v + g_move)
-	if Input.is_action_pressed("ui_down"):
+	if Input.is_action_pressed("cam_down"):
 		translation.z += 30 * delta
 #		var v = get_v_offset()
 #		set_v_offset(v - g_move)
