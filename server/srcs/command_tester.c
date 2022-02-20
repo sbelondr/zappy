@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/20 16:24:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/20 16:35:54 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,17 +81,16 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	if (!strncmp("ppo #", command, 5))
 	{
 		//TODO: check args
-		target_id = atoi(command + 5);
-		char **args = split_args(command, 3);
-
-		if (args)
+		error = sscanf(command, "ppo #%d %d %d %d", &arg[0], &arg[1], &arg[2], &arg[3]);
+		if (error >= 0)
 		{
-			target = get_client_by_id(srv, target_id);
+			target = get_client_by_id(srv, arg[0]);
 			if (target)
 			{
-				target->p_x = atoi(args[2]) % srv->param->world_width;
-				target->p_y = atoi(args[3]) % srv->param->world_height;
-				target->orientation = atoi(args[4]) % 4;
+				target->p_x = arg[1] % srv->param->world_width;
+				target->p_y = arg[2] % srv->param->world_height;
+				target->orientation = arg[3] - 1; //TODO: VERIFY UNDERFLOW
+				simple_send(srv, tester->id, strdup("ok\n"));
 			}
 			else
 				simple_send(srv, tester->id, strdup("sbp\n"));
