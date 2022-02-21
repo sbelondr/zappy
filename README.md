@@ -6,12 +6,9 @@
 - We'll do it when everything else is working
 
 ## Client Library
-- Handle level up
-- Handle initial incantation server message in `listen`
 - Handle kicking
 
 ## Server
-- Telling clients they are dead *before* kicking them. 
 - Use \~conditional compilation\~ to avoid relying on gettimeofday unless it is necessary.
 
 ## Graphics
@@ -28,6 +25,8 @@
 - `take_decision`: Override this to create your client behaviour. Called constantly, does not need to be an infinite loop,
 - `starter`: Override this to create your client behaviour. Called once before `take_decision` at the start of the game, then never again.
 - `on_broadcast_received(msg, direction)`: Override this. Called when receiving a broadcast
+- `on_ritual_started`: Override this. Called when a ritual including the player is started.
+- `on_ritual_completed(new_level)`: Override this. Called once a ritual including the player is finished. `@level` is updated automatically, no need to do it.
 - `initialize(*args)`: You *can* override this. Call `super` if you do to call parent constructor.
 
 ### Action helper:

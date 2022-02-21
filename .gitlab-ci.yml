@@ -27,6 +27,14 @@ unit-test-job:   # This job runs in the test stage.
   script:
     - make -C server
     - ./server/server -x 10 -y 10 -n TOTO  -p 8080 -c 6 -v -t 100 -H & 
-    - ruby tester/Moniteur_test.rb
+    - ruby tester/Main_test.rb -r xml -v > tests.xml
     - pkill server
+  artifacts:
+    when: always
+    paths:
+      - tests.xml
+    reports:
+      junit: tests.xml
+    untracked: false
+    expire_in: 30 days
 
