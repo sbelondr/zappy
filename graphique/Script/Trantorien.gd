@@ -71,7 +71,7 @@ func is_interpolate(val: int, new_val: int) -> bool:
 		return true
 	return false
 
-func manage_orientation_trantorien(orientation: int, time: int):
+func manage_orientation_trantorien(orientation: int, time: float):
 	if (orientation == 1):
 		rotation_trantorien(180, time);
 	elif (orientation == 2):
@@ -90,8 +90,10 @@ func move_trantorien(dest: Vector3, speed: float) -> void:
 	animPlayer.queue("WalkCycle")
 
 func rotation_trantorien(dest: int, speed: float) -> void:
+	print("dest: " + str(dest))
 	goal_rotation = deg2rad(dest)
 	current_rotation = rotation.y
+	print(speed)
 	rotation_speed = max(speed, 0.001)
 	rotation_progress = 0
 
@@ -152,39 +154,13 @@ func load_inventory_hud():
 	for i in len(inventory_node):
 		inventory_node[i].text = str(inventory[i])
 
-func _ready():
-	animPlayer.get_animation("WalkCycle").set_loop(true)
-	animPlayer.get_animation("Ritual1").set_loop(true)
-	animPlayer.get_animation("Ritual2").set_loop(true)
-	animPlayer.get_animation("Ritual3").set_loop(true)
-	animPlayer.get_animation("Ritual4").set_loop(true)
-	animPlayer.get_animation("Pose").set_loop(true)
-	animPlayer.get_animation("Ponte loop").set_loop(true)
-	current_rotation = rotation.y
-	goal_rotation = current_rotation
-	rotation_progress = 0
-	rotation_speed = 0.1
-	orientation = 0
-	team = ''
-	player_id = ''
-	highlighted = false
-	animPlayer.play("Idle")
-#	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire').visible = false
-	get_node("NodeHUD/HUDPlayer/info_player").visible = false
-	load_inventory_hud()
-#		NodeHUD/HUDPlayer/GC_inventaire/Food
-	
-#Private function, PLEASE DO *NOT* CALL THIS
-func _death_animation_finished(animation_name: String) -> void:
-	if animation_name == "Death":
-		queue_free()
-	elif animation_name == "Ponte":
-		animPlayer.play("Ponte loop")
-
-func _process(delta: float):
-	if rotation_progress < 1:
-		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
-		rotation_progress += (1 / rotation_speed) * delta
+func broadcast(msg: String):
+	get_node("Viewport/Panel/Label").text = msg
+	var node_panel = get_node("Viewport/Panel")
+	node_panel.visible = true
+	node_panel.rect_size.x = len(msg) * 30
+	get_node("Viewport").size.x = (len(msg) * 30) + 10
+	$Timer_broadcast.start(5.0)
 
 func highlight():
 	if not highlighted:
@@ -206,7 +182,47 @@ func highlight_end():
 #		get_node('NodeHUD/HUDPlayer/GC_inventaire').visible = false
 		get_node("NodeHUD/HUDPlayer/info_player").visible = false
 
+func _ready():
+	animPlayer.get_animation("WalkCycle").set_loop(true)
+	animPlayer.get_animation("Ritual1").set_loop(true)
+	animPlayer.get_animation("Ritual2").set_loop(true)
+	animPlayer.get_animation("Ritual3").set_loop(true)
+	animPlayer.get_animation("Ritual4").set_loop(true)
+	animPlayer.get_animation("Pose").set_loop(true)
+	animPlayer.get_animation("Ponte loop").set_loop(true)
+	current_rotation = rotation.y
+	goal_rotation = current_rotation
+	rotation_progress = 0
+	rotation_speed = 0.1
+	orientation = 0
+	team = ''
+	player_id = ''
+	highlighted = false
+	animPlayer.play("Idle")
+#	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire').visible = false
+	get_node("NodeHUD/HUDPlayer/info_player").visible = false
+	get_node("Viewport/Panel").visible = false
+	load_inventory_hud()
+#		NodeHUD/HUDPlayer/GC_inventaire/Food
+	
+#Private function, PLEASE DO *NOT* CALL THIS
+func _death_animation_finished(animation_name: String) -> void:
+	if animation_name == "Death":
+		queue_free()
+	elif animation_name == "Ponte":
+		animPlayer.play("Ponte loop")
+
+func _process(delta: float):
+	if rotation_progress < 1:
+		#print("%f %f %f\n" %[current_rotation, rotation_speed, rotation_progress])
+		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
+		rotation_progress += (1 / rotation_speed) * delta
+
 func _on_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:# and event.pressed:
 			emit_signal("selected", self)
+
+
+func _on_Timer_broadcast_timeout():
+	get_node("Viewport/Panel").visible = false

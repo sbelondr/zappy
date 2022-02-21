@@ -220,8 +220,10 @@ func is_interpolate(val: int, new_val: int) -> bool:
 #	vec: new position of Trantorien
 #	orientation: orientation of Trantorien (1: N, 2: E, 3: S, 4: O)
 func move_trantorien(name: String, vec: Vector3, orientation: int) -> void:
+	print("orientation : " + str(orientation))
 	if name in list_player:
 		var player = list_player.get(name)
+		print(TIME)
 		player.manage_orientation_trantorien(orientation, TIME)
 		if is_interpolate(player.translation.x, vec.x) \
 			and is_interpolate(player.translation.y, vec.y) \
@@ -267,7 +269,6 @@ func command_server(arr):
 	# new player
 	elif arr[0] == 'pnw':
 		# pnw #n X Y O L N
-		print(arr)
 		if arr[6] != 'GRAPHIC' and arr[6] != '(null)':
 			add_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]), int(arr[5]), arr[6])
 			$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" + color[cnt_color % 7] + "]" + arr[1] + "[/color]"
@@ -275,6 +276,7 @@ func command_server(arr):
 	# move player
 	elif arr[0] == 'ppo':
 		#"ppo #n X Y O\n"
+		print(arr)
 		move_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]))
 	# set time
 	elif arr[0] == 'sgt':
@@ -298,8 +300,9 @@ func command_server(arr):
 		var msg = ''
 		for i in range(2, len(arr)):
 			msg += " " + arr[i]
-		$HUD/logs.text = arr[1] + ': ' + msg + '\n'
-		pass
+#		$HUD/logs.text = arr[1] + ': ' + msg + '\n'
+		if arr[1] in list_player:
+			list_player[arr[1]].broadcast(msg)
 	# lance incantation
 	elif arr[0] == 'pic':
 #		"pic X Y L #n #n …\n"
