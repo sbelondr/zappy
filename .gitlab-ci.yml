@@ -26,8 +26,8 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - make -C server
-    - ./server/server -x 10 -y 10 -n TOTO  -p 8080 -c 6 -v -t 100 -H & 
-    - ruby tester/Moniteur_test.rb -r xml -v > tests.xml
+    - ./server/server -x 10 -y 10 -n TOTO  -p 8080 -c 6 -v -t 100 -H >/dev/null & 
+    - ruby tester/All_test.rb -r xml -v > tests.xml
     - pkill server
   artifacts:
     when: always
