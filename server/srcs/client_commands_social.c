@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 08:53:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/21 09:55:22 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	t_list	*current;
 	int		maxid;
 
-	maxid = 0;
+	maxid = -1;
 	egg = (t_egg*)malloc(sizeof(t_egg));
 	egg->team_name = ft_strdup(player->team_name);
 	egg->p_x = player->p_x;
