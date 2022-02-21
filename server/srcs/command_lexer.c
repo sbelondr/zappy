@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/20 16:57:13 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/21 09:16:46 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 		reset();
 		ft_client_exit(srv, i);
 	}
-	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) && srv->param->flags & FLAG_TESTER))
+	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !srv->param->flags & FLAG_TESTER))
 	{
 		printf("%ld: %s successfully connected \n", srv->frame_nbr, client->team_name);
 		send_to_all_moniteur(srv, moniteur_pnw(client));
