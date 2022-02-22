@@ -81,13 +81,18 @@ func manage_orientation_trantorien(orientation_trantorien: int, time: float):
 
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
-func move_trantorien(dest: Vector3, time: float) -> void:
-#	Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
-# warning-ignore:return_value_discarded
-	tween.interpolate_property(self, "translation", translation, dest, time, Tween.TRANS_CUBIC)
-# warning-ignore:return_value_discarded
-	tween.start()
-	animPlayer.queue("WalkCycle")
+func move_trantorien(dest: Vector3, orientation: int, time: float) -> void:
+	manage_orientation_trantorien(orientation, TIME)
+	if is_interpolate(translation.x, dest.x) \
+		and is_interpolate(translation.y, dest.y) \
+		and is_interpolate(translation.z, dest.z):
+	# warning-ignore:return_value_discarded
+		tween.interpolate_property(self, "translation", translation, dest, time, Tween.TRANS_CUBIC)
+	# warning-ignore:return_value_discarded
+		tween.start()
+		animPlayer.queue("WalkCycle")
+	else:
+		translation = vec
 
 func rotation_trantorien(dest: int, time: float) -> void:
 	goal_rotation = deg2rad(dest)
