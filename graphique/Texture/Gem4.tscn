@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/gemmes/Dipyramid_001.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://Assets/gemms/Dipyramid_001.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://Texture/gem_green.tres" type="Material" id=2]
 
 [node name="Spatial" type="Spatial"]

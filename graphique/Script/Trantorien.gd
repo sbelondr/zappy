@@ -33,8 +33,6 @@ onready var tween : Tween = get_node("Tween")
 
 signal selected(player)
 
-var gem_texture = preload("res://Texture/Gem.tscn");
-
 func set_trantorien(pname: String, pid, pteam: String, porientation: int, plevel: int):
 	player_name = pname
 	player_id = pid
