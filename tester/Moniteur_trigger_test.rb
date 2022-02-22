@@ -11,6 +11,8 @@ class MoniteurTriggerTest < Test::Unit::TestCase
     @tester.gets
     @tester.puts "TESTER"
     @tester.gets
+    @tester.puts "set tac 6"
+    @tester.gets
     @client = TCPSocket.new 'localhost', 8080
     @client.gets
     @client.puts "TOTO"
@@ -26,11 +28,9 @@ class MoniteurTriggerTest < Test::Unit::TestCase
   end
 
   def teardown
-    @tester.puts "set pdi #2"
+    @tester.puts "set edi all"
     @tester.gets
-    @tester.puts "set pdi #1"
-    @tester.gets
-    @tester.puts "set pdi #0"
+    @tester.puts "set pdi all"
   end
 
   def test_client_connexion
@@ -66,5 +66,45 @@ class MoniteurTriggerTest < Test::Unit::TestCase
     assert_equal "pfk #1\n", @graphic.gets 
     @client.gets
     assert_equal "enw #1 #1 #{pos[2]} #{pos[3]}\n", @graphic.gets
+  end
+
+  def test_client_eggs
+    @tester.puts "set ppo #1 0 0 1"
+    assert_equal "ok\n", @tester.gets
+    @graphic.gets
+
+    @client.puts "fork"
+    @graphic.gets
+    @client.gets
+    @graphic.gets
+
+    client2 = TCPSocket.new 'localhost', 8080
+    client2.puts "TOTO"
+
+    assert @graphic.gets.start_with? "pnw"
+
+    assert_equal "eht #0\n", @graphic.gets
+    assert_equal "edi #0\n", @graphic.gets
+
+    @tester.puts "set tac 1"
+    assert_equal "ok\n", @tester.gets
+
+    client3 = TCPSocket.new 'localhost', 8080
+
+    @client.puts "fork"
+    @graphic.gets
+    @client.gets
+    @graphic.gets
+
+    assert_equal "eht #0\n", @graphic.gets
+    client3.puts "TOTO"
+    assert_equal "ebo #0\n", @graphic.gets
+    @tester.puts "get ppo #4"
+    pos = @tester.gets.split
+    assert_equal "pnw #4 0 0 #{pos[4]} 1 TOTO\n", @graphic.gets
+    @tester.puts "set pdi #4"
+    @tester.gets
+    @tester.puts "set pdi #3"
+    @tester.gets
   end
 end

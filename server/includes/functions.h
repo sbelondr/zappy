@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:00:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 09:56:52 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ char			*moniteur_pbc(int id, char *msg);
 char			*moniteur_pic(t_world_state *wld, t_client *client);
 char			*moniteur_edi(t_egg *egg);
 char			*moniteur_pie(int x, int y, int success);
+char			*moniteur_eht(t_egg *egg);
 void			send_to_all_moniteur(t_srv *srv, char *msg);
 
 #endif

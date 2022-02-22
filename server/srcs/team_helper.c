@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 08:49:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 10:30:49 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	simple_send(srv, c->id, msg);
 	ft_lst_append(&team->team_clients, ft_lstnew_no_copy(c, sizeof(t_client)));
 	c->team_name = ft_strdup(team->team_name);
+	c->p_x = rand() % srv->param->world_width;
+	c->p_y = rand() % srv->param->world_height;
 	if (ft_lst_size(team->team_clients) > (unsigned int)srv->param->allowed_clients_amount)
 	{
 		egg = get_first_valid_egg(team);
@@ -132,19 +134,17 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 			exit(1);
 			return (0);
 		}
-		printf("Connecting new client with egg n#%d\n", egg->id);
+		printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
 		egg->used = 1;
 		c->orientation = rand() % 4;
 		t_egg temp;
 		temp.id = egg->id;
-		//send_to_all_moniteur(srv, moniteur_ebo(egg));
+		send_to_all_moniteur(srv, moniteur_ebo(egg));
 		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
 		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}
-	c->p_x = rand() % srv->param->world_width;
-	c->p_y = rand() % srv->param->world_height;
 	printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
 	return (1);
 }

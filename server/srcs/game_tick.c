@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 15:40:15 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 10:50:30 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,26 @@ void	egg_tick(t_srv *srv, t_list *egg_list)
 		egg = egg_list->content;
 		egg_list = egg_list->next;
 		if (egg->maturity > 0)
-			egg->maturity--;
-		if (egg->food == 0 && egg->hunger == 0)
-			rotten_egg(srv, egg);
-		else if (egg->hunger <= 0)
 		{
-			egg->food--;
-			egg->hunger = MAX_HUNGER;
+			egg->maturity--;
+			if (egg->maturity == 0)
+			{
+				printf("%ld: An egg is ready to hatch!\n", srv->frame_nbr);
+				send_to_all_moniteur(srv, moniteur_eht(egg));
+			}
 		}
 		else
-			egg->hunger--;
+		{
+			if (egg->food == 0 && egg->hunger == 0)
+				rotten_egg(srv, egg);
+			else if (egg->hunger <= 0)
+			{
+				egg->food--;
+				egg->hunger = MAX_HUNGER;
+			}
+			else
+				egg->hunger--;
+		}
 	}
 }
 
@@ -75,6 +85,8 @@ void	client_tick(t_srv *srv, t_list *player_list)
 	while (current)
 	{
 		client = current->content;
+		if (client->buffer[0].command == COMMAND_FORK)
+		printf("FORK: %d\n", client->buffer[0].cooldown);
 		if (client->buffer[0].command == COMMAND_INCANTATION && client->buffer[0].cooldown == 300)
 		{
 			for (t_list *cc = player_list; cc; cc = cc->next)
@@ -84,7 +96,9 @@ void	client_tick(t_srv *srv, t_list *player_list)
 			send_to_all_moniteur(srv, moniteur_pic(srv->world, client));
 		}
 		else if (client->buffer[0].command == COMMAND_FORK && client->buffer[0].cooldown == 42)
+		{
 			send_to_all_moniteur(srv, moniteur_pfk(client));
+		}
 		if (client->buffer[0].cooldown > 0)
 			client->buffer[0].cooldown -= 1;
 		else
