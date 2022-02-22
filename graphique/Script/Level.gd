@@ -209,7 +209,7 @@ func add_trantorien(id_trantorien: String, vec: Vector3, orientation: int, level
 # fuck you
 # edit: permet de savoir si on est sur le bord ou non, donc savoir si on utilise
 # la fonction interpolate ou non
-func is_interpolate(val: int, new_val: int) -> bool:
+func is_interpolate(val: float, new_val: float) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
 	return false
@@ -220,10 +220,8 @@ func is_interpolate(val: int, new_val: int) -> bool:
 #	vec: new position of Trantorien
 #	orientation: orientation of Trantorien (1: N, 2: E, 3: S, 4: O)
 func move_trantorien(name: String, vec: Vector3, orientation: int) -> void:
-	print("orientation : " + str(orientation))
 	if name in list_player:
 		var player = list_player.get(name)
-		print(TIME)
 		player.manage_orientation_trantorien(orientation, TIME)
 		if is_interpolate(player.translation.x, vec.x) \
 			and is_interpolate(player.translation.y, vec.y) \
@@ -256,12 +254,15 @@ func add_all_gem(arr) -> void:
 	var gems = [int(arr[3]), int(arr[4]), int(arr[5]), int(arr[6]), int(arr[7]), int(arr[8]), int(arr[9])]
 	map[vec.x][vec.z].set_inventory(gems)
 
+func player_kicked(id, position):
+	pass
+	
 func command_server(arr):
 	# generate map
 	if arr[0] == "msz":
 		g_x = int(arr[1])
 		g_z = int(arr[2])
-		var camera_script = preload("res://Script/Camera_lvl.gd")
+#		var camera_script = preload("res://Script/Camera_lvl.gd")
 		get_node("Camera").h_offset = g_x / 2.0
 		get_node("Camera").v_offset = g_z / 2.0
 		get_node("Camera").fov = g_x * 2.0
@@ -276,7 +277,6 @@ func command_server(arr):
 	# move player
 	elif arr[0] == 'ppo':
 		#"ppo #n X Y O\n"
-		print(arr)
 		move_trantorien(arr[1], Vector3(int(arr[2]), 0.5, int(arr[3])), int(arr[4]))
 	# set time
 	elif arr[0] == 'sgt':
@@ -293,6 +293,7 @@ func command_server(arr):
 		cnt_color += 1
 	elif arr[0] == 'pex':
 #		"pex #n\n"
+		$Level.player_kicked()
 		var obj_player = list_player[arr[1]]
 		obj_player.kick()
 	# un joueur fait un broadcast
@@ -383,7 +384,7 @@ func command_server(arr):
 		if len(arr) > 1:
 			print(arr)
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("+"):
 		if TIME > 0.21:
 			TIME -= 0.2
@@ -393,6 +394,7 @@ func _process(delta):
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 	if Input.is_action_just_pressed("reload"):
+# warning-ignore:return_value_discarded
 		get_tree().reload_current_scene()
 
 # Manage connection server
@@ -400,9 +402,13 @@ func _process(delta):
 func _ready():
 	# manage connection socket
 	add_child(_client)
+# warning-ignore:return_value_discarded
 	_client.connect("connected", self, "_handle_client_connected")
+# warning-ignore:return_value_discarded
 	_client.connect("disconnected", self, "_handle_client_disconnected")
+# warning-ignore:return_value_discarded
 	_client.connect("data", self, "_handle_client_data")
+# warning-ignore:return_value_discarded
 	_client.connect("error", self, "_handle_client_error")
 	_client.connect_to_server(HOST, PORT)
 	root_tree = tree.create_item()
@@ -432,7 +438,7 @@ func _handle_client_error() -> void:
 
 # Signal
 
-func _on_Tree_item_deselected(id) -> void:
+func _on_Tree_item_deselected(_id) -> void:
 	for player in list_player:
 		list_player[player].highlight_end()
 

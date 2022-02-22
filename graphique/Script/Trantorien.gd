@@ -69,30 +69,30 @@ func is_interpolate(val: int, new_val: int) -> bool:
 		return true
 	return false
 
-func manage_orientation_trantorien(orientation: int, time: float):
-	if (orientation == 1):
+func manage_orientation_trantorien(orientation_trantorien: int, time: float):
+	if (orientation_trantorien == 1):
 		rotation_trantorien(180, time);
-	elif (orientation == 2):
+	elif (orientation_trantorien == 2):
 		rotation_trantorien(90, time);
-	elif (orientation == 3):
+	elif (orientation_trantorien == 3):
 		rotation_trantorien(0, time);
-	elif (orientation == 4):
+	elif (orientation_trantorien == 4):
 		rotation_trantorien(270, time);
 
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
-func move_trantorien(dest: Vector3, speed: float) -> void:
+func move_trantorien(dest: Vector3, time: float) -> void:
 #	Tween.interpolate_property(obj, "translation", obj.translation, vec, TIME, Tween.TRANS_CUBIC)
-	tween.interpolate_property(self, "translation", translation, dest, speed, Tween.TRANS_CUBIC)
+# warning-ignore:return_value_discarded
+	tween.interpolate_property(self, "translation", translation, dest, time, Tween.TRANS_CUBIC)
+# warning-ignore:return_value_discarded
 	tween.start()
 	animPlayer.queue("WalkCycle")
 
-func rotation_trantorien(dest: int, speed: float) -> void:
-	print("dest: " + str(dest))
+func rotation_trantorien(dest: int, time: float) -> void:
 	goal_rotation = deg2rad(dest)
 	current_rotation = rotation.y
-	print(speed)
-	rotation_speed = max(speed, 0.001)
+	rotation_speed = max(time, 0.001)
 	rotation_progress = 0
 
 #Handle fork animation and fade into fork loop, PLEASE CALL THIS
@@ -132,8 +132,10 @@ func kick() -> void:
 	
 #Is being kicked
 #Stop current animation (will play one later) and handle movement, PLEASE CALL THIS
-func kicked(new_position: Vector3, speed: float) -> void:
-	tween.interpolate_property(self, "translation", null, new_position, speed, Tween.TRANS_CUBIC)
+func kicked(new_position: Vector3, time: float) -> void:
+# warning-ignore:return_value_discarded
+	tween.interpolate_property(self, "translation", null, new_position, time, Tween.TRANS_CUBIC)
+# warning-ignore:return_value_discarded
 	tween.start()
 	animPlayer.stop()
 
@@ -141,6 +143,7 @@ func kicked(new_position: Vector3, speed: float) -> void:
 #Handle deleting the character AFTER the animation finished, PLEASE CALL THIS
 func dead() -> void:
 	animPlayer.queue("Death")
+# warning-ignore:return_value_discarded
 	animPlayer.connect("animation_finished", self, "_death_animation_finished")
 
 #Play the idle animation when nothing else is going on
@@ -212,15 +215,13 @@ func _death_animation_finished(animation_name: String) -> void:
 
 func _process(delta: float):
 	if rotation_progress < 1:
-		#print("%f %f %f\n" %[current_rotation, rotation_speed, rotation_progress])
 		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
 		rotation_progress += (1 / rotation_speed) * delta
 
-func _on_input_event(camera, event, position, normal, shape_idx):
+func _on_input_event(_camera, event, _position, _normal, _shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:# and event.pressed:
 			emit_signal("selected", self)
-
 
 func _on_Timer_broadcast_timeout():
 	get_node("Viewport/Panel").visible = false
