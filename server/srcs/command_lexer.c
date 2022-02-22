@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/22 10:29:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 15:35:36 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 		append_command(c, new_command(COMMAND_GAUCHE, NULL, 7));
 	else if (!strcmp(buf, "avance"))
 		append_command(c, new_command(COMMAND_AVANCE, NULL, 7));
+	else if (!strcmp(buf, "kick"))
+		append_command(c, new_command(COMMAND_EXPULSER, NULL, 7));
 	else if (!strcmp(buf, "voir"))
 		append_command(c, new_command(COMMAND_VOIR, NULL, 7));
 	else if (!strcmp(buf, "incantation"))

@@ -147,4 +147,32 @@ class MoniteurTriggerTest < Test::Unit::TestCase
     assert_equal "bct 0 0 2 1 0 0 0 0 0\n", @graphic.gets
   end
 
+  def test_client_cancel
+    client3 = TCPSocket.new 'localhost', 8080
+    client3.gets
+    client3.puts "TOTO"
+    client3.gets
+    client3.gets
+    @graphic.gets
+
+    @tester.puts "set ppo #1 0 1 1"
+    assert_equal "ok\n", @tester.gets
+    @graphic.gets
+
+    @tester.puts "set ppo #3 0 2 1"
+    assert_equal "ok\n", @tester.gets
+    @graphic.gets
+
+    @client.puts "fork"
+    @graphic.gets
+
+    client3.puts "kick"
+    assert_equal "ok\n", client3.gets
+    
+    assert_equal "deplacement 5\n", @client.gets
+    assert_equal "pex #3\n", @graphic.gets
+    assert_equal "ppo #1 0 0 1\n", @graphic.gets
+
+  end
+
 end

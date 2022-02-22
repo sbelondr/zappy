@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/05 10:40:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 15:35:20 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char		*unknown_command(t_srv *srv, t_world_state *world, t_client *client
 	(void)world;
 	(void)client;
 	(void)srv;
-	return (ft_strdup("???"));
+	return (ft_strdup("???\n"));
 }
 
 t_game_action	get_action_from_enum(t_command_type command)
@@ -34,6 +34,7 @@ t_game_action	get_action_from_enum(t_command_type command)
 	array[COMMAND_INVENTAIRE] = see_inventaire;
 	array[COMMAND_PRENDRE] = pickup_item;
 	array[COMMAND_POSER] = putdown_item;
+	array[COMMAND_EXPULSER] = kick;
 	array[COMMAND_FORK] = player_fork;
 	array[COMMAND_BROADCAST] = broadcast;
 	array[COMMAND_EXPULSER] = kick;

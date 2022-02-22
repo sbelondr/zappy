@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/01/09 15:31:01 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 15:37:53 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*avance(t_srv *srv, t_world_state *world, t_client *player)
 {
 	move_player(world, player, player->orientation);
 	send_to_all_moniteur(srv, moniteur_ppo(player));
-	return (ft_strdup("OK\n"));
+	return (ft_strdup("ok\n"));
 }
 
 char	*turn_right(t_srv *srv, t_world_state *world, t_client *player)
@@ -29,7 +29,7 @@ char	*turn_right(t_srv *srv, t_world_state *world, t_client *player)
 	(void)world;
 	player->orientation = (player->orientation + 1) % 4;
 	send_to_all_moniteur(srv, moniteur_ppo(player));
-	return (ft_strdup("OK\n"));
+	return (ft_strdup("ok\n"));
 }
 
 char	*turn_left(t_srv *srv, t_world_state *world, t_client *player)
@@ -41,7 +41,7 @@ char	*turn_left(t_srv *srv, t_world_state *world, t_client *player)
 	if ((int)player->orientation > 3)
 		player->orientation = 0;
 	send_to_all_moniteur(srv, moniteur_ppo(player));
-	return (ft_strdup("OK\n"));
+	return (ft_strdup("ok\n"));
 }
 
 char	*kick(t_srv *srv, t_world_state *world, t_client *client)
@@ -52,24 +52,24 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 	int			dir;
 	char		*format;
 
-	if (client->orientation == NORTH)
-	{
-		direction = ft_vector2(0, 1);
-		dir = 7;
-	}
-	else if (client->orientation == EAST)
+	if (client->orientation == EAST)
 	{
 		direction = ft_vector2(1, 0);
-		dir = 5;
+		dir = 7;
 	}
-	else if (client->orientation == SOUTH)
+	else if (client->orientation == NORTH)
 	{
 		direction = ft_vector2(0, -1);
-		dir = 3;
+		dir = 5;
 	}
 	else if (client->orientation == WEST)
 	{
 		direction = ft_vector2(-1, 0);
+		dir = 3;
+	}
+	else if (client->orientation == SOUTH)
+	{
+		direction = ft_vector2(0, 1);
 		dir = 1;
 	}
 	if (asprintf(&format, "deplacement %d\n", dir) < 0)
@@ -79,14 +79,17 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 	while (current)
 	{
 		target = current->content;
+		printf("Testing target %d at %d %d\n", target->id, target->p_x, target->p_y);
 		if (target->p_x == client->p_x + direction.x
-				&& target->p_y == client->p_y + direction.y)
+				&& target->p_y == client->p_y + direction.y && !is_special_team_member(target))
 		{
-			simple_send(srv, target->id, format);
+			simple_send(srv, target->id, strdup(format));
+			target->p_x += direction.x;
+			target->p_y += direction.y;
 			send_to_all_moniteur(srv, moniteur_ppo(target));
 		}
 		current = current->next;
 	}
 	free(format);
-	return (ft_strdup("OK\n"));
+	return (ft_strdup("ok\n"));
 }

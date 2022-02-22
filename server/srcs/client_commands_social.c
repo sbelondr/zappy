@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 14:33:44 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 15:23:33 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	add_egg_to_team(world, player->team_name, egg->id);
 	printf("[%d] a pondu un oeuf avec l'ID %d !", player->id, egg->id);
 	send_to_all_moniteur(srv, moniteur_enw(egg));
-	return (ft_strdup("OK\n"));
+	return (ft_strdup("ok\n"));
 }
 
 /*
