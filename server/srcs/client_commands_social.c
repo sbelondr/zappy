@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 14:25:23 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 14:33:44 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,43 +145,35 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 	return (ft_strdup("OK\n"));
 }
 
-static int	is_enough_for_ritual(int level, int players, int *objs)
-{
-	if (level == 1 && players >= 1 && objs[LINEMATE] >= 1)
-		return (1);
-	else if (level == 2 && players >= 2 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 && objs[SIBUR] >= 1)
-		return (1);
-	else if (level == 3 && players >= 2 && objs[LINEMATE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1)
-		return (1);
-	else if (level == 4 && players >= 4 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 
-			&& objs[SIBUR] >= 2 && objs[PHIRAS] >= 1 && objs[SIBUR] >= 1 )
-		return (1);
-	else if (level == 5 && players >= 4 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 2 
-			&& objs[SIBUR] >= 1 && objs[LAMENDIANE] >= 3 && objs[SIBUR] >= 1 )
-		return (1);
-	else if (level == 6 && players >= 6 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 2 
-			&& objs[SIBUR] >= 3 && objs[PHIRAS] >= 1 && objs[SIBUR] >= 1 )
-		return (1);
-	else if (level == 7 && players >= 6 && objs[LINEMATE] >= 2 && objs[DERAUMERE] >= 2 
-			&& objs[SIBUR] >= 2 && objs[LAMENDIANE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1 && objs[THYSTAME] >= 1)
-		return (1);
-	return (0);
-}
-
 static	int	*get_ritual_data(int level)
 {
-	int	values[7][7] = { 
-		{0, 1, 0, 0, 0, 0, 0},
-		{0, 1, 1, 1, 0, 0, 0},
-		{0, 2, 0, 1, 0, 0, 0},
-		{0, 1, 1, 2, 0, 0, 0},
-		{0, 1, 2, 1, 3, 0, 0},
-		{0, 1, 2, 3, 0, 1, 0},
-		{0, 0, 0, 0, 0, 0, 0}
+	int	values[8][8] = { 
+		{0, 1, 0, 0, 0, 0, 0, 1},
+		{0, 1, 1, 1, 0, 0, 0, 2},
+		{0, 2, 0, 1, 0, 0, 0, 2},
+		{0, 1, 1, 2, 0, 0, 0, 4},
+		{0, 1, 2, 1, 3, 0, 0, 4},
+		{0, 1, 2, 3, 0, 1, 0, 6},
+		{0, 2, 2, 2, 2, 2, 1, 6}
 	};
-	static int	ret[7];
-	memcpy(ret, values[level - 1], 7 * sizeof(int));
+	static int	ret[8];
+	memcpy(ret, values[level - 1], 8 * sizeof(int));
 	return (ret);
+}
+
+static int	is_enough_for_ritual(int level, int players, int *objs)
+{
+	int	*required;
+
+	required = get_ritual_data(level);
+	for (int i = 0; i < 7; ++i)
+	{
+		if (objs[i] < required[i])
+		{
+			return (0);
+		}
+	}
+	return (required[7] < players);
 }
 
 static void	substract_from_ritual(int level, int *objs)
