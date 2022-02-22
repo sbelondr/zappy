@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/21 09:55:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 14:33:44 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,27 +145,45 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 	return (ft_strdup("OK\n"));
 }
 
+static	int	*get_ritual_data(int level)
+{
+	int	values[8][8] = { 
+		{0, 1, 0, 0, 0, 0, 0, 1},
+		{0, 1, 1, 1, 0, 0, 0, 2},
+		{0, 2, 0, 1, 0, 0, 0, 2},
+		{0, 1, 1, 2, 0, 0, 0, 4},
+		{0, 1, 2, 1, 3, 0, 0, 4},
+		{0, 1, 2, 3, 0, 1, 0, 6},
+		{0, 2, 2, 2, 2, 2, 1, 6}
+	};
+	static int	ret[8];
+	memcpy(ret, values[level - 1], 8 * sizeof(int));
+	return (ret);
+}
+
 static int	is_enough_for_ritual(int level, int players, int *objs)
 {
-	if (level == 1 && players >= 1 && objs[LINEMATE] >= 1)
-		return (1);
-	else if (level == 2 && players >= 2 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 && objs[SIBUR] >= 1)
-		return (1);
-	else if (level == 3 && players >= 2 && objs[LINEMATE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1)
-		return (1);
-	else if (level == 4 && players >= 4 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 1 
-			&& objs[SIBUR] >= 2 && objs[PHIRAS] >= 1 && objs[SIBUR] >= 1 )
-		return (1);
-	else if (level == 5 && players >= 4 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 2 
-			&& objs[SIBUR] >= 1 && objs[LAMENDIANE] >= 3 && objs[SIBUR] >= 1 )
-		return (1);
-	else if (level == 6 && players >= 6 && objs[LINEMATE] >= 1 && objs[DERAUMERE] >= 2 
-			&& objs[SIBUR] >= 3 && objs[PHIRAS] >= 1 && objs[SIBUR] >= 1 )
-		return (1);
-	else if (level == 7 && players >= 6 && objs[LINEMATE] >= 2 && objs[DERAUMERE] >= 2 
-			&& objs[SIBUR] >= 2 && objs[LAMENDIANE] >= 2 && objs[PHIRAS] >= 2 && objs[SIBUR] >= 1 && objs[THYSTAME] >= 1)
-		return (1);
-	return (0);
+	int	*required;
+
+	required = get_ritual_data(level);
+	for (int i = 0; i < 7; ++i)
+	{
+		if (objs[i] < required[i])
+		{
+			return (0);
+		}
+	}
+	return (required[7] < players);
+}
+
+static void	substract_from_ritual(int level, int *objs)
+{
+	int	*cost;
+
+	cost = get_ritual_data(level);
+	for (int i = 0; i < 7; ++i)
+		objs[i] -= cost[i];
+	printf("Paid cost!!\n");
 }
 
 char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
@@ -183,26 +201,38 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 	while (current)
 	{
 		c = current->content;
-		printf("%d/%d %d/%d %d/%d %p/%p\n", c->p_x, player->p_x, c->p_y, player->p_y, c->lvl, player->lvl, c, player);
-		if (c->p_x == player->p_x && c->p_y == player->p_y && c->lvl == player->lvl)
+		if (same_position(c, player) && c->lvl == player->lvl && !is_special_team_member(c))
 			players++;
 		current = current->next;
 	}
 	if (is_enough_for_ritual(player->lvl, players, get_case(world, player->p_x, player->p_y)))
 	{
+		substract_from_ritual(player->lvl, get_case(world, player->p_x, player->p_y));
 		current = world->client_list;
 		while (current)
 		{
 			c = current->content;
-			if (c->p_x == player->p_x && c->p_y == player->p_y && c->lvl == player->lvl)
+			if (same_position(player, c) && c->lvl == player->lvl && c->id != player->id && !is_special_team_member(c))
 				c->lvl += 1;
 			current = current->next;
 		}
+		player->lvl += 1;
 		success = 1;
 	}
+	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
+	current = world->client_list;
+	while (current)
+	{
+		c = current->content;
+		if (same_position(player, c) && c->lvl == player->lvl && !is_special_team_member(c))
+		{
+			send_to_all_moniteur(srv, moniteur_plv(c));
+		}
+		current = current->next;
+	}
+	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
 	error = asprintf(&msg, "Niveau actuel : %d\n", player->lvl);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
-	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
 	return (msg);
 }

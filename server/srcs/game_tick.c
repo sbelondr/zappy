@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 10:50:30 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 13:36:39 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	setup_ritual_client(t_srv *srv, t_client *client, t_client *client_bis)
 {
 	int	ret;
 
-	if (client_bis->p_x == client->p_x && client_bis->p_y == client->p_y && client->lvl == client_bis->lvl)
+	if (client_bis->p_x == client->p_x && client_bis->p_y == client->p_y && client->lvl == client_bis->lvl && !is_special_team_member(client_bis))
 	{
 		printf("[%d] <- %s\n", srv->client_sck[client_bis->id], "elevation en cours\n");
 		if (client_bis->buffer[0].command != COMMAND_INCANTATION)
