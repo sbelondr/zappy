@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 15:38:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 11:02:17 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,12 @@ void	rotten_egg(t_srv *srv, t_egg *egg)
 	ft_lstdelbyval(&team->team_eggs, egg, mcmp, mdel);
 	free(egg->team_name);
 	free(egg);
-	printf("An egg died!\n");
+	printf("%ld: An egg died!\n", srv->frame_nbr);
 }
 
 void	kill_player(t_srv *srv, t_client *client)
 {
-	printf("Client #%d died!\n", client->id);
+	printf("%ld: Client #%d died!\n", srv->frame_nbr, client->id);
 	simple_send(srv, client->id, strdup("mort\n"));
 	send_to_all_moniteur(srv, moniteur_pdi(client));
 	ft_client_exit(srv, client->id);

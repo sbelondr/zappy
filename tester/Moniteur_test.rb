@@ -20,9 +20,7 @@ class MoniteurCommandTester < Test::Unit::TestCase
   end
 
   def teardown
-    @tester.puts "set pdi #1"
-    @tester.gets
-    @tester.puts "set pdi #0"
+    @tester.puts "set pdi all"
   end
 
   def test_ppo_simple

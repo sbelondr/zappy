@@ -6,11 +6,87 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/20 16:35:54 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 11:11:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
+
+static void	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
+{
+	if (!is_special_team_member(target))
+	{
+		kill_player(srv, target);
+		simple_send(srv, tester->id, strdup("ok\n"));
+	}
+	else if (target->id != tester->id)
+	{
+		ft_client_exit(srv, target->id);
+		simple_send(srv, tester->id, strdup("ok\n"));
+	}
+}
+
+static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
+{
+	int			target_id;
+	t_list		*current;
+	t_client	*target;
+
+	if (!strcmp("all", command))
+	{
+		current = srv->world->client_list;
+		while (current)
+		{
+			target = current->content;
+			current = current->next;
+			kill_any_client(srv, target, tester);
+		}
+		ft_client_exit(srv, tester->id);
+	}
+	else
+	{
+		target_id = atoi(command);
+		target = get_client_by_id(srv, target_id);
+		if (target)
+		{
+			kill_any_client(srv, target, tester);
+			simple_send(srv, tester->id, strdup("ok\n"));
+		}
+		else
+			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
+}
+
+static void	parse_edi(t_srv *srv, t_client *tester, char *command)
+{
+	t_egg	*target;
+	t_list	*current;
+	int		target_id;
+
+	if (!strcmp("all", command))
+	{
+		current = srv->world->egg_list;
+		while (current)
+		{
+			target = current->content;
+			current = current->next;
+			rotten_egg(srv, target);
+		}
+		simple_send(srv, tester->id, ft_strdup("ok\n"));
+	}
+	else
+	{
+		target_id = atoi(command);
+		target = get_egg_by_id(srv->world, target_id);
+		if (target)
+		{
+			rotten_egg(srv, target);
+			simple_send(srv, tester->id, ft_strdup("ok\n"));
+		}
+		else
+			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
+}
 
 void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 {
@@ -19,32 +95,15 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	int			arg[10];
 	int			error;
 
-	if (!strncmp("pdi #", command, 5))
+	if (!strncmp("pdi ", command, 4))
 	{
-		//TODO: check args
-		target_id = atoi(command + 5);
-		target = get_client_by_id(srv, target_id);
-		if (target)
-		{
-			if (!is_special_team_member(target))
-			{
-				kill_player(srv, target);
-				simple_send(srv, tester->id, strdup("ok\n"));
-			}
-			else if (target->id != tester->id)
-			{
-				ft_client_exit(srv, target->id);
-				simple_send(srv, tester->id, strdup("ok\n"));
-			}
-			else
-			{
-				ft_client_exit(srv, target->id);
-			}
-		}
-		else
-			simple_send(srv, tester->id, strdup("sbp\n"));
+		parse_pdi(srv, tester, command + 4);
 	}
-	if (!strncmp("pin #", command, 5))
+	else if (!strncmp("edi ", command, 4))
+	{
+		parse_edi(srv, tester, command + 4);
+	}
+	else if (!strncmp("pin #", command, 5))
 	{
 		//TODO: check args
 		target_id = atoi(command + 5);
@@ -78,7 +137,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
 	}
-	if (!strncmp("ppo #", command, 5))
+	else if (!strncmp("ppo #", command, 5))
 	{
 		//TODO: check args
 		error = sscanf(command, "ppo #%d %d %d %d", &arg[0], &arg[1], &arg[2], &arg[3]);
@@ -90,6 +149,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 				target->p_x = arg[1] % srv->param->world_width;
 				target->p_y = arg[2] % srv->param->world_height;
 				target->orientation = arg[3] - 1; //TODO: VERIFY UNDERFLOW
+				send_to_all_moniteur(srv, moniteur_ppo(target));
 				simple_send(srv, tester->id, strdup("ok\n"));
 			}
 			else
@@ -98,5 +158,18 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
 	}
+	else if (!strncmp(command, "tac ", 4))
+	{
+		error = sscanf(command, "tac %d", &arg[0]);
+		if (error >= 0 && arg[0] > 0)
+		{
+			srv->param->allowed_clients_amount = arg[0];
+			simple_send(srv, tester->id, strdup("ok\n"));
+		}
+		else
+			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
+	else
+		simple_send(srv, tester->id, strdup("suc\n"));
 }
 
