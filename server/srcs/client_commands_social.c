@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/21 09:55:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 14:25:23 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,32 @@ static int	is_enough_for_ritual(int level, int players, int *objs)
 	return (0);
 }
 
+static	int	*get_ritual_data(int level)
+{
+	int	values[7][7] = { 
+		{0, 1, 0, 0, 0, 0, 0},
+		{0, 1, 1, 1, 0, 0, 0},
+		{0, 2, 0, 1, 0, 0, 0},
+		{0, 1, 1, 2, 0, 0, 0},
+		{0, 1, 2, 1, 3, 0, 0},
+		{0, 1, 2, 3, 0, 1, 0},
+		{0, 0, 0, 0, 0, 0, 0}
+	};
+	static int	ret[7];
+	memcpy(ret, values[level - 1], 7 * sizeof(int));
+	return (ret);
+}
+
+static void	substract_from_ritual(int level, int *objs)
+{
+	int	*cost;
+
+	cost = get_ritual_data(level);
+	for (int i = 0; i < 7; ++i)
+		objs[i] -= cost[i];
+	printf("Paid cost!!\n");
+}
+
 char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 {
 	t_list		*current;
@@ -183,26 +209,38 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 	while (current)
 	{
 		c = current->content;
-		printf("%d/%d %d/%d %d/%d %p/%p\n", c->p_x, player->p_x, c->p_y, player->p_y, c->lvl, player->lvl, c, player);
-		if (c->p_x == player->p_x && c->p_y == player->p_y && c->lvl == player->lvl)
+		if (same_position(c, player) && c->lvl == player->lvl && !is_special_team_member(c))
 			players++;
 		current = current->next;
 	}
 	if (is_enough_for_ritual(player->lvl, players, get_case(world, player->p_x, player->p_y)))
 	{
+		substract_from_ritual(player->lvl, get_case(world, player->p_x, player->p_y));
 		current = world->client_list;
 		while (current)
 		{
 			c = current->content;
-			if (c->p_x == player->p_x && c->p_y == player->p_y && c->lvl == player->lvl)
+			if (same_position(player, c) && c->lvl == player->lvl && c->id != player->id && !is_special_team_member(c))
 				c->lvl += 1;
 			current = current->next;
 		}
+		player->lvl += 1;
 		success = 1;
 	}
+	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
+	current = world->client_list;
+	while (current)
+	{
+		c = current->content;
+		if (same_position(player, c) && c->lvl == player->lvl && !is_special_team_member(c))
+		{
+			send_to_all_moniteur(srv, moniteur_plv(c));
+		}
+		current = current->next;
+	}
+	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
 	error = asprintf(&msg, "Niveau actuel : %d\n", player->lvl);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
-	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
 	return (msg);
 }

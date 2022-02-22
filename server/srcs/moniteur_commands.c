@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 16:22:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 13:38:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,14 +244,14 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 	t_list		*current;
 	t_client	*c;
 
-	error = asprintf(&ret, "pic %d %d %d #%d", client->p_x, client->p_y, client->lvl, client->id);
+	error = asprintf(&ret, "pic %d %d %d", client->p_x, client->p_y, client->lvl);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	current = world->client_list;
 	while (current)
 	{
 		c = current->content;
-		if (c->p_x == client->p_x && c->p_y == client->p_y && c->lvl == client->lvl)
+		if (c->p_x == client->p_x && c->p_y == client->p_y && c->lvl == client->lvl && !is_special_team_member(c))
 		{
 			tmp = ret;
 			error = asprintf(&ret, "%s #%d", tmp, c->id);

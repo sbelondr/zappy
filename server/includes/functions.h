@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 09:56:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 14:20:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_team			*get_team_by_name(t_world_state *world, char *team_name);
 void			rotten_egg(t_srv *srv, t_egg *egg);
 int				available_slots(t_srv *srv, t_team *team);
 void			kill_player(t_srv *srv, t_client *player);
-
+int				same_position(t_client *a, t_client *b);
 /*
  * GAME
  */

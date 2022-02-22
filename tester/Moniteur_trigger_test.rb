@@ -107,4 +107,44 @@ class MoniteurTriggerTest < Test::Unit::TestCase
     @tester.puts "set pdi #3"
     @tester.gets
   end
+
+  def test_client_ritual
+    @tester.puts "set ppo #1 0 0 1"
+    assert_equal "ok\n", @tester.gets
+    @graphic.gets
+
+    @tester.puts "set bct 0 0 0 0 0 0 0 0 0"
+    assert_equal "ok\n", @tester.gets
+
+    assert_equal "bct 0 0 0 0 0 0 0 0 0\n", @graphic.gets
+
+    @client.puts "incantation"
+    assert_equal "pic 0 0 1 #1\n", @graphic.gets
+    @client.gets
+    assert_equal "pie 0 0 0\n", @graphic.gets
+    assert_equal "plv #1 1\n", @graphic.gets
+    assert_equal "bct 0 0 0 0 0 0 0 0 0\n", @graphic.gets
+
+    @tester.puts "set bct 0 0 2 2 0 0 0 0 0"
+    @tester.gets
+    @graphic.gets
+    client3 = TCPSocket.new 'localhost', 8080
+    client3.gets
+    client3.puts "TOTO"
+    client3.gets
+    @graphic.gets
+
+    @tester.puts "set ppo #3 0 0 1"
+    assert_equal "ok\n", @tester.gets
+    @graphic.gets
+
+    @client.puts "incantation"
+    assert_equal "pic 0 0 1 #1 #3\n", @graphic.gets
+
+    assert_equal "pie 0 0 1\n", @graphic.gets
+    assert_equal "plv #1 2\n", @graphic.gets
+    assert_equal "plv #3 2\n", @graphic.gets
+    assert_equal "bct 0 0 2 1 0 0 0 0 0\n", @graphic.gets
+  end
+
 end

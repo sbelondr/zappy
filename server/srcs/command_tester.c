@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/22 11:11:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/22 13:35:26 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,25 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		{
 			srv->param->allowed_clients_amount = arg[0];
 			simple_send(srv, tester->id, strdup("ok\n"));
+		}
+		else
+			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
+	else if (!strncmp("bct ", command, 4))
+	{
+		error = sscanf(command, "bct %d %d %d %d %d %d %d %d %d",  &arg[0], &arg[1], &arg[2], &arg[3], &arg[4], &arg[5], &arg[6], &arg[7],&arg[8]);
+		if (error >= 0)
+		{
+			int *pos = get_case(srv->world, arg[0], arg[1]);
+			pos[FOOD] = arg[2];
+			pos[LINEMATE] = arg[3];
+			pos[DERAUMERE] = arg[4];
+			pos[SIBUR] = arg[5];
+			pos[LAMENDIANE] = arg[6];
+			pos[PHIRAS] = arg[7];
+			pos[THYSTAME] = arg[8];
+			simple_send(srv, tester->id, strdup("ok\n"));
+			send_to_all_moniteur(srv, moniteur_bct(srv->world, arg[0], arg[1]));
 		}
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
