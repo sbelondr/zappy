@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 09:49:20 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:48:26 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,18 @@ t_team	new_team(char *name)
 	return (team);
 }
 
+static	int	is_option(char *argument, char *shortform, char *longform)
+{
+	int	ret;
+
+	ret = 0;
+	if (shortform)
+		ret |= !strcmp(argument, shortform);
+	if (longform)
+		ret |= !strcmp(argument, longform);
+	return (ret);
+}
+
 t_param	parse_input(int ac, char **av)
 {
 	t_param param;
@@ -95,15 +107,15 @@ t_param	parse_input(int ac, char **av)
 	param.generate_function = generate_ressource_standard;
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
 	{
-		if (!strcmp(av[i], "-v"))
+		if (is_option(av[i], "-v", "--verification"))
 			param.flags |= FLAG_TESTER;
-		else if (!strcmp(av[i], "-h"))
+		else if (is_option(av[i], "-h", "--help"))
 			usage();
-		else if (!strcmp(av[i], "-H"))
+		else if (is_option(av[i], "-H", "--hunger"))
 			param.flags |= FLAG_NOHUNGER;
-		else if (!strcmp(av[i], "-T"))
+		else if (is_option(av[i], "-T", "--ticks"))
 			param.allowed_logs |= LOG_TICK;
-		else if (!strcmp(av[i], "-s"))
+		else if (is_option(av[i], "-s", "--silent"))
 			param.allowed_logs = 0;
 		else if (i + 1 >= ac)
 		{
@@ -111,21 +123,21 @@ t_param	parse_input(int ac, char **av)
 			usage();
 			exit(1);
 		}
-		if (!strcmp(av[i], "-t"))
+		else if (is_option(av[i], "-t", "--time"))
 			param.time_delta = get_numeric_parameter(av[++i], 1, 15000);
-		else if (!strcmp(av[i], "-p"))
+		else if (is_option(av[i], "-p", "--port"))
 			param.port = get_numeric_parameter(av[++i], 1, 15000);
-		else if (!strcmp(av[i], "-x"))
+		else if (is_option(av[i], "-x", "--width"))
 			param.world_width = get_numeric_parameter(av[++i], 5, 15000);
-		else if (!strcmp(av[i], "-y"))
+		else if (is_option(av[i], "-y", "--height"))
 			param.world_height = get_numeric_parameter(av[++i], 5, 15000);
-		else if (!strcmp(av[i], "-G"))
+		else if (is_option(av[i], "-G", "--gen-frequency"))
 			param.generation_frequency = get_numeric_parameter(av[++i], 1, 100000);
-		else if (!strcmp(av[i], "-c"))
+		else if (is_option(av[i], "-c", "--clients-allowed"))
 			param.allowed_clients_amount = get_numeric_parameter(av[++i], 1, 150);
-		else if (!strcmp(av[i], "-m"))
+		else if (is_option(av[i], "-m", "--max-clients"))
 			param.team_hard_limit = get_numeric_parameter(av[++i], 1, 1000);
-		else if (!strcmp(av[i], "-n"))
+		else if (is_option(av[i], "-n", "--name"))
 		{
 			do
 			{
@@ -133,7 +145,7 @@ t_param	parse_input(int ac, char **av)
 				ft_lstadd(&param.team_list, ft_lstnew(&tmp, sizeof(t_team)));
 			} while (ac > i + 1 && av[i + 1][0] != '-');
 		}
-		else if (!strcmp(av[i], "-g"))
+		else if (is_option(av[i], "-g", "--gen-function"))
 		{
 			++i;
 			if (!strcmp(av[i], "STANDARD")) {
