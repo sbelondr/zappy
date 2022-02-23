@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:49:48 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:17:47 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@
 	"-h		affiche l'usage\n" \
 	"-H		desactive la faim\n" \
 	"-v		permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
-	"-T <N> regenere des ressources tous les N ticks (1000 par defaut)\n" \
-	"-g <F> change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n"
+	"-G <N>	regenere des ressources tous les N ticks (1000 par defaut)\n" \
+	"-g <F>	change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
+	"-T		print a message when a tick begins.\n"
 
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
+#define FLAG_TICK			4
 
 typedef enum	e_ressources {
 	FOOD,

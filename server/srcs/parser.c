@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:46:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:14:07 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ t_param	parse_input(int ac, char **av)
 			usage();
 		else if (!strcmp(av[i], "-H"))
 			param.flags |= FLAG_NOHUNGER;
+		else if (!strcmp(av[i], "-T"))
+			param.flags |= FLAG_TICK;
 		else if (i + 1 >= ac)
 		{
 			printf("Error: unexpected end of argument: %s\n", av[i]);
@@ -118,7 +120,7 @@ t_param	parse_input(int ac, char **av)
 		{
 			param.world_height = get_numeric_parameter(av[++i], 5, 15000);
 		}
-		else if (!strcmp(av[i], "-T"))
+		else if (!strcmp(av[i], "-G"))
 		{
 			param.generation_frequency = get_numeric_parameter(av[++i], 1, 100000);
 		}

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/18 11:05:45 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:15:04 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ int main(int ac, char **av)
 			//timeout = time_left(end);
 		}
 		timeout = delta_to_time(param.time_delta);
-		printf("%ld:TICK!!\n", srv->frame_nbr);
 		game_tick(srv);
 	}
 	ft_quit(0);

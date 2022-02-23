@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 13:36:39 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:15:29 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	client_tick(t_srv *srv, t_list *player_list)
 	{
 		client = current->content;
 		if (client->buffer[0].command == COMMAND_FORK)
-		printf("FORK: %d\n", client->buffer[0].cooldown);
+			printf("FORK: %d\n", client->buffer[0].cooldown);
 		if (client->buffer[0].command == COMMAND_INCANTATION && client->buffer[0].cooldown == 300)
 		{
 			for (t_list *cc = player_list; cc; cc = cc->next)
@@ -129,6 +129,8 @@ void	client_tick(t_srv *srv, t_list *player_list)
 void	game_tick(t_srv *srv)
 {
 	srv->frame_nbr += 1;
+	if (srv->param->flags & FLAG_TICK)
+		printf("%ld:TICK!!\n", srv->frame_nbr);
 	client_tick(srv, srv->world->client_list);
 	if (srv->frame_nbr % srv->param->generation_frequency > 0) //TODO: activate it and fix the issue 
 	{
