@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:14:35 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 13:04:03 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 			return (perform_add_to_team(srv, team, c));
 		current = current->next;
 	}
+	simple_send(srv, id, strdup("0\n"));
 	return (0);
 }
 
