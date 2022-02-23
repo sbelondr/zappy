@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 14:01:43 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:21:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,14 @@ int		is_special_team_member(t_client *client)
 
 void simple_send(t_srv *srv, int id, char *msg)
 {
+	if (can_print(srv->param, LOG_SEND))
+	{
+		blue();
+		printf("[%d] <- %s", srv->client_sck[id], msg);
+		reset();
+	}
 	if ((int)send(srv->client_sck[id], msg, \
-			strlen(msg), 0) != (int)strlen(msg))
+				strlen(msg), 0) != (int)strlen(msg))
 		dprintf(STDERR_FILENO, ERROR_SEND_CLIENT, \
 				srv->client_sck[id]);
 	free(msg);
@@ -119,12 +125,22 @@ void	rotten_egg(t_srv *srv, t_egg *egg)
 	ft_lstdelbyval(&team->team_eggs, egg, mcmp, mdel);
 	free(egg->team_name);
 	free(egg);
-	printf("%ld: An egg died!\n", srv->frame_nbr);
+	if (can_print(srv->param, LOG_EGGDEATH))
+	{
+		cyan();
+		printf("%ld: An egg died!\n", srv->frame_nbr);
+		reset();
+	}
 }
 
 void	kill_player(t_srv *srv, t_client *client)
 {
-	printf("%ld: Client #%d died!\n", srv->frame_nbr, client->id);
+	if (can_print(srv->param, LOG_PLAYERDEATH))
+	{
+		cyan();
+		printf("%ld: Client #%d died!\n", srv->frame_nbr, client->id);
+		reset();
+	}
 	simple_send(srv, client->id, strdup("mort\n"));
 	send_to_all_moniteur(srv, moniteur_pdi(client));
 	ft_client_exit(srv, client->id);
@@ -133,4 +149,12 @@ void	kill_player(t_srv *srv, t_client *client)
 int		same_position(t_client *a, t_client *b)
 {
 	return (a->p_x == b->p_x && a->p_y == b->p_y);
+}
+
+int		can_print(t_param *param, t_logtype log_level)
+{
+	return (param->allowed_logs & log_level);
+	if (log_level == LOG_TICK)
+		return (param->flags & FLAG_TICK);
+	return !(param->flags & FLAG_SILENT);
 }

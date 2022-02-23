@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 09:17:47 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:06:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@
 	"-v		permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
 	"-G <N>	regenere des ressources tous les N ticks (1000 par defaut)\n" \
 	"-g <F>	change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
-	"-T		print a message when a tick begins.\n"
+	"-T		print a message when a tick begins.\n" \
+	"-s		does not print anything.\n"
 
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
 #define FLAG_TICK			4
+#define FLAG_SILENT			8
 
 typedef enum	e_ressources {
 	FOOD,
@@ -49,6 +51,17 @@ typedef enum	e_ressources {
 	PHIRAS,
 	THYSTAME,
 }				t_ressources;
+
+typedef enum	e_logtype {
+	LOG_TICK		= 1,
+	LOG_RECEIVE		= 2,
+	LOG_SEND		= 4,
+	LOG_ACTION		= 8,
+	LOG_PLAYERDEATH	= 16,
+	LOG_EGGDEATH	= 32,
+	LOG_CONNEXION	= 64,
+	LOG_INFO		= 128
+}				t_logtype;
 
 typedef enum	e_command_type
 {

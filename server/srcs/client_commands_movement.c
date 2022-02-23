@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 15:37:53 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:15:18 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 	while (current)
 	{
 		target = current->content;
-		printf("Testing target %d at %d %d\n", target->id, target->p_x, target->p_y);
 		if (target->p_x == client->p_x + direction.x
 				&& target->p_y == client->p_y + direction.y && !is_special_team_member(target))
 		{

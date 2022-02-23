@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 10:30:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:14:35 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int			available_slots(t_srv *srv, t_team *team)
 		i++;
 		current = current->next;
 	}
-	printf("There is %d eggs in the list, %d are mature and %d are not used!\n", i, valid_eggs, x);
 	valid_eggs = x;
 	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit) //TODO: Parametize hard limit
 		remaining_slots = srv->param->team_hard_limit - valid_eggs - lstsize;
@@ -112,7 +111,6 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	int	eggcmp(t_egg *a, t_egg *b) { return a->id == b->id; }
 	void free_egg(t_egg *a) { free(a->team_name); free(a); }
 	void emptydel(t_client *_a) { (void)_a;  }
-	printf("Connecting new client\n");
 	remaining_slots = available_slots(srv, team);
 	asprintf(&msg, "%d\n", remaining_slots);
 	simple_send(srv, c->id, msg);
@@ -134,7 +132,12 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 			exit(1);
 			return (0);
 		}
-		printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
+		if (can_print(srv->param, LOG_CONNEXION))
+		{
+			yellow();
+			printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
+			reset();
+		}
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
 		egg->used = 1;
@@ -145,7 +148,12 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		ft_lstdelbyval(&team->team_eggs, &temp, eggcmp, emptydel);
 		ft_lstdelbyval(&srv->world->egg_list, &temp, eggcmp, free_egg);
 	}
-	printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
+	if (can_print(srv->param, LOG_CONNEXION))
+	{
+		yellow();
+		printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
+		reset();
+	}
 	return (1);
 }
 

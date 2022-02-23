@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/11 12:43:13 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:12:44 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,24 @@ void ft_add_new_client(t_srv *srv, fd_set *readfds)
 			reset();
 			return; // (EXIT_FAILURE);
 		}
-		yellow();
-		printf("New connection: fd -> %d\n", new_socket);
-		reset();
+		if (can_print(srv->param, LOG_CONNEXION))
+		{
+			yellow();
+			printf("New connection: fd -> %d\n", new_socket);
+			reset();
+		}
 		i = -1;
 		while (++i < srv->param->team_hard_limit * 2) //TODO: change 2 by number of teams 
 		{
 			if (srv->client_sck[i] == 0)
 			{
 				srv->client_sck[i] = new_socket;
-				yellow();
-				printf("Add new client: %d\n", i);
-				reset();
+				if (can_print(srv->param, LOG_CONNEXION))
+				{
+					yellow();
+					printf("Add new client: %d\n", i);
+					reset();
+				}
 				simple_send(srv, i, ft_strdup("BIENVENUE\n"));
 				ft_lst_append(&srv->world->client_list, ft_lstnew_no_copy(new_client(i), sizeof(t_client)));
 				break;

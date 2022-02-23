@@ -48,6 +48,8 @@ int				ft_set_max_sd(t_srv *srv, fd_set *readfds);
 */
 
 void			red(void);
+void			cyan(void);
+void			purple(void);
 void			blue(void);
 void			yellow(void);
 void			green(void);

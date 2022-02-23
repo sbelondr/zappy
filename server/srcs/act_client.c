@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/20 09:24:28 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:08:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,12 @@ void ft_client_exit(t_srv *srv, int i)
 	if (client->team_name && !is_special_team_member(client))
 		free(client->team_name);
 	free(client);
-	printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
+	if (can_print(srv->param, LOG_INFO))
+	{
+		purple();
+		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
+		reset();
+	}
 	close(srv->client_sck[i]);
 	srv->client_sck[i] = 0;
 }
@@ -88,8 +93,11 @@ void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 		printf("ERROR: CLIENT DOES NOT RESPECT RFC: '%s'\n", buff);
 		exit(1);
 	}
-	green();
-	printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
+	if (can_print(srv->param, LOG_RECEIVE))
+	{
+		green();
+		printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
+		reset();
+	}
 	ft_lexer(srv, buff, i);
-	reset();
 }

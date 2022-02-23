@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 15:23:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:22:59 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	egg->id = maxid + 1;
 	ft_lst_append(&world->egg_list, ft_lstnew_no_copy(egg, sizeof(t_egg)));
 	add_egg_to_team(world, player->team_name, egg->id);
-	printf("[%d] a pondu un oeuf avec l'ID %d !", player->id, egg->id);
+	if (can_print(srv->param, LOG_ACTION))
+	{
+		printf("[%d] a pondu un oeuf avec l'ID %d !", player->id, egg->id);
+	}
 	send_to_all_moniteur(srv, moniteur_enw(egg));
 	return (ft_strdup("ok\n"));
 }
@@ -183,7 +186,6 @@ static void	substract_from_ritual(int level, int *objs)
 	cost = get_ritual_data(level);
 	for (int i = 0; i < 7; ++i)
 		objs[i] -= cost[i];
-	printf("Paid cost!!\n");
 }
 
 char	*ritual(t_srv *srv, t_world_state *world, t_client *player)

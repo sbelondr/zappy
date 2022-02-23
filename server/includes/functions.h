@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 14:20:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:39:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ char			*connect_nbr(t_srv *srv, t_world_state *world, t_client *player);
  * HELPERS
  */
 
+int				can_print(t_param *param, t_logtype log_level);
 char			**split_args(char *str, int expected);
 int				is_special_team_member(t_client *client);
 void			append_command(t_client *client, t_command to_append);
