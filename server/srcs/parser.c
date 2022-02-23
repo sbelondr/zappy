@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:46:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:49:20 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ t_param	parse_input(int ac, char **av)
 
 	bzero(&param, sizeof(t_param));
 	param.team_hard_limit = 500;
+	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION;
 	param.generate_function = generate_ressource_standard;
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
 	{
@@ -100,6 +101,10 @@ t_param	parse_input(int ac, char **av)
 			usage();
 		else if (!strcmp(av[i], "-H"))
 			param.flags |= FLAG_NOHUNGER;
+		else if (!strcmp(av[i], "-T"))
+			param.allowed_logs |= LOG_TICK;
+		else if (!strcmp(av[i], "-s"))
+			param.allowed_logs = 0;
 		else if (i + 1 >= ac)
 		{
 			printf("Error: unexpected end of argument: %s\n", av[i]);
@@ -111,25 +116,15 @@ t_param	parse_input(int ac, char **av)
 		else if (!strcmp(av[i], "-p"))
 			param.port = get_numeric_parameter(av[++i], 1, 15000);
 		else if (!strcmp(av[i], "-x"))
-		{
 			param.world_width = get_numeric_parameter(av[++i], 5, 15000);
-		}
 		else if (!strcmp(av[i], "-y"))
-		{
 			param.world_height = get_numeric_parameter(av[++i], 5, 15000);
-		}
-		else if (!strcmp(av[i], "-T"))
-		{
+		else if (!strcmp(av[i], "-G"))
 			param.generation_frequency = get_numeric_parameter(av[++i], 1, 100000);
-		}
 		else if (!strcmp(av[i], "-c"))
-		{
 			param.allowed_clients_amount = get_numeric_parameter(av[++i], 1, 150);
-		}
 		else if (!strcmp(av[i], "-m"))
-		{
 			param.team_hard_limit = get_numeric_parameter(av[++i], 1, 1000);
-		}
 		else if (!strcmp(av[i], "-n"))
 		{
 			do

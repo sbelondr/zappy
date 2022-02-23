@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/02/20 10:50:43 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 09:28:57 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct	s_param
 	int			allowed_clients_amount;
 	int			team_hard_limit;
 	int			generation_frequency;
+	int			allowed_logs;
 	t_generate	generate_function;
 	t_list		*team_list;	
 }				t_param;
