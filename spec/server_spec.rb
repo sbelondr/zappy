@@ -1,8 +1,8 @@
 require 'socket'
 
-RSpec.describe "Connecting to server" do
+RSpec.describe 'Connecting to server' do
   def connect
-TCPSocket.new 'localhost', 8080
+    TCPSocket.new 'localhost', 8080
   end
   before(:example) do
     @client = connect
@@ -10,27 +10,27 @@ TCPSocket.new 'localhost', 8080
     @graphic = connect
     @tester = connect
   end
-  it "says BIENVENUE" do
+  it 'says BIENVENUE' do
     expect(@client.gets).to eq("BIENVENUE\n")
   end
 
-  context "after connecting" do
+  context 'after connecting' do
     before(:example) do
       @client.gets
-      @client.puts "TOTO"
+      @client.puts 'TOTO'
       @client2.gets
-      @client2.puts "badteam"
+      @client2.puts 'badteam'
       @tester.gets
-      @tester.puts "TESTER"
+      @tester.puts 'TESTER'
       @graphic.gets
-      @graphic.puts "GRAPHIC"
+      @graphic.puts 'GRAPHIC'
     end
-    it "knows a bad team" do
+    it 'does not connect bad team' do
       ret = @client2.gets
       expect(ret).to be_a(String)
       expect(ret).to eq("0\n")
     end
-    it "knows a good team" do
+    it 'properly connects good team' do
       ret = @client.gets
       expect(ret).to be_a(String)
       expect(ret).not_to eq("0\n")
@@ -39,18 +39,15 @@ TCPSocket.new 'localhost', 8080
       expect(ret).to be_a(String)
       expect(ret.chomp).to match(/[\d]+ [\d]+/)
     end
-    it "knows about graphics" do
+    it 'properly connects graphics' do
       ret = @graphic.gets
       expect(ret).to be_a(String)
       expect(ret.chomp).to match(/msz [\d]+ [\d]+/)
     end
-    it "knows about tester" do
+    it 'properly connects tester' do
       ret = @tester.gets
       expect(ret).to be_a(String)
-      expect(ret.chomp).to eq("Test mode enabled. Welcome.")
+      expect(ret.chomp).to eq('Test mode enabled. Welcome.')
     end
   end
 end
-      
-
-
