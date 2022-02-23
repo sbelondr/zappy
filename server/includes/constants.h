@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:06:24 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:50:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,20 @@
 #define TESTER_TEAM			"TESTER"
 
 #define USAGE	"Usage: ./serveur -p <port> -x <width> -y <height> -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n" \
-	"-p		numero de port\n" \
-	"-x		largeur du Monden\n"\
-	"-y		hauteur du Monde\n"\
-	"-n		nom_equipe_1 nom_equipe_2 ...\n"\
-	"-c		nombre de client autorises au commencement du jeu\n" \
-	"-t		diviseur de l'unite de temps (plus t est grand, plus le jeu va vite)\n"\
-	"-m		nombre maximum de clients par equipe (300 par defaut)\n" \
-	"-h		affiche l'usage\n" \
-	"-H		desactive la faim\n" \
-	"-v		permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
-	"-G <N>	regenere des ressources tous les N ticks (1000 par defaut)\n" \
-	"-g <F>	change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
-	"-T		print a message when a tick begins.\n" \
-	"-s		does not print anything.\n"
+	"-p, --port <port>          numero de port\n" \
+	"-x, --width <n>            largeur du Monden\n"\
+	"-y, --height <n>           hauteur du Monde\n"\
+	"-n, --name <name>          nom_equipe_1 nom_equipe_2 ...\n"\
+	"-c, --clients-allowed <n>  nombre de client autorises au commencement du jeu\n" \
+	"-t, --time <n>             diviseur de l'unite de temps (plus t est grand, plus le jeu va vite)\n"\
+	"-m, --max <n>              nombre maximum de clients par equipe (300 par defaut)\n" \
+	"-h, --help                 affiche l'usage\n" \
+	"-H, --hunger               desactive la faim\n" \
+	"-v, --verification         permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
+	"-G, --gen-frequency <N>    regenere des ressources tous les N ticks (1000 par defaut)\n" \
+	"-g, --gen-function <F>     change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
+	"-T, --ticks                imprime le numero de tick quand un nouveau tour commence.\n" \
+	"-s, --silent               n'imprime rien.\n"
 
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
