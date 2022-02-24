@@ -26,7 +26,7 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - make -C server
-    - bundle install --local
+    - bundle2.7 install --local
     - ./server/server -x 10 -y 10 -n TOTO  -p 8080 -c 6 -v -t 100 -H -s >/dev/null & 
     - bin/rspec -r rspec_junit_formatter --format RspecJunitFormatter -o tests.xml
     - pkill server
