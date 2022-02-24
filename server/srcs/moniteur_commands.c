@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/22 13:38:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/24 13:52:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char	*moniteur_mct(t_world_state *world)
 {
 	char	*ret;
 	char	*dup;
+	char	*tmp;
 	int		error;
 	int		c_x;
 	int		c_y;
@@ -59,7 +60,9 @@ char	*moniteur_mct(t_world_state *world)
 	{
 		while (c_x < world->params.world_width)
 		{
-			error = asprintf(&dup, "%s%s", ret, moniteur_bct(world, c_x, c_y));
+			tmp = moniteur_bct(world, c_x, c_y);
+			error = asprintf(&dup, "%s%s", ret, tmp);
+			free(tmp);
 			if (error < 0)
 				ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 			free(ret);
