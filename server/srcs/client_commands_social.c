@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:22:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/24 13:48:40 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	egg->maturity = 600;
 	egg->father_id = player->id;
 	egg->used = 0;
+	egg->hunger = 0;
 	current = world->egg_list;
 	while (current)
 	{
