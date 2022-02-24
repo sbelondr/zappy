@@ -153,7 +153,7 @@ RSpec.describe 'Using the TESTER' do
       @tester.puts 'get mct'
       @size[0].times do |x|
         @size[1].times do |y|
-        expect(@tester.gets).to eq("bct #{y} #{x} 0 0 0 0 0 0 0\n")
+          expect(@tester.gets).to eq("bct #{y} #{x} 0 0 0 0 0 0 0\n")
         end
       end
     end
@@ -192,6 +192,8 @@ RSpec.describe 'Going forward' do
     @tester.gets
     @graphic.gets
     @graphic.puts 'GRAPHIC'
+    @tester.puts 'get msz'
+    @map_size = @tester.gets.split[1..2].collect &:to_i
   end
   after(:each) do
     @cleanup = connect
@@ -234,4 +236,111 @@ RSpec.describe 'Going forward' do
       expect(@tester.gets).to eq("ppo #0 5 6 3\n")
     end
   end
+  context 'on the borders of the map' do
+    it 'goes north' do
+      @tester.puts "set ppo #0 0 0 1"
+      @tester.gets
+      @client.puts "avance"
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts "get ppo #0"
+      expect(@tester.gets).to eq("ppo #0 0 #{@map_size[1] - 1} 1\n")
+    end
+    it 'goes east' do
+      @tester.puts "set ppo #0 #{@map_size[0] - 1} 5 2"
+      @tester.gets
+      @client.puts "avance"
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts "get ppo #0"
+      expect(@tester.gets).to eq("ppo #0 0 5 2\n")
+    end
+    it 'goes west' do
+      @tester.puts "set ppo #0 0 5 4"
+      @tester.gets
+      @client.puts "avance"
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts "get ppo #0"
+      expect(@tester.gets).to eq("ppo #0 #{@map_size[0] - 1} 5 4\n")
+    end
+    it 'goes south' do
+      @tester.puts "set ppo #0 5 #{@map_size[1] - 1} 3"
+      @tester.gets
+      @client.puts "avance"
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts "get ppo #0"
+      expect(@tester.gets).to eq("ppo #0 5 0 3\n")
+    end
+  end
+end
+
+RSpec.describe 'Making the client turn ' do
+  def connect
+    TCPSocket.new 'localhost', 8080
+  end
+  before(:each) do
+    @client = connect
+    @client2 = connect
+    @graphic = connect
+    @tester = connect
+    @client.gets
+    @client.puts 'TOTO'
+    @client.gets
+    @client.gets
+    @client2.gets
+    @client2.puts 'TOTO'
+    @client2.gets
+    @client2.gets
+    @tester.gets
+    @tester.puts 'TESTER'
+    @tester.gets
+    @graphic.gets
+    @graphic.puts 'GRAPHIC'
+  end
+  after(:each) do
+    @cleanup = connect
+    @cleanup.gets
+    @cleanup.puts "TESTER"
+    @cleanup.gets
+    @cleanup.puts "set pdi all"
+  end
+  it 'right' do
+    @tester.puts "set ppo #0 0 0 1"
+    @tester.gets
+    @client.puts 'droite'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 2\n")
+    @client.puts 'droite'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 3\n")
+    @client.puts 'droite'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 4\n")
+    @client.puts 'droite'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 1\n")
+  end
+  it 'left' do
+    @tester.puts "set ppo #0 0 0 1"
+    @tester.gets
+    @client.puts 'gauche'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 4\n")
+    @client.puts 'gauche'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 3\n")
+    @client.puts 'gauche'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 2\n")
+    @client.puts 'gauche'
+    expect(@client.gets).to eq("ok\n")
+    @tester.puts 'get ppo #0'
+    expect(@tester.gets).to eq("ppo #0 0 0 1\n")
+  end
+
 end
