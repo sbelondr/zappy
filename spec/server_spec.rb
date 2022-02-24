@@ -1,5 +1,9 @@
 require 'socket'
 
+def putget(socket, msg)
+  socket.puts msg
+  socket.gets
+end
 RSpec.describe 'Connecting to server' do
   def connect
     TCPSocket.new 'localhost', 8080
@@ -67,10 +71,6 @@ RSpec.describe 'Using the TESTER' do
     TCPSocket.new 'localhost', 8080
   end
 
-  def putget(socket, msg)
-    socket.puts msg
-    socket.gets
-  end
 
   before(:each) do
     @client = connect
