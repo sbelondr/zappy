@@ -66,6 +66,12 @@ RSpec.describe 'Using the TESTER' do
   def connect
     TCPSocket.new 'localhost', 8080
   end
+
+  def putget(socket, msg)
+    socket.puts msg
+    socket.gets
+  end
+
   before(:each) do
     @client = connect
     @client2 = connect
@@ -143,7 +149,7 @@ RSpec.describe 'Using the TESTER' do
       @tester.puts "get bct 2 6"
       expect(@tester.gets).to eq("bct 5 3 1 2 3 4 5 6 7\n")
     end
-    it 'can set items on the whole map' do
+    it 'can clear the whole map' do
       @tester.puts 'get msz'
       ret = @tester.gets
       expect(ret).to match(/msz \d+ \d+/)
@@ -168,9 +174,30 @@ RSpec.describe 'Using the TESTER' do
       expect(@tester.gets).to eq("ok\n")
     end
   end
+  context 'with bad inputs' do
+    it 'answers suc to unknown commands' do
+      expect(putget @tester, 'toto' ).to eq("suc\n")
+      expect(putget @tester, 'get toto' ).to eq("suc\n")
+      expect(putget @tester, 'set pini' ).to eq("suc\n")
+      expect(putget @tester, 'set ppopp' ).to eq("suc\n")
+      expect(putget @tester, 'get mszs' ).to eq("suc\n")
+      expect(putget @tester, 'get pini' ).to eq("suc\n")
+    end
+
+    it 'answers sbp to bad parameters' do
+      expect(putget(@tester, 'set ppo #6 0 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #-1 0 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #a 0 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0b 0 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 a 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 0 a 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 0 0 0')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 0 0 5')).to eq("sbp\n")
+    end
+  end
 end
 
-RSpec.describe 'Going forward' do
+RSpec.describe 'Using the CLIENT' do
   def connect
     TCPSocket.new 'localhost', 8080
   end
@@ -202,145 +229,117 @@ RSpec.describe 'Going forward' do
     @cleanup.gets
     @cleanup.puts "set pdi all"
   end
-  context 'in the middle of the map' do
-    it 'goes north' do
-      @tester.puts "set ppo #0 5 5 1"
-      @tester.gets
-      @client.puts "avance"
-      expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 5 4 1\n")
+  context 'Going forward' do
+    context 'in the middle of the map' do
+      it 'goes north' do
+        @tester.puts "set ppo #0 5 5 1"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 5 4 1\n")
+      end
+      it 'goes east' do
+        @tester.puts "set ppo #0 5 5 2"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 6 5 2\n")
+      end
+      it 'goes west' do
+        @tester.puts "set ppo #0 5 5 4"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 4 5 4\n")
+      end
+      it 'goes south' do
+        @tester.puts "set ppo #0 5 5 3"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 5 6 3\n")
+      end
     end
-    it 'goes east' do
-      @tester.puts "set ppo #0 5 5 2"
-      @tester.gets
-      @client.puts "avance"
-      expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 6 5 2\n")
-    end
-    it 'goes west' do
-      @tester.puts "set ppo #0 5 5 4"
-      @tester.gets
-      @client.puts "avance"
-      expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 4 5 4\n")
-    end
-    it 'goes south' do
-      @tester.puts "set ppo #0 5 5 3"
-      @tester.gets
-      @client.puts "avance"
-      expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 5 6 3\n")
+    context 'on the borders of the map' do
+      it 'goes north' do
+        @tester.puts "set ppo #0 0 0 1"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 0 #{@map_size[1] - 1} 1\n")
+      end
+      it 'goes east' do
+        @tester.puts "set ppo #0 #{@map_size[0] - 1} 5 2"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 0 5 2\n")
+      end
+      it 'goes west' do
+        @tester.puts "set ppo #0 0 5 4"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 #{@map_size[0] - 1} 5 4\n")
+      end
+      it 'goes south' do
+        @tester.puts "set ppo #0 5 #{@map_size[1] - 1} 3"
+        @tester.gets
+        @client.puts "avance"
+        expect(@client.gets).to eq("ok\n")
+        @tester.puts "get ppo #0"
+        expect(@tester.gets).to eq("ppo #0 5 0 3\n")
+      end
     end
   end
-  context 'on the borders of the map' do
-    it 'goes north' do
+
+  context 'Making the client turn ' do
+    it 'right' do
       @tester.puts "set ppo #0 0 0 1"
       @tester.gets
-      @client.puts "avance"
+      @client.puts 'droite'
       expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 0 #{@map_size[1] - 1} 1\n")
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 2\n")
+      @client.puts 'droite'
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 3\n")
+      @client.puts 'droite'
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 4\n")
+      @client.puts 'droite'
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 1\n")
     end
-    it 'goes east' do
-      @tester.puts "set ppo #0 #{@map_size[0] - 1} 5 2"
+    it 'left' do
+      @tester.puts "set ppo #0 0 0 1"
       @tester.gets
-      @client.puts "avance"
+      @client.puts 'gauche'
       expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 0 5 2\n")
-    end
-    it 'goes west' do
-      @tester.puts "set ppo #0 0 5 4"
-      @tester.gets
-      @client.puts "avance"
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 4\n")
+      @client.puts 'gauche'
       expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 #{@map_size[0] - 1} 5 4\n")
-    end
-    it 'goes south' do
-      @tester.puts "set ppo #0 5 #{@map_size[1] - 1} 3"
-      @tester.gets
-      @client.puts "avance"
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 3\n")
+      @client.puts 'gauche'
       expect(@client.gets).to eq("ok\n")
-      @tester.puts "get ppo #0"
-      expect(@tester.gets).to eq("ppo #0 5 0 3\n")
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 2\n")
+      @client.puts 'gauche'
+      expect(@client.gets).to eq("ok\n")
+      @tester.puts 'get ppo #0'
+      expect(@tester.gets).to eq("ppo #0 0 0 1\n")
     end
   end
-end
-
-RSpec.describe 'Making the client turn ' do
-  def connect
-    TCPSocket.new 'localhost', 8080
-  end
-  before(:each) do
-    @client = connect
-    @client2 = connect
-    @graphic = connect
-    @tester = connect
-    @client.gets
-    @client.puts 'TOTO'
-    @client.gets
-    @client.gets
-    @client2.gets
-    @client2.puts 'TOTO'
-    @client2.gets
-    @client2.gets
-    @tester.gets
-    @tester.puts 'TESTER'
-    @tester.gets
-    @graphic.gets
-    @graphic.puts 'GRAPHIC'
-  end
-  after(:each) do
-    @cleanup = connect
-    @cleanup.gets
-    @cleanup.puts "TESTER"
-    @cleanup.gets
-    @cleanup.puts "set pdi all"
-  end
-  it 'right' do
-    @tester.puts "set ppo #0 0 0 1"
-    @tester.gets
-    @client.puts 'droite'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 2\n")
-    @client.puts 'droite'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 3\n")
-    @client.puts 'droite'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 4\n")
-    @client.puts 'droite'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 1\n")
-  end
-  it 'left' do
-    @tester.puts "set ppo #0 0 0 1"
-    @tester.gets
-    @client.puts 'gauche'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 4\n")
-    @client.puts 'gauche'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 3\n")
-    @client.puts 'gauche'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 2\n")
-    @client.puts 'gauche'
-    expect(@client.gets).to eq("ok\n")
-    @tester.puts 'get ppo #0'
-    expect(@tester.gets).to eq("ppo #0 0 0 1\n")
-  end
-
 end
