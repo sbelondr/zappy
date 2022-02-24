@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/23 10:08:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 13:04:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void ft_client_exit(t_srv *srv, int i)
 		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
 		reset();
 	}
+	//shutdown(srv->client_sck[i], SHUT_RD);
 	close(srv->client_sck[i]);
 	srv->client_sck[i] = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:21:42 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 17:58:40 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ char	**split_args(char *str, int expected)
 }
 int		is_special_team_member(t_client *client)
 {
-	return (!strcmp(client->team_name, GRAPHIC_TEAM) ||
+	return (!client->team_name || 
+			!strcmp(client->team_name, GRAPHIC_TEAM) ||
 			!strcmp(client->team_name, TESTER_TEAM));
 }
 

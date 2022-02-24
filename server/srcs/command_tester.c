@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/22 13:35:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/23 18:02:13 by selver           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@ static void	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
 	if (!is_special_team_member(target))
 	{
 		kill_player(srv, target);
-		simple_send(srv, tester->id, strdup("ok\n"));
 	}
 	else if (target->id != tester->id)
 	{
 		ft_client_exit(srv, target->id);
-		simple_send(srv, tester->id, strdup("ok\n"));
 	}
 }
 
