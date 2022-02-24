@@ -15,19 +15,25 @@ _global_script_classes=[ {
 "path": "res://case.gd"
 }, {
 "base": "Node",
+"class": "CommandServer",
+"language": "GDScript",
+"path": "res://Script/CommandServer.gd"
+}, {
+"base": "Node",
 "class": "Gems",
 "language": "GDScript",
 "path": "res://Script/Gems.gd"
 } ]
 _global_script_class_icons={
 "Case": "",
+"CommandServer": "",
 "Gems": ""
 }
 
 [application]
 
 config/name="zappy"
-run/main_scene="res://Level.tscn"
+run/main_scene="res://Scene/Main.tscn"
 config/icon="res://icon.png"
 
 [autoload]

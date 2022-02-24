@@ -14,7 +14,8 @@ onready var inventory_node := [
 	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire/Thystame')
 ]
 
-onready var camera_trantorien = $Camera #get_node("Control/ViewportContainer/Viewport/Camera")
+onready var camera_trantorien = $Camera
+#get_node("Control/ViewportContainer/Viewport/Camera")
 
 var current_rotation : float
 var goal_rotation : float
@@ -44,8 +45,15 @@ func set_trantorien(pname: String, pid, pteam: String, porientation: int, plevel
 	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_team").text = pteam
 	
 
-#Much better than using attributes as globals, PLEASE CALL THIS
+# Much better than using attributes as globals, PLEASE CALL THIS
 func set_level(new_level: int) -> void:
+	if level == new_level:
+		return
+	idle()
+	if level < new_level:
+		scale += Vector3(0.1, 0.1, 0.1)
+	else:
+		scale -= Vector3(0.1, 0.1, 0.1)
 	level = new_level
 	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_level").text = str(new_level)
 	get_node("NodeHUD/HUDPlayer/info_player/pb_level").value = new_level
@@ -62,8 +70,10 @@ func set_inventory(new_inventory: Array) -> void:
 #	inventory = new_inventory
 	load_inventory_hud()
 
-# i don't remember but it's interresting
+# I don't remember but it's interresting
 # fuck you
+# edit: permet de savoir si on est sur le bord ou non, donc savoir si on utilise
+# la fonction interpolate ou non
 func is_interpolate(val: int, new_val: int) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
@@ -82,7 +92,7 @@ func manage_orientation_trantorien(orientation_trantorien: int, time: float):
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
 func move_trantorien(dest: Vector3, orientation: int, time: float) -> void:
-	manage_orientation_trantorien(orientation, TIME)
+	manage_orientation_trantorien(orientation, time)
 	if is_interpolate(translation.x, dest.x) \
 		and is_interpolate(translation.y, dest.y) \
 		and is_interpolate(translation.z, dest.z):
@@ -92,7 +102,7 @@ func move_trantorien(dest: Vector3, orientation: int, time: float) -> void:
 		tween.start()
 		animPlayer.queue("WalkCycle")
 	else:
-		translation = vec
+		translation = dest
 
 func rotation_trantorien(dest: int, time: float) -> void:
 	goal_rotation = deg2rad(dest)
