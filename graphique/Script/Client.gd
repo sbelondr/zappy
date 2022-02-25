@@ -13,7 +13,6 @@ var _status: int = 0
 
 func _ready():
 	client = StreamPeerTCP.new()
-	client.set_no_delay(true)
 
 func state_connection(new_status):
 	if new_status != _status:
@@ -39,7 +38,7 @@ func srv_send_msg():
 		else:
 			emit_signal("data", data[1])
 
-func _process(delta):
+func _process(_delta):
 	var new_status: int = client.get_status()
 	state_connection(new_status)
 	if new_status == client.STATUS_CONNECTED:
@@ -48,8 +47,9 @@ func _process(delta):
 func connect_to_server(ip, port):
 	set_process(true)
 	print("Connecting to server: %s : %s" % [ip, str(port)])
-	var connect = client.connect_to_host(ip, port)
+	client.connect_to_host(ip, port)
 	if client.is_connected_to_host():
+		client.set_no_delay(true)
 		wrapped_client = PacketPeerStream.new()
 		wrapped_client.set_stream_peer(client)
 

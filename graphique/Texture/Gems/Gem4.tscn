@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Gems/Dipyramid_001.mesh" type="ArrayMesh" id=1]
+[ext_resource path="res://Texture/Gems/gem_green.tres" type="Material" id=2]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.6 )
+mesh = ExtResource( 1 )
+material/0 = ExtResource( 2 )
