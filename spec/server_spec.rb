@@ -155,10 +155,6 @@ RSpec.describe 'Using the TESTER' do
     it 'can kill players' do
       expect(putget @tester, 'set pdi #0').to eq("ok\n")
     end
-    it 'can create eggs' do
-      expect(putget @tester, 'set enw 5 4 TOTO').to eq("ok\n")
-      expect(putget @tester, 'set edi #0').to eq("ok\n")
-    end
   end
   context 'with bad inputs' do
     it 'answers suc to unknown commands' do
