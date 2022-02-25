@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/25 10:38:17 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/25 10:46:45 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,17 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
 	}
+	else if (!strncmp(command, "mac ", 4))
+	{
+		error = sscanf(command, "mac %d", &arg[0]);
+		if (error >= 0 && arg[0] > 0)
+		{
+			srv->param->team_hard_limit = arg[0];
+			simple_send(srv, tester->id, strdup("ok\n"));
+		}
+		else
+			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
 	else if (!strncmp(command, "tac ", 4))
 	{
 		error = sscanf(command, "tac %d", &arg[0]);
@@ -233,22 +244,38 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	}
 	else if (!strncmp("bct ", command, 4))
 	{
-		error = sscanf(command, "bct %d %d %d %d %d %d %d %d %d",  &arg[0], &arg[1], &arg[2], &arg[3], &arg[4], &arg[5], &arg[6], &arg[7],&arg[8]);
-		if (error >= 0)
+		if (strstr(command, " clear"))
 		{
-			int *pos = get_case(srv->world, arg[0], arg[1]);
-			pos[FOOD] = arg[2];
-			pos[LINEMATE] = arg[3];
-			pos[DERAUMERE] = arg[4];
-			pos[SIBUR] = arg[5];
-			pos[LAMENDIANE] = arg[6];
-			pos[PHIRAS] = arg[7];
-			pos[THYSTAME] = arg[8];
-			simple_send(srv, tester->id, strdup("ok\n"));
-			send_to_all_moniteur(srv, moniteur_bct(srv->world, arg[0], arg[1]));
+			error = sscanf(command, "bct %d %d clear",  &arg[0], &arg[1]);
+			if (error >= 0)
+			{
+				ft_bzero(get_case(srv->world, arg[0], arg[1]), 7 * sizeof(int));
+				send_to_all_moniteur(srv, moniteur_bct(srv->world, arg[0], arg[1]));
+				simple_send(srv, tester->id, strdup("ok\n"));
+			}
+			else
+				simple_send(srv, tester->id, strdup("sbp\n"));
 		}
 		else
-			simple_send(srv, tester->id, strdup("sbp\n"));
+		{
+			//error = parse_int_parameters(command, 9, arg);
+			error = sscanf(command, "bct %d %d %d %d %d %d %d %d %d",  &arg[0], &arg[1], &arg[2], &arg[3], &arg[4], &arg[5], &arg[6], &arg[7],&arg[8]);
+			if (error >= 0)
+			{
+				int *pos = get_case(srv->world, arg[0], arg[1]);
+				pos[FOOD] = arg[2];
+				pos[LINEMATE] = arg[3];
+				pos[DERAUMERE] = arg[4];
+				pos[SIBUR] = arg[5];
+				pos[LAMENDIANE] = arg[6];
+				pos[PHIRAS] = arg[7];
+				pos[THYSTAME] = arg[8];
+				simple_send(srv, tester->id, strdup("ok\n"));
+				send_to_all_moniteur(srv, moniteur_bct(srv->world, arg[0], arg[1]));
+			}
+			else
+				simple_send(srv, tester->id, strdup("sbp\n"));
+		}
 	}
 	else
 		simple_send(srv, tester->id, strdup("suc\n"));
