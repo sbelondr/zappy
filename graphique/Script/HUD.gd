@@ -6,6 +6,8 @@ extends CanvasLayer
 signal player_selected(player)
 signal player_deselected(player)
 
+signal mode_doom()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$LineEdit.visible = false
@@ -37,4 +39,6 @@ func _on_Tree_item_activated():
 
 func _on_LineEdit_text_entered(new_text):
 	print(new_text)
+	if new_text == 'Doom':
+		emit_signal("mode_doom")
 	Manager.line_edit_cheat_enabled = false

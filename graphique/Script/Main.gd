@@ -6,15 +6,15 @@ const PORT: int = 8080
 const RECONNECT_TIMEOUT: float = 3.0
 const Client = preload("res://Script/Client.gd")
 
-onready var CommandServer = preload("res://Script/CommandServer.gd")
+onready var CommandServer = load("res://Script/CommandServer.gd")
 
 var command_server
 
 var _client: Client = Client.new()
-onready var test = get_node("World/Level")
+onready var level = get_node("World/Level")
 
 func _ready():
-	command_server = CommandServer.new(test) #instance()
+	command_server = CommandServer.new(level)
 	#command_server = CommandServer.new(get_node("World/Level")) #instance()
 	# manage connection socket
 	add_child(_client)

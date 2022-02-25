@@ -10,11 +10,6 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "Case",
-"language": "GDScript",
-"path": "res://case.gd"
-}, {
-"base": "Node",
 "class": "CommandServer",
 "language": "GDScript",
 "path": "res://Script/CommandServer.gd"
@@ -25,7 +20,6 @@ _global_script_classes=[ {
 "path": "res://Script/Gems.gd"
 } ]
 _global_script_class_icons={
-"Case": "",
 "CommandServer": "",
 "Gems": ""
 }

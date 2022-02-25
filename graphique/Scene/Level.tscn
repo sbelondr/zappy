@@ -79,5 +79,6 @@ stream = ExtResource( 6 )
 
 [connection signal="input_event" from="StaticBody" to="StaticBody" method="_on_StaticBody_input_event"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="mode_doom" from="HUD" to="." method="_on_HUD_mode_doom"]
 [connection signal="player_deselected" from="HUD" to="." method="_on_Tree_item_deselected"]
 [connection signal="player_selected" from="HUD" to="." method="_on_Tree_item_selected"]

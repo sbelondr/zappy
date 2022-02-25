@@ -34,7 +34,7 @@ onready var tween : Tween = get_node("Tween")
 
 signal selected(player)
 
-func set_trantorien(pname: String, pid, pteam: String, porientation: int, plevel: int):
+func set_trantorien(pname: String, pid: String, pteam: String, porientation: int, plevel: int):
 	player_name = pname
 	player_id = pid
 	team = pteam
@@ -74,7 +74,7 @@ func set_inventory(new_inventory: Array) -> void:
 # fuck you
 # edit: permet de savoir si on est sur le bord ou non, donc savoir si on utilise
 # la fonction interpolate ou non
-func is_interpolate(val: int, new_val: int) -> bool:
+func is_interpolate(val: float, new_val: float) -> bool:
 	if val == new_val or val + 1 == new_val or val - 1 == new_val:
 		return true
 	return false
@@ -88,11 +88,12 @@ func manage_orientation_trantorien(orientation_trantorien: int, time: float):
 		rotation_trantorien(0, time);
 	elif (orientation_trantorien == 4):
 		rotation_trantorien(270, time);
+	orientation = orientation_trantorien
 
 #Move trantorien to target direction, speed is TIME
 #Handles animation and tweening, PLEASE CALL THIS
-func move_trantorien(dest: Vector3, orientation: int, time: float) -> void:
-	manage_orientation_trantorien(orientation, time)
+func move(dest: Vector3, orientation_player: int, time: float) -> void:
+	manage_orientation_trantorien(orientation_player, time)
 	if is_interpolate(translation.x, dest.x) \
 		and is_interpolate(translation.y, dest.y) \
 		and is_interpolate(translation.z, dest.z):
