@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/24 13:52:08 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/25 11:01:56 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,28 @@ char	*moniteur_mct(t_world_state *world)
 	return (ret);
 }
 
+//Unité de temps
+char	*moniteur_tac(t_world_state *world)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "tac %d\n", world->params.allowed_clients_amount);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
+//Unité de temps
+char	*moniteur_mac(t_world_state *world)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "mac %d\n", world->params.team_hard_limit);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	return (ret);
+}
 //Unité de temps
 char	*moniteur_sgt(t_world_state *world)
 {

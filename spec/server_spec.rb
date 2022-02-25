@@ -122,56 +122,38 @@ RSpec.describe 'Using the TESTER' do
       expect(@tester.gets).to match(/pin #1 \d+ \d+ 1 2 3 4 5 6 7\n/)
     end
     it 'can set the time unit of the server' do
-      @tester.puts "set sst 50"
-      expect(@tester.gets).to eq("sgt 50\n")
-      @tester.puts "sgt"
-      expect(@tester.gets).to eq("sgt 50\n")
+      expect(putget @tester, 'set sst 50').to eq("sgt 50\n")
+      expect(putget @tester, 'get sgt').to eq("sgt 50\n")
     end
     it 'can set the allowed clients at start amount of the server' do
-      @tester.puts "set tac 20"
-      expect(@tester.gets).to eq("ok\n")
-      @tester.puts "get tac"
-      expect(@tester.gets).to eq("tac 20\n")
+      expect(putget @tester, 'set tac 50').to eq("ok\n")
+      expect(putget @tester, 'get tac').to eq("tac 50\n")
     end
     it 'can set the maximum amount of clients allowed per team on the server' do
-      @tester.puts "set mac 50"
-      expect(@tester.gets).to eq("ok\n")
-      @tester.puts "get mac"
-      expect(@tester.gets).to eq("mac 50\n")
+      expect(putget @tester, 'set mac 50').to eq("ok\n")
+      expect(putget @tester, 'get mac').to eq("mac 50\n")
     end
     it 'can set items on the ground' do
-      @tester.puts 'set bct 5 3 clear'
-      expect(@tester.gets).to eq("ok\n")
-      @tester.puts 'set bct 2 6 1 2 3 4 5 6 7'
-      expect(@tester.gets).to eq("ok\n")
-      @tester.puts "get bct 5 3"
-      expect(@tester.gets).to eq("bct 5 3 0 0 0 0 0 0 0\n")
-      @tester.puts "get bct 2 6"
-      expect(@tester.gets).to eq("bct 5 3 1 2 3 4 5 6 7\n")
+      expect(putget @tester, 'set bct 5 3 clear').to eq("ok\n")
+      expect(putget @tester, 'set bct 2 6 1 2 3 4 5 6 7').to eq("ok\n")
+      expect(putget @tester, 'get bct 5 3').to eq("bct 5 3 0 0 0 0 0 0 0\n")
+      expect(putget @tester, 'get bct 2 6').to eq("bct 2 6 1 2 3 4 5 6 7\n")
     end
     it 'can clear the whole map' do
       @tester.puts 'get msz'
       ret = @tester.gets
       expect(ret).to match(/msz \d+ \d+/)
       size = ret.split[1..2].collect(&:to_i)
-      @tester.puts 'set mct clear'
-      expect(@tester.gets).to eq("ok\n")
+      expect(putget @tester, 'set mct clear').to eq("ok\n")
       @tester.puts 'get mct'
-      @size[0].times do |x|
-        @size[1].times do |y|
+      (size[0]).times do |x|
+        (size[1]).times do |y|
           expect(@tester.gets).to eq("bct #{y} #{x} 0 0 0 0 0 0 0\n")
         end
       end
     end
     it 'can kill players' do
-      @tester.puts 'set pdi #0'
-      expect(@tester.gets).to eq("ok\n")
-    end
-    it 'can create eggs' do
-      @tester.puts 'set enw 5 4 TOTO'
-      expect(@tester.gets).to eq("ok\n")
-      @tester.puts 'set edi #0'
-      expect(@tester.gets).to eq("ok\n")
+      expect(putget @tester, 'set pdi #0').to eq("ok\n")
     end
   end
   context 'with bad inputs' do
@@ -188,11 +170,19 @@ RSpec.describe 'Using the TESTER' do
       expect(putget(@tester, 'set ppo #6 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #-1 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #a 0 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #1b 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0b 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 a 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 0 a 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 0 0 0')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 0 0 5')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 -1 1 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1 -1 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1d 1c 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1 1 -3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo 0 1 1 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1 1 3v')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo  0 1 1 3v')).to eq("sbp\n")
     end
   end
 end
