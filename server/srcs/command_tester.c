@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/25 11:03:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/25 11:06:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,17 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 			}
 			else
 				simple_send(srv, tester->id, strdup("sbp\n"));
+		}
+		else
+			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
+	else if (!strncmp(command, "sst ", 4))
+	{
+		error = sscanf(command, "sst %d", &arg[0]);
+		if (error >= 0 && arg[0] > 0)
+		{
+			srv->world->params.time_delta = arg[0];
+			simple_send(srv, tester->id, moniteur_sgt(srv->world));
 		}
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));

@@ -123,7 +123,7 @@ RSpec.describe 'Using the TESTER' do
     end
     it 'can set the time unit of the server' do
       expect(putget @tester, 'set sst 50').to eq("sgt 50\n")
-      expect(putget @tester, 'sgt').to eq("sgt 50\n")
+      expect(putget @tester, 'get sgt').to eq("sgt 50\n")
     end
     it 'can set the allowed clients at start amount of the server' do
       expect(putget @tester, 'set tac 50').to eq("ok\n")
