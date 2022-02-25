@@ -1,0 +1,52 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Script/block.gd" type="Script" id=1]
+[ext_resource path="res://Texture/Gems/Gem7.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Texture/Gems/Gem3.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Texture/Gems/Gem4.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Texture/Gems/Gem2.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Texture/Gems/Gem6.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Texture/Player/material-block.material" type="Material" id=7]
+[ext_resource path="res://Texture/Gems/Gem5.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Texture/Gems/Gem.tscn" type="PackedScene" id=9]
+
+[sub_resource type="CubeMesh" id=1]
+material = ExtResource( 7 )
+
+[sub_resource type="BoxShape" id=2]
+
+[node name="block" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="MeshInstance"]
+
+[node name="CollisionShape" type="CollisionShape" parent="MeshInstance/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="Materials" type="Spatial" parent="."]
+
+[node name="Linemate" parent="Materials" instance=ExtResource( 9 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -0.256712, 0.614772, -0.137827 )
+
+[node name="Deraumere" parent="Materials" instance=ExtResource( 5 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -0.183531, 0.690348, 0.289645 )
+
+[node name="Sibur" parent="Materials" instance=ExtResource( 3 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0.335882, 0.611795, 0 )
+
+[node name="Mendiane" parent="Materials" instance=ExtResource( 4 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0.612666, 0.337998 )
+
+[node name="Phiras" parent="Materials" instance=ExtResource( 6 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0.607347, -0.170216 )
+
+[node name="Thystame" parent="Materials" instance=ExtResource( 2 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0.331946, 0.591663, 0.383658 )
+
+[node name="Food" parent="Materials" instance=ExtResource( 8 )]
+transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0.157464, 0.557698, -0.295213 )

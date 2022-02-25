@@ -1,0 +1,11 @@
+[gd_resource type="SpatialMaterial" format=2]
+
+[resource]
+albedo_color = Color( 0.705882, 0.0392157, 0.823529, 1 )
+metallic = 0.16
+roughness = 0.24
+emission_enabled = true
+emission = Color( 0.231373, 0.00784314, 0.25098, 1 )
+emission_energy = 3.51
+emission_operator = 0
+emission_on_uv2 = false

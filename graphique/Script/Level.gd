@@ -17,9 +17,9 @@ var g_x: int = 10
 var g_z: int = 10
 
 # Texture
-const texture_block: PackedScene = preload("res://Texture/block.tscn")
-const trantorien: PackedScene = preload("res://Texture/Trantorien.tscn")
-const egg: PackedScene = preload("res://Texture/Egg.tscn");
+const texture_block: PackedScene = preload("res://Texture/Ground/block.tscn")
+const trantorien: PackedScene = preload("res://Texture/Player/Trantorien.tscn")
+const egg: PackedScene = preload("res://Texture/Egg/Egg.tscn");
 
 # HUD
 onready var tree = $HUD/Tree
