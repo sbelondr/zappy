@@ -48,7 +48,7 @@ var generate_name = load("res://Script/GenerateName.gd").new()
 # 	texture: texture block
 #	vec: position
 # Return: obj
-func add_block(texture : PackedScene, vec: Vector3, scale=Vector3(0,0,0)):
+func add_block(texture : PackedScene, vec: Vector3, scale=Vector3(0,0,0)) -> Node:
 	var obj = texture.instance()
 	obj.translation = vec
 	if scale.x != 0:
@@ -72,7 +72,7 @@ func map_add_gem(arr: Array) -> void:
 #	g_x: size x
 #	g_y: size y
 # Return: new map
-func map_set(x: int, z: int):
+func map_set(x: int, z: int) -> void:
 	_set_map(x, z)
 	_set_camera()
 
@@ -104,11 +104,11 @@ func player_die(id_player: String) -> void:
 		player.dead()
 		list_player.erase(id_player)
 
-func player_kicked(id_player: String):
+func player_kicked(id_player: String) -> void:
 	var player = list_player[id_player]
 	player.kick()
 
-func player_fork_start(id_player: String):
+func player_fork_start(id_player: String) -> void:
 	if id_player in list_player:
 		list_player[id_player].fork_start()
 
@@ -116,7 +116,7 @@ func player_broadcast(id_player, msg) -> void:
 	if id_player in list_player:
 		list_player[id_player].broadcast(msg)
 
-func player_level(id_player: String, level: int):
+func player_level(id_player: String, level: int) -> void:
 	var player = list_player[id_player]
 	player.set_level(level)
 
@@ -126,14 +126,14 @@ func player_incantation(arr_player: Array) -> void:
 			var player = list_player[id_player]
 			player.start_incantation()
 
-func player_putdown_item(id_player: String, color_gem: int):
+func player_putdown_item(id_player: String, color_gem: int) -> void:
 	if id_player in list_player:
 		var player = list_player[id_player]
 		var vec_player = player.translation
 		player.putdown(color_gem)
 		map[vec_player.x][vec_player.z].add_item(color_gem)
 
-func player_pickup_item(id_player: String, color_gem: int):
+func player_pickup_item(id_player: String, color_gem: int) -> void:
 	if id_player in list_player:
 		var player = list_player[id_player]
 		var vec_player = player.translation
@@ -150,7 +150,7 @@ func player_move(id_player, vec: Vector3, orientation: int, time: float) -> void
 		var player = list_player[id_player]
 		player.move(vec, orientation, time)
 
-func player_set_inventory(id_player: String, inventory: Array):
+func player_set_inventory(id_player: String, inventory: Array) -> void:
 	if id_player in list_player:
 		list_player[id_player].set_inventory(inventory)
 
@@ -159,7 +159,7 @@ func player_set_inventory(id_player: String, inventory: Array):
 #	vec: Vector to indicate the position of Trantorien
 # add new Trantorien
 func player_add(id_trantorien: String, vec: Vector3, orientation: int, \
-		level: int, team: String, time: float):
+		level: int, team: String, time: float) -> Node:
 	var obj = add_block(trantorien, vec, Vector3(0.1, 0.1, 0.1))
 	var name = generate_name.generate_names()
 	obj.set_trantorien(name, id_trantorien, team, orientation, level)
@@ -168,7 +168,7 @@ func player_add(id_trantorien: String, vec: Vector3, orientation: int, \
 
 # TODO: a refaire add et add new.
 func player_add_new(id_player: String, position: Vector3, orientation: int, \
-		level: int, team: String, time: float):
+		level: int, team: String, time: float) -> void:
 	list_player[id_player] = player_add(id_player, \
 			position, orientation, level, team, time)
 	# add user in HUD
@@ -187,7 +187,7 @@ func egg_die(id_egg: String) -> void:
 		egg.queue_free()
 		list_egg.erase(id_egg)
 
-func egg_spawn(id_egg: String, id_player: String, position: Vector3):
+func egg_spawn(id_egg: String, id_player: String, position: Vector3) -> void:
 	if id_player in list_player:
 		list_player[id_player].fork_end()
 		var new_egg = add_block(egg, position)
@@ -214,7 +214,7 @@ func _ready():
 #	g_x: size x
 #	g_y: size y
 # Return: new map
-func _set_map(x: int, z: int):
+func _set_map(x: int, z: int) -> void:
 	g_x = x
 	g_z = z
 	var y := 0
@@ -247,14 +247,15 @@ func _hud_add_player(team: String, id_trantorien: String) -> void:
 # Signals
 ###############################################################################
 
-func _on_Tree_item_deselected(_id) -> void:
+func _on_Tree_item_deselected(_id: String) -> void:
 	for player in list_player:
 		list_player[player].highlight_end()
+	$Camera.make_current()
 
 func _on_Tree_item_selected(id: String) -> void:
 	if not id in list_player:
 		return
-	$Camera.current = false
+#	$Camera.current = false
 	for player in list_player:
 		if player != id:
 			list_player[player].highlight_end()
@@ -262,5 +263,5 @@ func _on_Tree_item_selected(id: String) -> void:
 	if not status:
 		$Camera.make_current()
 
-func _on_HUD_mode_doom():
+func _on_HUD_mode_doom() -> void:
 	get_node("AudioStreamPlayer").playing = true

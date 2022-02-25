@@ -8,6 +8,7 @@ signal player_deselected(player)
 
 signal mode_doom()
 
+var selected : TreeItem = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$LineEdit.visible = false
@@ -25,17 +26,13 @@ func _process(_delta):
 
 func _on_Tree_item_selected():
 	var select_text = $Tree.get_selected().get_text(0)
-	emit_signal("player_selected", select_text)
-
-func _on_Tree_item_activated():
-	emit_signal("player_deselected", $Tree.get_selected().get_text(0))
-
-#func _on_LineEdit_focus_entered():
-#	Manager.movement_enabled = false
-##	get_node("/root/Manager").movement_enabled = false
-#
-#func _on_LineEdit_focus_exited():
-#	Manager.movement_enabled = true
+	if selected == $Tree.get_selected():
+		emit_signal("player_deselected", select_text)
+		selected = null
+		$Tree.get_selected().deselect(0)
+	else:
+		emit_signal("player_selected", select_text)
+		selected = $Tree.get_selected()
 
 func _on_LineEdit_text_entered(new_text):
 	print(new_text)
