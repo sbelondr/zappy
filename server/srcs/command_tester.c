@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/25 10:46:45 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/25 11:03:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ freeerror:
 		free(array[i]);
 	free(array);
 	return (-1);
-
 }
 
 static void	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
@@ -189,7 +188,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		error = sscanf(command, "mac %d", &arg[0]);
 		if (error >= 0 && arg[0] > 0)
 		{
-			srv->param->team_hard_limit = arg[0];
+			srv->world->params.team_hard_limit = arg[0];
 			simple_send(srv, tester->id, strdup("ok\n"));
 		}
 		else
@@ -200,7 +199,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		error = sscanf(command, "tac %d", &arg[0]);
 		if (error >= 0 && arg[0] > 0)
 		{
-			srv->param->allowed_clients_amount = arg[0];
+			srv->world->params.allowed_clients_amount = arg[0];
 			simple_send(srv, tester->id, strdup("ok\n"));
 		}
 		else

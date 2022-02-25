@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 09:39:34 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/25 10:55:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ char			*moniteur_enw(t_egg *egg);
 char			*moniteur_ebo(t_egg *egg);
 char			*moniteur_pin(t_client *client);
 char			*moniteur_pfk(t_client *client);
+char			*moniteur_mac(t_world_state *world);
+char			*moniteur_tac(t_world_state *world);
 char			*moniteur_pex(t_client *client);
 char			*moniteur_pdi(t_client *client);
 char			*moniteur_plv(t_client *client);

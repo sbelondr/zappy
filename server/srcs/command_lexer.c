@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/23 10:14:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/25 10:53:33 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		simple_send(srv, c->id, moniteur_mct(srv->world));
 	else if (!strcmp(buf, "tna"))
 		simple_send(srv, c->id, moniteur_tna(srv->world));
+	else if  (!strcmp(buf, "mac"))
+		simple_send(srv, c->id, moniteur_mac(srv->world));
+	else if  (!strcmp(buf, "tac"))
+		simple_send(srv, c->id, moniteur_tac(srv->world));
 	else if  (!strcmp(buf, "sgt"))
 		simple_send(srv, c->id, moniteur_sgt(srv->world));
 	else if  (!strncmp(buf, "sst ", 4))
