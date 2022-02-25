@@ -146,8 +146,8 @@ RSpec.describe 'Using the TESTER' do
       size = ret.split[1..2].collect(&:to_i)
       expect(putget @tester, 'set mct clear').to eq("ok\n")
       @tester.puts 'get mct'
-      @size[0].times do |x|
-        @size[1].times do |y|
+      (size[0]).times do |x|
+        (size[1]).times do |y|
           expect(@tester.gets).to eq("bct #{y} #{x} 0 0 0 0 0 0 0\n")
         end
       end
@@ -174,11 +174,19 @@ RSpec.describe 'Using the TESTER' do
       expect(putget(@tester, 'set ppo #6 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #-1 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #a 0 0 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #1b 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0b 0 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 a 0 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 0 a 3')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 0 0 0')).to eq("sbp\n")
       expect(putget(@tester, 'set ppo #0 0 0 5')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 -1 1 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1 -1 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1d 1c 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1 1 -3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo 0 1 1 3')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo #0 1 1 3v')).to eq("sbp\n")
+      expect(putget(@tester, 'set ppo  0 1 1 3v')).to eq("sbp\n")
     end
   end
 end

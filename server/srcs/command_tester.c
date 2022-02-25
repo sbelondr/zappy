@@ -6,11 +6,39 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/23 18:02:13 by selver           ###   ########.fr       */
+/*   Updated: 2022/02/25 10:38:17 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
+
+static int	parse_int_parameters(char *str, int nb, int *args)
+{
+	char	**array;
+	int		total;
+
+	array = ft_strsplit(str, ' ');
+	total = 0;
+	if (!array)
+		return (-1);
+	for (int i = 0; array[i]; ++i)
+	{
+		if (!ft_strisnumeric(array[i]))
+			goto freeerror;
+		args[i] = atoi(array[i]);
+		total++;
+	}
+	if (total != nb)
+		goto freeerror;
+	return (nb);
+
+freeerror:
+	for (int i = 0; array[i]; ++i)
+		free(array[i]);
+	free(array);
+	return (-1);
+
+}
 
 static void	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
 {
@@ -135,18 +163,18 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
 	}
-	else if (!strncmp("ppo #", command, 5))
+	else if (!strncmp("ppo ", command, 4))
 	{
 		//TODO: check args
-		error = sscanf(command, "ppo #%d %d %d %d", &arg[0], &arg[1], &arg[2], &arg[3]);
+		error = parse_int_parameters(command + 5, 4, arg);
 		if (error >= 0)
 		{
 			target = get_client_by_id(srv, arg[0]);
-			if (target)
+			if (target && arg[3] > 0 && arg[3] < 5)
 			{
 				target->p_x = arg[1] % srv->param->world_width;
 				target->p_y = arg[2] % srv->param->world_height;
-				target->orientation = arg[3] - 1; //TODO: VERIFY UNDERFLOW
+				target->orientation = arg[3] - 1; 
 				send_to_all_moniteur(srv, moniteur_ppo(target));
 				simple_send(srv, tester->id, strdup("ok\n"));
 			}
@@ -166,6 +194,42 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		}
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
+	}
+	else if (!strncmp("mct ", command, 4))
+	{
+		if (strstr(command, " clear"))
+		{
+			for (int x = 0; x < srv->param->world_width; ++x)
+				for (int y = 0; y < srv->param->world_height; ++y)
+				{
+					ft_bzero(get_case(srv->world, x, y), 7 * sizeof(int));
+					send_to_all_moniteur(srv, moniteur_bct(srv->world, x, y));
+				}
+			simple_send(srv, tester->id, strdup("ok\n"));
+		}
+		else
+		{
+			error = sscanf(command, "mct %d %d %d %d %d %d %d", &arg[2], &arg[3], &arg[4], &arg[5], &arg[6], &arg[7],&arg[8]);
+			if (error >= 0)
+			{
+				for (int x = 0; x < srv->param->world_width;++x)
+					for (int y = 0; y < srv->param->world_height;++y)
+					{
+						int *pos = get_case(srv->world, x, y);
+						pos[FOOD] = arg[2];
+						pos[LINEMATE] = arg[3];
+						pos[DERAUMERE] = arg[4];
+						pos[SIBUR] = arg[5];
+						pos[LAMENDIANE] = arg[6];
+						pos[PHIRAS] = arg[7];
+						pos[THYSTAME] = arg[8];
+						send_to_all_moniteur(srv, moniteur_bct(srv->world, arg[0], arg[1]));
+					}
+				simple_send(srv, tester->id, strdup("ok\n"));
+			}
+			else
+				simple_send(srv, tester->id, strdup("sbp\n"));
+		}
 	}
 	else if (!strncmp("bct ", command, 4))
 	{
