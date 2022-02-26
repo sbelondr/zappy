@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/24 13:48:40 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/26 10:05:38 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 		current = current->next;
 	}
 	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
-	error = asprintf(&msg, "Niveau actuel : %d\n", player->lvl);
+	error = asprintf(&msg, "niveau actuel : %d\n", player->lvl);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (msg);

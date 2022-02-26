@@ -29,6 +29,18 @@ module Client
     def take_decision
       puts "Override me!"
     end
+    
+    def get_ritual_cost(level)
+      [
+        [0, 1, 0, 0, 0, 0, 0, 1],
+        [0, 1, 1, 1, 0, 0, 0, 2],
+        [0, 2, 0, 1, 0, 2, 0, 2],
+        [0, 1, 1, 2, 0, 1, 0, 4],
+        [0, 1, 2, 1, 3, 0, 0, 4],
+        [0, 1, 2, 3, 0, 1, 0, 6], 
+        [0, 2, 2, 2, 2, 2, 1, 6]
+      ][level - 1]
+    end
 
     def process
       starter if not @dead
@@ -94,6 +106,10 @@ module Client
       return 6 if item_name == "THYSTAME"
     end
 
+    def id_to_item_name(id)
+      return ["FOOD", "LINEMATE", "DERAUMERE", "SIBUR", "MENDIANE", "PHIRAS", "THYSTAME"][id]
+    end
+
     #Do an action, blocking till it gets an answer
     def do_action(action)
       if ["broadcast", "voir", "avance", "droite", "gauche"].include? action
@@ -107,9 +123,6 @@ module Client
         ret = listen
       rescue Errno::ECONNREFUSED 
         puts "#{@self_id}: Server booted me!!"
-        @dead = true
-        Thread.exit
-      rescue
         @dead = true
         Thread.exit
       end
@@ -132,7 +145,7 @@ module Client
           on_broadcast_received(tmp[1], tmp[0].split(' ')[1].to_i)
         elsif response.start_with? "elevation en cours"
           on_ritual_started
-        elsif response.start_with? "niveau_actual :"
+        elsif response.start_with? "niveau actuel :"
           on_ritual_completed response.split(':')[1].to_i
           @level += 1
           answered = true
