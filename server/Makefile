@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/02/20 09:38:51 by jayache          ###   ########.fr        #
+#    Updated: 2022/02/25 22:00:58 by sbelondr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ LIBDIR=libft/
 LIBS_NAMES=libft.a
 
 VPATH = objs:\
-	srcs:
+	srcs:\
+	includes:
 
 # ------------------ #
 # Compiler and flags #
@@ -72,7 +73,7 @@ SRCS_NAMES = server.c\
 	helpers.c \
 	moniteur_commands.c
 
-HEADERS_NAMES = server.h
+HEADERS_NAMES = constants.h functions.h includes.h server.h struct.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 
