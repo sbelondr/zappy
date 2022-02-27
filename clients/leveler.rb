@@ -22,7 +22,6 @@ class Leveler < Client::Trantorien
     1..6.times do |i|
       if @communal_inventory[i] < @needed[i]
         item_name = id_to_item_name i
-        puts "Gathering #{i}"
         if gather_item item_name
           do_action "broadcast #{broadcast_prefix}GATHERED #{item_name}"
         end
@@ -32,14 +31,15 @@ class Leveler < Client::Trantorien
   end
 
   def converging
-    puts "#{broadcast_prefix}Currently converging!!"
+    #puts "#{broadcast_prefix}Currently converging!!"
     if not @king
       if @with_king
         pose_tout
-        puts "with king"
+        puts "#{broadcast_prefix}with king"
         listen true
       else
         if @goal != [0, 0]
+          puts  "#{broadcast_prefix}moving towards king"
           move_towards @goal
           @goal = [0, 0]
         else
@@ -47,15 +47,15 @@ class Leveler < Client::Trantorien
         end
       end
     else
-      puts "TOTO"
-      do_action("broadcast #{broadcast_prefix}I AM HERE")
+      do_action("broadcast #{broadcast_prefix}CONVERGING")
       pose_tout
       vision = do_action "voir"
-      if quantity_of("PLAYER", vision) > 5 and quantity_of("LINEMATE", vision) > 0
-        puts "#{@self_id}: Starting incantation !!"
+      if quantity_of("PLAYER", vision) > 4 and can_do_ritual(vision, @level)
+        puts "#{broadcast_prefix}Starting incantation !!"
         do_action "incantation"
       else
-        puts "Not enough to begin"
+        puts "#{broadcast_prefix}Not enough to begin"
+        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision} players!"
       end
     end
   end
@@ -68,13 +68,15 @@ class Leveler < Client::Trantorien
   def on_ritual_completed(new_level)
     @mode = :foraging
     @communal_inventory = @inventory.dup
-    puts "Incantation finished!!"
+    @needed = get_ritual_cost new_level
+    puts "#{broadcast_prefix}Incantation finished!!"
+    puts "Inventory: #{@communal_inventory}, needed: #{@needed}"
   end
 
   def pose_tout
     1..6.times do |i|
       @inventory[i].times do 
-        do_action "pose #{id_to_item_name i}"
+        pose id_to_item_name(i)
       end
     end
   end
@@ -98,13 +100,14 @@ class Leveler < Client::Trantorien
   def enough_for_ritual
       enough = true
       1..6.times do |i|
+        puts "#{broadcast_prefix}#{@communal_inventory[i]} < #{@needed[i]}"
         return false if @communal_inventory[i] < @needed[i]
       end
       true
   end
 
   def on_broadcast_received(msg, direction)
-    puts "#{@self_id}: I received >#{msg}< from #{direction} !! King status: #{@king}"
+    #puts "#{@self_id}: I received >#{msg}< from #{direction} !! King status: #{@king}"
 
     info = msg.split(':')
     id = info[0].to_i
@@ -121,21 +124,22 @@ class Leveler < Client::Trantorien
     if id == @king_id
       @goal = translate_broadcast_to_vector direction.to_i
       if direction == 0
-        puts "CURRENTLY IN PLACE"
         @with_king = true
+      else
+        @with_king = false
       end
     end
     if info[2].start_with? "GATHERED "
       @communal_inventory[item_name_to_id info[2].split[1]] += 1
       if enough_for_ritual
         puts "#{broadcast_prefix}Converging"
-        do_action "broadcast #{broadcast_prefix}CONVERGING"
+        puts "#{broadcast_prefix}#{@communal_inventory}"
+        #do_action "broadcast #{broadcast_prefix}CONVERGING"
         @mode = :converging
       end
     elsif info[2] == "HELLO WORLD"
-      puts "Oh, HELLO"
       if id == @king_id and @mode == :converging
-        do_action "#{broadcast_prefix}CONVERGING"
+        #do_action "#{broadcast_prefix}CONVERGING"
       end
     elsif info[2] == "CONVERGING"
       @mode = :converging
@@ -144,15 +148,6 @@ class Leveler < Client::Trantorien
 
   def starter
     do_action "broadcast #{broadcast_prefix}HELLO WORLD"
-  end
-
-  def find_food
-    pos = find_item("FOOD")
-    if pos != nil
-      move_towards(pos)
-      return pickup("FOOD")
-    end
-    false
   end
 end
 

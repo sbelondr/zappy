@@ -16,6 +16,7 @@ module Client
       @socket = TCPSocket.new ip, port 
       @socket.recv(99)
       @socket.puts @team_name 
+      @broadcast_prefix = "#{@self_id}:"
       data = @socket.recv(99).split("\n")
       if data[0].to_i == 0
         @dead = true
@@ -28,6 +29,38 @@ module Client
 
     def take_decision
       puts "Override me!"
+    end
+
+    def broadcast(message)
+      do_action "broadcast #{@broadcast_prefix}#{message}"
+    end
+
+    def pickup(item)
+      ret = do_action("prendre #{item}")
+      if ret == "ok"
+        if item == "FOOD"
+          @food += 126
+        else
+          @inventory[item_name_to_id(item)] += 1
+        end
+        true
+      else
+        false
+      end
+    end
+
+    def pose(item)
+      ret = do_action("prendre #{item}")
+      if ret == "ok"
+        if item == "FOOD"
+          @food -= 126
+        else
+          @inventory[item_name_to_id(item)] -= 1
+        end
+        true
+      else
+        false
+      end
     end
     
     def get_ritual_cost(level)
@@ -67,33 +100,6 @@ module Client
       end
     end
 
-    def pickup(item)
-      ret = do_action("prendre #{item}")
-      if ret == "ok"
-        if item == "FOOD"
-          @food += 126
-        else
-          @inventory[item_name_to_id(item)] += 1
-        end
-        true
-      else
-        false
-      end
-    end
-
-    def pose(item)
-      ret = do_action("prendre #{item}")
-      if ret == "ok"
-        if item == "FOOD"
-          @food -= 126
-        else
-          @inventory[item_name_to_id(item)] -= 1
-        end
-        true
-      else
-        false
-      end
-    end
 
     def item_name_to_id(item_name)
       item_name = item_name.upcase
@@ -131,7 +137,20 @@ module Client
 
     def quantity_of(item, vision_string)
       items = vision_string.split ','
-      items[0].count item
+      items[0].scan(item).size
+    end
+
+    def can_do_ritual(vision, level)
+      cost = get_ritual_cost level
+      ret = quantity_of("FOOD", vision)>= cost[0]
+      ret ||= quantity_of("LINEMATE", vision)>= cost[1]
+      ret ||= quantity_of("DERAUMERE", vision)>= cost[2]
+      ret ||= quantity_of("SIBUR", vision)>= cost[3]
+      ret ||= quantity_of("MENDIANE", vision)>= cost[4]
+      ret ||= quantity_of("PHIRAS", vision)>= cost[5]
+      ret ||= quantity_of("THYSTAME", vision)>= cost[6]
+      ret ||= quantity_of("PLAYER", vision)>= cost[7]
+      ret
     end
 
     def listen(only_one = false)
@@ -146,8 +165,8 @@ module Client
         elsif response.start_with? "elevation en cours"
           on_ritual_started
         elsif response.start_with? "niveau actuel :"
+          @level = response.split(':')[1].to_i
           on_ritual_completed response.split(':')[1].to_i
-          @level += 1
           answered = true
         elsif response == "mort"
           @dead = true
@@ -253,7 +272,6 @@ module Client
 
   def self.main(trantorien)
     options = self.parse
-    p options
     threads = []
     loop do
       tt = trantorien.new options[:team] 
