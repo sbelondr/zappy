@@ -17,10 +17,11 @@ module Client
       @socket.recv(99)
       @socket.puts @team_name 
       @broadcast_prefix = "#{@self_id}:"
-      data = @socket.recv(99).split("\n")
+      data = @socket.gets
       if data[0].to_i == 0
         @dead = true
       end
+      @socket.gets
     end
 
     def dead?
@@ -63,18 +64,6 @@ module Client
       end
     end
     
-    def get_ritual_cost(level)
-      [
-        [0, 1, 0, 0, 0, 0, 0, 1],
-        [0, 1, 1, 1, 0, 0, 0, 2],
-        [0, 2, 0, 1, 0, 2, 0, 2],
-        [0, 1, 1, 2, 0, 1, 0, 4],
-        [0, 1, 2, 1, 3, 0, 0, 4],
-        [0, 1, 2, 3, 0, 1, 0, 6], 
-        [0, 2, 2, 2, 2, 2, 1, 6]
-      ][level - 1]
-    end
-
     def process
       starter if not @dead
       while not @dead
@@ -135,21 +124,33 @@ module Client
       ret
     end
 
+    def get_ritual_cost(level)
+      [
+        [0, 1, 0, 0, 0, 0, 0, 1],
+        [0, 1, 1, 1, 0, 0, 0, 2],
+        [0, 2, 0, 1, 0, 2, 0, 2],
+        [0, 1, 1, 2, 0, 1, 0, 4],
+        [0, 1, 2, 1, 3, 0, 0, 4],
+        [0, 1, 2, 3, 0, 1, 0, 6], 
+        [0, 2, 2, 2, 2, 2, 1, 6]
+      ][level - 1]
+    end
+
     def quantity_of(item, vision_string)
       items = vision_string.split ','
-      items[0].scan(item).size
+      items[0].downcase.scan(item.downcase).size
     end
 
     def can_do_ritual(vision, level)
       cost = get_ritual_cost level
-      ret = quantity_of("FOOD", vision)>= cost[0]
-      ret ||= quantity_of("LINEMATE", vision)>= cost[1]
-      ret ||= quantity_of("DERAUMERE", vision)>= cost[2]
-      ret ||= quantity_of("SIBUR", vision)>= cost[3]
-      ret ||= quantity_of("MENDIANE", vision)>= cost[4]
-      ret ||= quantity_of("PHIRAS", vision)>= cost[5]
-      ret ||= quantity_of("THYSTAME", vision)>= cost[6]
-      ret ||= quantity_of("PLAYER", vision)>= cost[7]
+      ret = quantity_of("FOOD", vision) >= cost[0]
+      ret &&= quantity_of("LINEMATE", vision) >= cost[1]
+      ret &&= quantity_of("DERAUMERE", vision) >= cost[2]
+      ret &&= quantity_of("SIBUR", vision) >= cost[3]
+      ret &&= quantity_of("MENDIANE", vision) >= cost[4]
+      ret &&= quantity_of("PHIRAS", vision) >= cost[5]
+      ret &&= quantity_of("THYSTAME", vision) >= cost[6]
+      ret &&= quantity_of("PLAYER", vision) >= (cost[7] - 1)
       ret
     end
 
@@ -200,20 +201,26 @@ module Client
         do_action "avance"
       end
       turn_to = if (coordinates[0] > 0)
-                  "gauche"
-                elsif (coordinates[0] < 0)
                   "droite"
+                elsif (coordinates[0] < 0)
+                  "gauche"
                 else
                   nil
                 end
-      do_action turn_to if not turn_to.nil?
+      do_action turn_to unless turn_to.nil?
       coordinates[0].abs.times do
         do_action "avance"
       end
-      coordinates[1] *= -1
-      do_action turn_to if not turn_to.nil? and coordinates[1] > 0
-      coordinates[1].times do
-        do_action "avance"
+      if coordinates[1] < 0
+        if turn_to.nil?
+          do_action "gauche"
+          do_action "gauche"
+        else
+          do_action turn_to
+        end
+        coordinates[1].abs.times do
+          do_action "avance"
+        end
       end
     end
 
