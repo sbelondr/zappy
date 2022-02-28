@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/07 08:12:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/28 16:13:17 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 		free(srv);
 		return (NULL);
 	}
+	/* setup non blocking socket */
+//	if (ioctl(srv->master_sck, FIONBIO, &opt) < 0)
+//	{
+//		dprintf(STDERR_FILENO, "ioctl failled\n");
+//		free(srv);
+//		return (NULL);
+//	}
 	srv->address.sin_family = AF_INET;
 	srv->address.sin_addr.s_addr = INADDR_ANY;
 	srv->address.sin_port = htons(param->port);
@@ -51,9 +58,13 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 		free(srv);
 		return (NULL);
 	}
-	if (listen(srv->master_sck, 3) < 0)
+	/* backlog (man listen):
+	 * maximum length to which the queue of pending connections for sockfd may grow
+	 */
+	int	backlog = 32;
+	if (listen(srv->master_sck, backlog) < 0)
 	{
-		dprintf(STDERR_FILENO, "I'm not listen you because I don't give a fuck\n");
+		dprintf(STDERR_FILENO, "listen failled\n");
 		free(srv);
 		return (NULL);
 	}

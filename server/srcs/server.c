@@ -6,13 +6,15 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/24 13:55:39 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/28 16:23:08 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 #include "struct.h"
 #include "functions.h"
+
+#include <poll.h>
 
 static t_srv **g_srv = NULL;
 
@@ -76,18 +78,20 @@ struct timeval	time_left(struct timeval limit)
 	return (ret);
 }
 
+/* https://www.ibm.com/docs/en/i/7.2?topic=designs-using-poll-instead-select */
 int main(int ac, char **av)
 {
 	int				max_sd;
 	int				activity;
 	fd_set			readfds;
+	
 	fd_set			writefds;
 	t_srv			*srv;
-	struct timeval	timeout;
 	struct timeval	end;
 	struct timeval	tmp;
 	t_world_state	st;
 	t_param			param;
+	int	timeout = (3 * 60 * 1000);
 
 
 	param = parse_input(ac, av);
@@ -100,19 +104,48 @@ int main(int ac, char **av)
 	yellow();
 	printf("Launch srv\n");
 	reset();
-	timeout = delta_to_time(param.time_delta);
+//	timeout = delta_to_time(param.time_delta);
 	gettimeofday(&end, NULL);
 	while (1)
 	{
-		timeradd(&end, &timeout, &tmp);
+//		timeradd(&end, &timeout, &tmp);
 		end = tmp;
 		FD_ZERO(&readfds);
 		FD_ZERO(&writefds);
+
+		/*
+		       int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+struct pollfd {
+               int   fd;          file descriptor 
+               short events;      requested events
+               short revents;     returned events 
+           };
+			   int select(int nfds, fd_set *readfds, fd_set *writefds,
+                  fd_set *exceptfds, struct timeval *timeout);
+		*/
 		FD_SET(srv->master_sck, &readfds);
 		max_sd = ft_set_max_sd(srv, &readfds);
-		//timeout = time_left(end);
-		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
+
+		struct pollfd	fds[2];
+		char	buf[1024];
+		int		nfds = 1;
+
+
+		fds[0].fd = srv->master_sck;
+		fds[0].events = POLLIN;
+
+
+		activity = poll(fds, nfds, timetime);
+		if (fds[0].revents & POLLIN)
 		{
+			activity = recv(fds[0].fd, buf, 1024, 0);
+			if (activity > 0)
+				printf("%d - [%s]\n", activity, buf);
+		}
+		//timeout = time_left(end);
+//		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
+//		{
+			/*
 			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
 			// activity < 0 -> error socket
 			// activity > 0 -> nouvelle connection est detecte ou nouveau message recu
@@ -124,8 +157,9 @@ int main(int ac, char **av)
 				ft_listen_srv(srv, &readfds);
 			}
 			//timeout = time_left(end);
-		}
-		timeout = delta_to_time(param.time_delta);
+			*/
+//		}
+//		timeout = delta_to_time(param.time_delta);
 		game_tick(srv);
 	}
 	ft_quit(0);
