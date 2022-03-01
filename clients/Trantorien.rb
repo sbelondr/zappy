@@ -46,6 +46,19 @@ module Client
       do_action "voir"
     end
 
+    def incantation
+      old_level = @level
+      do_action "incantation"
+      old_level != @level
+    end
+
+    def convert_vision_string vision_string
+      vision = vision_string.split(',')
+      vision.collect do |block|
+        block.each_char.filter {|c| c != '}' && c != '{'}.join.split
+      end
+    end
+
     def pickup(item)
       ret = do_action("prendre #{item}")
       if ret == "ok"
@@ -85,7 +98,7 @@ module Client
       puts "Override me!"
     end
 
-    def update_inventory
+    def inventory
       inventory = do_action "inventaire"
       inventory = inventory.split ","
       inventory.each do |item|
@@ -97,6 +110,7 @@ module Client
         @inventaire[item_name_to_id "thystame"] = item.split[1].to_i if item.contains? "thystame"
         @inventaire[item_name_to_id "linemate"] = item.split[1].to_i if item.contains? "linemate"
       end
+      nil
     end
 
 
@@ -286,6 +300,10 @@ module Client
     def available_slots
       do_action("connect_nbr").to_i
     end
+    alias prendre pickup 
+    alias ritual incantation
+    alias see voir
+    alias inventaire inventory
   end
 
   def self.main(trantorien)
@@ -307,7 +325,7 @@ module Client
       parser.banner = "Usage: #{File.basename($0)} -t team [-d delay]"
 
       parser.on("-t", "--team TEAM", String, "Player team")
-      parser.on("-d", "--delay SECONDS", Integer, "Attempt connecting each SECONDS seconds. Defaults to 1")
+      parser.on("-d", "--delay SECONDS", Float, "Attempt connecting each SECONDS seconds. Defaults to 1. Can take decimal values.")
       parser.on("-h", "--help", "Display this help") { puts parser; exit }
 
     end.parse!(into: options)
