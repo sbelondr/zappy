@@ -240,28 +240,53 @@ RSpec.describe 'Checking if we can do the ritual', :ritual do
 
   end
 end
-RSpec.describe 'Doing ritual' do
+
+RSpec.describe 'Doing ritual', :ritual do
   before(:each) do
-    @client = connect 'TOTO'
-    @client2 = connect 'TOTO'
-    @client3 = connect 'TOTO'
-    @client4 = connect 'TOTO'
-    @client5 = connect 'TOTO'
-    @client6 = connect 'TOTO'
-    @client7 = connect 'TOTO'
     @tester = connect 'TESTER'
+    @clients = []
+    6.times do |i|
+      @clients.push Client::Trantorien.new('TOTO')
+      @tester.puts "set ppo ##{i + 1} 5 5 1"
+      @tester.gets
+    end
   end
   after(:each) do
     @tester.puts "set pdi all"
   end
 
   context 'With enough materials' do
-
+    it ': all levels' do 
+      7.times do |i|
+        @tester.puts "set bct 5 5 0 #{@clients[0].get_ritual_cost(i + 1)[1..6].join ' '}"
+        @tester.gets
+        @clients[0].do_action "incantation"
+        5.times do |x|
+          @clients[x + 1].listen
+        end
+        6.times do |x|
+          expect(@clients[x].level).to eq(i + 2)
+        end
+      end
+    end
   end
-  context 'With not enough materials' do
 
-  end
   context 'With not enough players' do
-
+    it ': all levels' do 
+      @tester.puts 'set ppo #1 4 4 1'
+      @tester.gets
+      @tester.puts "set bct 4 4 0 #{@clients[0].get_ritual_cost(1)[1..6].join ' '}"
+      @tester.gets
+      @clients[0].do_action "incantation"
+      (1..6).each do |i|
+        @tester.puts "set bct 4 4 0 #{@clients[0].get_ritual_cost(i + 1)[1..6].join ' '}"
+        @tester.gets
+        @clients[0].do_action "incantation"
+        expect(@clients[0].level).to eq(2)
+        5.times do |i|
+          expect(@clients[i + 1].level).to eq(1)
+        end
+      end
+    end
   end
 end

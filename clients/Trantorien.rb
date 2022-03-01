@@ -16,7 +16,6 @@ module Client
       @socket = TCPSocket.new ip, port 
       @socket.recv(99)
       @socket.puts @team_name 
-      @broadcast_prefix = "#{@self_id}:"
       data = @socket.gets
       if data[0].to_i == 0
         @dead = true
@@ -28,12 +27,23 @@ module Client
       @dead
     end
 
+    def level
+      @level
+    end
+
     def take_decision
       puts "Override me!"
     end
 
     def broadcast(message)
-      do_action "broadcast #{@broadcast_prefix}#{message}"
+      do_action "broadcast #{broadcast_prefix}#{message}"
+    end
+
+  def broadcast_prefix
+    "#{@self_id}"
+  end
+    def voir
+      do_action "voir"
     end
 
     def pickup(item)
@@ -51,7 +61,7 @@ module Client
     end
 
     def pose(item)
-      ret = do_action("prendre #{item}")
+      ret = do_action("pose #{item}")
       if ret == "ok"
         if item == "FOOD"
           @food -= 126
@@ -167,7 +177,7 @@ module Client
           on_ritual_started
         elsif response.start_with? "niveau actuel :"
           @level = response.split(':')[1].to_i
-          on_ritual_completed response.split(':')[1].to_i
+          on_ritual_completed @level
           answered = true
         elsif response == "mort"
           @dead = true
@@ -181,15 +191,16 @@ module Client
     end
 
     def on_ritual_started
-      puts "#{@self_id}:Started ritual!!"
+      #Override me !
     end
 
     def on_ritual_completed(new_level)
-      puts "#{@self_id}:I am now level #{new_level}!"
+      #puts "Now: level #{new_level}"
+      #Override me !
     end
 
     def on_broadcast_received(msg, direction)
-      puts "#{@self_id}: I received #{msg} from #{direction} !!"
+      #Override me !
     end
 
     def reduce_hunger(amount)

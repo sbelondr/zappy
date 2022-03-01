@@ -13,6 +13,7 @@ class Leveler < Client::Trantorien
     @mode = :foraging
     @communal_inventory = [0, 0, 0, 0, 0, 0, 0]
     @needed = get_ritual_cost(1)
+    @uptospeed = false
     @possible_mode = [:foraging, :converging, :wait]
   end
 
@@ -32,11 +33,18 @@ class Leveler < Client::Trantorien
 
   def converging
     #puts "#{broadcast_prefix}Currently converging!!"
+    if @uptospeed
+      broadcast "CONVERGING"
+      @uptospeed = false
+    end
     if not @king
       if @with_king
         pose_tout
         puts "#{broadcast_prefix}with king"
         listen true
+        if @uptospeed
+          prendre_tout
+        end
       else
         if @goal != [0, 0]
           puts  "#{broadcast_prefix}moving towards king"
@@ -47,15 +55,15 @@ class Leveler < Client::Trantorien
         end
       end
     else
-      do_action("broadcast #{broadcast_prefix}CONVERGING")
+      broadcast "CONVERGING"
       pose_tout
       vision = do_action "voir"
-      if quantity_of("PLAYER", vision) > 4 and can_do_ritual(vision, @level)
+      if quantity_of("PLAYER", vision) > 5 and can_do_ritual(vision, @level)
         puts "#{broadcast_prefix}Starting incantation !!"
         do_action "incantation"
       else
         puts "#{broadcast_prefix}Not enough to begin"
-        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision} players!"
+        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision}/5 players!"
       end
     end
   end
@@ -81,6 +89,19 @@ class Leveler < Client::Trantorien
     end
   end
 
+  def prendre_tout
+    vision = do_action("voir").split(',')[0]
+    vision.slice!(0)
+    items = vision.split.filter {|a| a != "PLAYER"} 
+    while items.size > 0
+      item = current.split(" ").sample
+      prendre item
+      vision = do_action("voir"),split(',')[0]
+      vision.slice!(0)
+      items = current.split.filter {|a| a != "PLAYER"} 
+    end
+  end
+
   def take_decision
     if @mode == :foraging
       foraging
@@ -98,12 +119,12 @@ class Leveler < Client::Trantorien
   end
 
   def enough_for_ritual
-      enough = true
-      1..6.times do |i|
-        puts "#{broadcast_prefix}#{@communal_inventory[i]} < #{@needed[i]}"
-        return false if @communal_inventory[i] < @needed[i]
-      end
-      true
+    enough = true
+    1..6.times do |i|
+      puts "#{broadcast_prefix}#{@communal_inventory[i]} < #{@needed[i]}"
+      return false if @communal_inventory[i] < @needed[i]
+    end
+    true
   end
 
   def on_broadcast_received(msg, direction)
@@ -134,12 +155,11 @@ class Leveler < Client::Trantorien
       if enough_for_ritual
         puts "#{broadcast_prefix}Converging"
         puts "#{broadcast_prefix}#{@communal_inventory}"
-        #do_action "broadcast #{broadcast_prefix}CONVERGING"
         @mode = :converging
       end
     elsif info[2] == "HELLO WORLD"
-      if id == @king_id and @mode == :converging
-        #do_action "#{broadcast_prefix}CONVERGING"
+      if id == @king_id and @mode == :converging #If the newcomer is a king
+        @uptospeed = true
       end
     elsif info[2] == "CONVERGING"
       @mode = :converging
@@ -147,7 +167,7 @@ class Leveler < Client::Trantorien
   end
 
   def starter
-    do_action "broadcast #{broadcast_prefix}HELLO WORLD"
+    broadcast "HELLO WORLD"
   end
 end
 

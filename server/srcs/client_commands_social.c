@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/27 09:04:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/01 09:22:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,10 +174,12 @@ static int	is_enough_for_ritual(int level, int players, int *objs)
 	{
 		if (objs[i] < required[i])
 		{
+			printf("Not enough %d! %d < %d\n", i, objs[i], required[i]);
 			return (0);
 		}
 	}
-	return (required[7] < players);
+	printf("Players: %d / %d\n", players, required[7]);
+	return (required[7] <= players);
 }
 
 static void	substract_from_ritual(int level, int *objs)
@@ -208,6 +210,7 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 			players++;
 		current = current->next;
 	}
+	printf("Figuring it out for %d %d...\n", player->p_x, player->p_y);
 	if (is_enough_for_ritual(player->lvl, players, get_case(world, player->p_x, player->p_y)))
 	{
 		substract_from_ritual(player->lvl, get_case(world, player->p_x, player->p_y));
