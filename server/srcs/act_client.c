@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/28 14:52:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/02 10:49:09 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,19 @@ void ft_client_exit(t_srv *srv, int i)
 //Delete the newline on the string/cut the string via newline, returns the number of lines found
 static int		delete_newline(char *buff)
 {
-	size_t	size;
+	int		size;
 	int		occurence;
 
 	occurence = 0;
 	size = strlen(buff);
 	for (int i = 0; i < size; ++i)
+	{
 		if (buff[i] == '\n')
 		{
 			occurence++;
 			buff[i] = '\0';
 		}
+	}
 	return (occurence);
 }
 

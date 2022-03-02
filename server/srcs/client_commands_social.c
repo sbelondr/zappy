@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/03/01 09:22:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/02 11:02:31 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,7 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 	int		maxid;
 
 	maxid = -1;
-	egg = (t_egg*)malloc(sizeof(t_egg));
-	egg->team_name = ft_strdup(player->team_name);
-	egg->p_x = player->p_x;
-	egg->p_y = player->p_y;
-	egg->food = 10;
-	egg->maturity = 600;
-	egg->father_id = player->id;
-	egg->used = 0;
-	egg->hunger = 0;
-	current = world->egg_list;
-	while (current)
-	{
-		if (((t_egg *)current->content)->id > maxid)
-			maxid = ((t_egg *)current->content)->id;
-		current = current->next;
-	}
-	egg->id = maxid + 1;
+	egg = new_egg(world, player->team_name, ft_vector2(player->p_x, player->p_y), player->id);
 	ft_lst_append(&world->egg_list, ft_lstnew_no_copy(egg, sizeof(t_egg)));
 	add_egg_to_team(world, player->team_name, egg->id);
 	if (can_print(srv->param, LOG_ACTION))

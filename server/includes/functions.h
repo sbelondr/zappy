@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/25 10:55:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/02 10:39:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ char			*connect_nbr(t_srv *srv, t_world_state *world, t_client *player);
  * HELPERS
  */
 
+t_vector2		rotate_vector(t_vector2 vec, int direction);
 int				can_print(t_param *param, t_logtype log_level);
 char			**split_args(char *str, int expected);
 int				is_special_team_member(t_client *client);
