@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/02 09:42:17 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/02 10:48:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,26 @@ char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 	return (inventory);
 }
 
+t_vector2	index_to_map_vector(int index)
+{
+	t_vector2	ret;
+	int			limit;
+
+	limit = 1;
+	ret = ft_vector2(0, 0);
+	for (int i = 0; i < index; ++i)
+	{
+		ret.x++;
+		if (ret.x >= limit)
+		{
+			ret.x *= -1;
+			ret.y++;
+			limit++;
+		}
+	}
+	return (ret);
+}
+
 /*
  ** Construit un élément de la chaîne de caractère de vision
  ** PARAMS: char* str -> le string en construction, doit avoir la bonne taille déjà allouée
@@ -59,53 +79,53 @@ static int	build_see_part(char *str, char *name, int count)
 	return (offset);
 }
 
-t_vector2	index_to_map_vector(int index)
+static int	player_on_position(t_world_state *world, t_vector2 pos)
 {
-	t_vector2	ret;
-	int			limit;
+	t_client	*client;
+	t_list		*current;
+	int			acc;
 
-	limit = 1;
-	ret = ft_vector2(0, 0);
-	for (int i = 0; i < index; ++i)
+	acc = 0;
+	current = world->client_list;
+	while (current)
 	{
-		ret.x++;
-		if (ret.x >= limit)
-		{
-			ret.x *= -1;
-			ret.y++;
-			limit++;
-		}
+		client = current->content;	
+		if (client->p_x == pos.x && client->p_y == pos.y)
+			acc += 1;
+		current = current->next;
 	}
-	return (ret);
+	return (acc);
 }
 
-t_vector2	rotate_vector(t_vector2 vec, int direction)
+static int	size_of_string(t_world_state *world, t_client *player)
 {
-	int	ca;
-	int	sa;
+	int			cnt;
+	int			case_nbr;
+	int			*items;
+	t_vector2	target;
 
-	if (direction == NORTH)
+	cnt = 0;
+	case_nbr = 4;
+	for (int i = 0; i < case_nbr; ++i) 
 	{
-		ca = 1;
-		sa = 0;
+		target = index_to_map_vector(i);
+		target = rotate_vector(target, player->orientation);
+		target.x += player->p_x;
+		target.y += player->p_y;
+		items = get_case(world, target.x, target.y); 
+		cnt += items[LINEMATE] * strlen(" LINEMATE");
+		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
+		cnt += items[SIBUR] * strlen(" SIBUR");
+		cnt += items[LAMENDIANE] * strlen(" LAMENDIANE");
+		cnt += items[PHIRAS] * strlen(" PHIRAS");
+		cnt += items[THYSTAME] * strlen(" THYSTAME");
+		cnt += items[FOOD] * strlen(" FOOD");
+		cnt += player_on_position(world, target) * strlen(" PLAYER");
 	}
-	else if (direction == EAST)
-	{
-		ca = 0;
-		sa = 1;
-	}
-	else if (direction == SOUTH)
-	{
-		ca = -1;
-		sa = 0;
-	}
-	else if (direction == WEST)
-	{
-		ca = 0;
-		sa = -1;
-	}
-	return (ft_vector2(ca * vec.x - sa * vec.y, sa * vec.x + ca * vec.y));
+	cnt += case_nbr + 4;
+	return (cnt);
 }
+
 /*
  * Donne la chaîne de charactères à retourner au client
  * PARAMS: t_world_state *world -> world state
@@ -120,47 +140,18 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	int		*items;
 	int		cnt;
 	int		case_nbr;
-	int		nbr = 0;
+	int		offset;
 	t_vector2	target;
-	t_client *client;
-	t_list *current;
 	(void)srv;
 
 	cnt = 0;
 	case_nbr = 4; //Remplacer par nombre de case vues au lvl du joueur
-	for (int i = 0; i < case_nbr; ++i) //remplacer 4 par le nombre de case au niveau
-	{
-		target = index_to_map_vector(i);
-		target = rotate_vector(target, player->orientation);
-		target.x += player->p_x;
-		target.y += player->p_y;
-		items = get_case(world, target.x, target.y); 
-		cnt += items[LINEMATE] * strlen(" LINEMATE");
-		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
-		cnt += items[SIBUR] * strlen(" SIBUR");
-		cnt += items[LAMENDIANE] * strlen(" LAMENDIANE");
-		cnt += items[PHIRAS] * strlen(" PHIRAS");
-		cnt += items[THYSTAME] * strlen(" THYSTAME");
-		cnt += items[FOOD] * strlen(" FOOD");
-		current = world->client_list;
-		nbr = 0;
-		while (current)
-		{
-			client = current->content;	
-			if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
-				nbr += 1;
-			current = current->next;
-		}
-		cnt += nbr * strlen(" PLAYER");
-	}
-	cnt += case_nbr + 4; //Commas, accolades and \0
-	printf("Estimated size of vision string: %d\n", cnt);
+	cnt = size_of_string(world, player);
 	ret = ft_strnew(cnt);
 	ret[0] = '{';
-	int offset = 1;
-	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
+	offset = 1;
+	for (int i = 0; i < case_nbr; ++i)
 	{
-		nbr = 0;
 		target = index_to_map_vector(i);
 		target = rotate_vector(target, player->orientation);
 		target.x += player->p_x;
@@ -173,15 +164,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
 		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
 		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-		current = world->client_list;
-		while (current)
-		{
-			client = current->content;	
-			if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
-				nbr += 1;
-			current = current->next;
-		}
-		offset += build_see_part(ret + offset, " PLAYER", nbr);
+		offset += build_see_part(ret + offset, " PLAYER", player_on_position(world, target));
 		ret[offset++] = ',';
 	}
 	ret[offset++] = '}';
