@@ -6,6 +6,8 @@ require 'optparse'
 module Client
 
   class Trantorien
+    attr_reader :level, :dead, :food, :inventory, :self_id, :team_name
+
     def initialize(team_name, ip = "localhost", port = 8080)
       @team_name = team_name
       @self_id = rand(100000)
@@ -27,10 +29,6 @@ module Client
       @dead
     end
 
-    def level
-      @level
-    end
-
     def take_decision
       puts "Override me!"
     end
@@ -42,6 +40,7 @@ module Client
   def broadcast_prefix
     "#{@self_id}"
   end
+
     def voir
       do_action "voir"
     end
@@ -250,16 +249,17 @@ module Client
     end
 
     def translate_vision_to_map(index)
-      return [0, 0] if index == 0
-      return [-1, 1] if index == 1
-      return [0, 1] if index == 2
-      return [1, 1] if index == 3
-      return [-2, 2] if index == 4
-      return [-1, 2] if index == 5
-      return [0, 2] if index == 6
-      return [1, 2] if index == 7
-      return [2, 2] if index == 8
-      return [5, 5]
+      ret = [0, 0]
+      limit = 1
+      index.times do
+        ret[0] += 1
+        if ret[0] == limit 
+          ret[0] *= -1
+          ret[1] += 1
+          limit += 1
+        end
+      end
+      ret
     end
 
     def translate_broadcast_to_vector(index)

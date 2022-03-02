@@ -290,3 +290,32 @@ RSpec.describe 'Doing ritual', :ritual do
     end
   end
 end
+
+RSpec.describe 'Seeing', :vision do
+  def confirmed(index)
+    return [0, 0] if index == 0
+    return [-1, 1] if index == 1
+    return [0, 1] if index == 2
+    return [1, 1] if index == 3
+    return [-2, 2] if index == 4
+    return [-1, 2] if index == 5
+    return [0, 2] if index == 6
+    return [1, 2] if index == 7
+    return [2, 2] if index == 8
+    return [0, 3] if index == 12
+    return [5, 5]
+  end
+  before(:each) do
+    @tester = connect 'TESTER'
+    @client = Client::Trantorien.new('TOTO')
+  end
+  after(:each) do
+    @tester.puts "set pdi all"
+  end
+
+  it 'Can see' do
+    9.times do |i|
+      expect(@client.translate_vision_to_map i).to eq(confirmed i)
+    end
+  end
+end
