@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/23 13:04:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/28 14:52:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,34 +71,50 @@ void ft_client_exit(t_srv *srv, int i)
 	srv->client_sck[i] = 0;
 }
 
-//returns 0 if no newline, 1 otherwise
-static int		delete_newline(char *buf)
+//Delete the newline on the string/cut the string via newline, returns the number of lines found
+static int		delete_newline(char *buff)
 {
 	size_t	size;
+	int		occurence;
 
-	size = ft_strlen(buf);
-	if (buf[size - 1] != '\n')
-		return (0);
-	buf[size - 1] = '\0';
-	return (1);
+	occurence = 0;
+	size = strlen(buff);
+	for (int i = 0; i < size; ++i)
+		if (buff[i] == '\n')
+		{
+			occurence++;
+			buff[i] = '\0';
+		}
+	return (occurence);
 }
 
 
 void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 {
+	int	commands;
+	int	offset;
+
 	if (valread < 0)
 		return ;
 	buff[valread] = 0;
-	if (!delete_newline(buff))
+
+	commands = delete_newline(buff);
+	if (commands == 0)
 	{
-		printf("ERROR: CLIENT DOES NOT RESPECT RFC: '%s'\n", buff);
-		exit(1);
-	}
-	if (can_print(srv->param, LOG_RECEIVE))
-	{
-		green();
-		printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
+		red();
+		printf("ERROR! Command wasn't complete. Was it too long?\nCommand received: %s", buff);
 		reset();
 	}
-	ft_lexer(srv, buff, i);
+	offset = 0;
+	for (int x = 0; x < commands; ++x)
+	{
+		if (can_print(srv->param, LOG_RECEIVE))
+		{
+			green();
+			printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
+			reset();
+		}
+		ft_lexer(srv, buff + offset, i);
+		offset = strlen(buff) + 1;
+	}
 }

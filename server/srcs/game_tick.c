@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:17:35 by jayache          ###   ########.fr       */
+/*   Updated: 2022/02/28 15:24:04 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	client_tick(t_srv *srv, t_list *player_list)
 		{
 			send_to_all_moniteur(srv, moniteur_pfk(client));
 		}
-		if (client->buffer[0].cooldown > 0)
+		if (client->buffer[0].cooldown > 0 && !client->in_incantation)
 			client->buffer[0].cooldown -= 1;
 		else
 		{

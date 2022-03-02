@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/14 07:56:18 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/02 09:42:17 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,22 @@ static int	build_see_part(char *str, char *name, int count)
 
 t_vector2	index_to_map_vector(int index)
 {
-	if (index == 0) return ft_vector2(0, 0);
-	if (index == 1) return ft_vector2(-1, 1);
-	if (index == 2) return ft_vector2(0, 1);
-	if (index == 3) return ft_vector2(1, 1);
-	if (index == 4) return ft_vector2(-2, 2);
-	if (index == 5) return ft_vector2(-1, 2);
-	if (index == 6) return ft_vector2(0, 2);
-	if (index == 7) return ft_vector2(1, 2);
-	if (index == 8) return ft_vector2(2, 2);
-	printf("ERROR: Index is too far!!\n");
-	return ft_vector2(0, 0);
+	t_vector2	ret;
+	int			limit;
+
+	limit = 1;
+	ret = ft_vector2(0, 0);
+	for (int i = 0; i < index; ++i)
+	{
+		ret.x++;
+		if (ret.x >= limit)
+		{
+			ret.x *= -1;
+			ret.y++;
+			limit++;
+		}
+	}
+	return (ret);
 }
 
 t_vector2	rotate_vector(t_vector2 vec, int direction)
@@ -123,7 +128,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 
 	cnt = 0;
 	case_nbr = 4; //Remplacer par nombre de case vues au lvl du joueur
-	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
+	for (int i = 0; i < case_nbr; ++i) //remplacer 4 par le nombre de case au niveau
 	{
 		target = index_to_map_vector(i);
 		target = rotate_vector(target, player->orientation);

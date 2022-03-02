@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/02/24 13:48:40 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/01 09:22:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,10 +174,12 @@ static int	is_enough_for_ritual(int level, int players, int *objs)
 	{
 		if (objs[i] < required[i])
 		{
+			printf("Not enough %d! %d < %d\n", i, objs[i], required[i]);
 			return (0);
 		}
 	}
-	return (required[7] < players);
+	printf("Players: %d / %d\n", players, required[7]);
+	return (required[7] <= players);
 }
 
 static void	substract_from_ritual(int level, int *objs)
@@ -208,6 +210,7 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 			players++;
 		current = current->next;
 	}
+	printf("Figuring it out for %d %d...\n", player->p_x, player->p_y);
 	if (is_enough_for_ritual(player->lvl, players, get_case(world, player->p_x, player->p_y)))
 	{
 		substract_from_ritual(player->lvl, get_case(world, player->p_x, player->p_y));
@@ -223,19 +226,21 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 		success = 1;
 	}
 	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
+	error = asprintf(&msg, "niveau actuel : %d\n", player->lvl);
+	if (error < 0)
+		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	current = world->client_list;
 	while (current)
 	{
 		c = current->content;
 		if (same_position(player, c) && c->lvl == player->lvl && !is_special_team_member(c))
 		{
+			if (c->id != player->id)
+				simple_send(srv, c->id, ft_strdup(msg));
 			send_to_all_moniteur(srv, moniteur_plv(c));
 		}
 		current = current->next;
 	}
 	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
-	error = asprintf(&msg, "Niveau actuel : %d\n", player->lvl);
-	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (msg);
 }
