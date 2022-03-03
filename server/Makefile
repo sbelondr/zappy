@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/03 09:48:10 by jayache          ###   ########.fr        #
+#    Updated: 2022/03/03 10:07:45 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -107,9 +107,12 @@ else
 	@$(PRINT) "Debug mode : off\n"
 endif
 
-$(NAME) : $(LIBS) $(OBJ)
+$(NAME) : $(LIBS) $(OBJS_NAMES)
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) libft/libft.a #TU te démerdes moi ça me casse les couilles
 	@$(PRINT) $(REMOVE)"Executable built\n"
+
+%.o : srcs/%.c  | $(OBJDIR)
+	@$(CC) -o $(OBJDIR)$@ -c $< $(CFLAGS) $(CPPFLAGS)
 
 objs/%.o : srcs/%.c  | $(OBJDIR)
 	@$(CC) -o $@ -c $< $(CFLAGS) $(CPPFLAGS)
