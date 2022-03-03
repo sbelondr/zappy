@@ -6,11 +6,11 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/07 08:12:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:56:01 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 t_srv *init_srv(t_param *param, t_world_state *st)
 {

@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/18 11:09:53 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:59:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 static int	attempt_take_item(const char *name, int *quant, int *inv, char *arg)
 {

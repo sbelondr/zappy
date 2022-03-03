@@ -6,11 +6,10 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/02 10:49:09 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:17:26 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "functions.h"
 
 void	remove_from_client_list(t_world_state *world, t_client *client)

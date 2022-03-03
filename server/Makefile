@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/02 11:04:24 by jayache          ###   ########.fr        #
+#    Updated: 2022/03/03 09:48:10 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,6 +64,7 @@ SRCS_NAMES = server.c\
 	client_commands_vision.c\
 	client_commands_items.c\
 	client_commands_social.c\
+	client_commands_ritual.c\
 	command_lexer.c\
 	command_tester.c\
 	listen.c\
@@ -106,13 +107,15 @@ else
 	@$(PRINT) "Debug mode : off\n"
 endif
 
-$(NAME) : $(LIBS) $(OBJS_NAMES)
+$(NAME) : $(LIBS) $(OBJ)
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) libft/libft.a #TU te démerdes moi ça me casse les couilles
 	@$(PRINT) $(REMOVE)"Executable built\n"
 
-%.o : %.c $(HEADERS)
+objs/%.o : srcs/%.c  | $(OBJDIR)
+	@$(CC) -o $@ -c $< $(CFLAGS) $(CPPFLAGS)
+
+$(OBJDIR):
 	@$(CREATE) $(OBJDIR)
-	@$(CC) -o $(OBJDIR)$@ -c $< $(CFLAGS) $(CPPFLAGS)
 
 libs :
 	@$(MAKE) -j3 -C $(LIBDIR)

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:02:30 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 09:16:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:59:47 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
  * FUNCTION TO HANDLE THE COMMAND STRUCT
  */
 
-#include "server.h"
+#include "functions.h"
 
 void append_command(t_client *client, t_command to_append)
 {

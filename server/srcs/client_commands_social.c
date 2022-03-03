@@ -6,13 +6,12 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/03/02 11:02:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:43:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
-//TODO: change ft_itoa -- slowest function ever
 char	*connect_nbr(t_srv *srv, t_world_state *world, t_client *player)
 {
 	int		slots;
@@ -29,10 +28,7 @@ char	*connect_nbr(t_srv *srv, t_world_state *world, t_client *player)
 char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
 {
 	t_egg	*egg;
-	t_list	*current;
-	int		maxid;
 
-	maxid = -1;
 	egg = new_egg(world, player->team_name, ft_vector2(player->p_x, player->p_y), player->id);
 	ft_lst_append(&world->egg_list, ft_lstnew_no_copy(egg, sizeof(t_egg)));
 	add_egg_to_team(world, player->team_name, egg->id);
@@ -50,7 +46,6 @@ char	*player_fork(t_srv *srv, t_world_state *world, t_client *player)
  *			t_client *emitter -> The client who's speaking
  *			t_client *recepter -> The client that's listening
  * RETURNS:	int	-> The num of the case giving the direction of the ray
- * TODO: Does not take into account the recepter orientation
  */
 
 static int	b_dir(t_world_state *world, t_client *emitter, t_client *recepter)
@@ -131,100 +126,4 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 		current = current->next;
 	}
 	return (ft_strdup("OK\n"));
-}
-
-static	int	*get_ritual_data(int level)
-{
-	int	values[8][8] = { 
-		{0, 1, 0, 0, 0, 0, 0, 1},
-		{0, 1, 1, 1, 0, 0, 0, 2},
-		{0, 2, 0, 1, 0, 0, 0, 2},
-		{0, 1, 1, 2, 0, 0, 0, 4},
-		{0, 1, 2, 1, 3, 0, 0, 4},
-		{0, 1, 2, 3, 0, 1, 0, 6},
-		{0, 2, 2, 2, 2, 2, 1, 6}
-	};
-	static int	ret[8];
-	memcpy(ret, values[level - 1], 8 * sizeof(int));
-	return (ret);
-}
-
-static int	is_enough_for_ritual(int level, int players, int *objs)
-{
-	int	*required;
-
-	required = get_ritual_data(level);
-	for (int i = 0; i < 7; ++i)
-	{
-		if (objs[i] < required[i])
-		{
-			printf("Not enough %d! %d < %d\n", i, objs[i], required[i]);
-			return (0);
-		}
-	}
-	printf("Players: %d / %d\n", players, required[7]);
-	return (required[7] <= players);
-}
-
-static void	substract_from_ritual(int level, int *objs)
-{
-	int	*cost;
-
-	cost = get_ritual_data(level);
-	for (int i = 0; i < 7; ++i)
-		objs[i] -= cost[i];
-}
-
-char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
-{
-	t_list		*current;
-	t_client	*c;
-	int			players;
-	int			success;
-	int			error;
-	char		*msg;
-
-	players = 0;
-	success = 0;
-	current = world->client_list;
-	while (current)
-	{
-		c = current->content;
-		if (same_position(c, player) && c->lvl == player->lvl && !is_special_team_member(c))
-			players++;
-		current = current->next;
-	}
-	printf("Figuring it out for %d %d...\n", player->p_x, player->p_y);
-	if (is_enough_for_ritual(player->lvl, players, get_case(world, player->p_x, player->p_y)))
-	{
-		substract_from_ritual(player->lvl, get_case(world, player->p_x, player->p_y));
-		current = world->client_list;
-		while (current)
-		{
-			c = current->content;
-			if (same_position(player, c) && c->lvl == player->lvl && c->id != player->id && !is_special_team_member(c))
-				c->lvl += 1;
-			current = current->next;
-		}
-		player->lvl += 1;
-		success = 1;
-	}
-	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
-	error = asprintf(&msg, "niveau actuel : %d\n", player->lvl);
-	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
-	current = world->client_list;
-	while (current)
-	{
-		c = current->content;
-		if (same_position(player, c) && c->lvl == player->lvl && !is_special_team_member(c))
-		{
-			if (c->id != player->id)
-				simple_send(srv, c->id, ft_strdup(msg));
-			send_to_all_moniteur(srv, moniteur_plv(c));
-		}
-		current = current->next;
-	}
-	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
-	return (msg);
 }

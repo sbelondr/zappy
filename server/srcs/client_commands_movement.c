@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:15:18 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:59:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 void	move_player(t_world_state *world, t_client *client, t_orientation dir);
 /*

@@ -6,11 +6,10 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 13:04:03 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:42:22 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "functions.h"
 
 int asprintf(char **strp, const char *fmt, ...);
@@ -76,12 +75,11 @@ int			available_slots(t_srv *srv, t_team *team)
 		egg = current->content;
 		valid_eggs += (egg->maturity <= 0);
 		x += (egg->maturity <= 0 && !egg->used);
-
 		i++;
 		current = current->next;
 	}
 	valid_eggs = x;
-	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit) //TODO: Parametize hard limit
+	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit)
 		remaining_slots = srv->param->team_hard_limit - valid_eggs - lstsize;
 	return (remaining_slots + valid_eggs);
 }

@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/02/28 15:24:04 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:59:57 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 static void	treat_command(t_srv *srv, t_client *client, int client_id)
 {

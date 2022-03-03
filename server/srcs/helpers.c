@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/02 10:55:13 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:00:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 t_vector2	rotate_vector(t_vector2 vec, int direction)
 {

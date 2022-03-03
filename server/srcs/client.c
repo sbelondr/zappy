@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/01 10:13:21 by selver            #+#    #+#             */
-/*   Updated: 2022/03/02 10:56:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:49:57 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "struct.h"
+#include "functions.h"
 
 t_client	*new_client(int id)
 {
