@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/25 11:06:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/04 18:00:49 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	}
 	else if (!strncmp("pin #", command, 5))
 	{
-		//TODO: check args
 		target_id = atoi(command + 5);
 		target = get_client_by_id(srv, target_id);
 		if (target)
@@ -164,12 +163,11 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 	}
 	else if (!strncmp("ppo ", command, 4))
 	{
-		//TODO: check args
 		error = parse_int_parameters(command + 5, 4, arg);
 		if (error >= 0)
 		{
 			target = get_client_by_id(srv, arg[0]);
-			if (target && arg[3] > 0 && arg[3] < 5)
+			if (target && arg[3] > 0 && arg[3] < 5 && arg[1] >= 0 && arg[2] >= 0)
 			{
 				target->p_x = arg[1] % srv->param->world_width;
 				target->p_y = arg[2] % srv->param->world_height;

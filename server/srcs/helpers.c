@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 09:00:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/04 17:56:50 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,34 +38,6 @@ t_vector2	rotate_vector(t_vector2 vec, int direction)
 		sa = -1;
 	}
 	return (ft_vector2(ca * vec.x - sa * vec.y, sa * vec.x + ca * vec.y));
-}
-
-//Returns an array of string, with check to ensure it has expected elements
-//If it is impossible, returns NULL
-char	**split_args(char *str, int expected)
-{
-	int		cnt;
-	char	**ret;
-
-	cnt = 0;
-	for (int i = 0; str[i]; ++i)
-		cnt += (str[i] == ' ');
-	if (cnt != expected)
-	{
-		return (NULL);
-	}
-	ret = ft_strsplit(str, ' ');
-	if (!ret)
-		return (NULL);
-	for (int i = 0; i < expected + 1; ++i)
-	{
-		if (!ret[i])
-		{
-			//TODO: free
-			return (NULL);
-		}
-	}
-	return (ret);
 }
 
 /*
