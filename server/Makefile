@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/03 10:07:45 by jayache          ###   ########.fr        #
+#    Updated: 2022/03/04 15:40:33 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ SRCS_NAMES = server.c\
 	helpers.c \
 	moniteur_commands.c
 
-HEADERS_NAMES = constants.h functions.h includes.h server.h struct.h
+HEADERS_NAMES = constants.h functions.h includes.h struct.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 
@@ -111,14 +111,9 @@ $(NAME) : $(LIBS) $(OBJS_NAMES)
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) libft/libft.a #TU te démerdes moi ça me casse les couilles
 	@$(PRINT) $(REMOVE)"Executable built\n"
 
-%.o : srcs/%.c  | $(OBJDIR)
-	@$(CC) -o $(OBJDIR)$@ -c $< $(CFLAGS) $(CPPFLAGS)
-
-objs/%.o : srcs/%.c  | $(OBJDIR)
-	@$(CC) -o $@ -c $< $(CFLAGS) $(CPPFLAGS)
-
-$(OBJDIR):
+%.o : %.c $(HEADERS)
 	@$(CREATE) $(OBJDIR)
+	@$(CC) -o $(OBJDIR)$@ -c $< $(CFLAGS) $(CPPFLAGS)
 
 libs :
 	@$(MAKE) -j3 -C $(LIBDIR)
