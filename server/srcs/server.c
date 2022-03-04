@@ -6,11 +6,10 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/24 13:55:39 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:17:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "struct.h"
 #include "functions.h"
 
@@ -96,7 +95,7 @@ int main(int ac, char **av)
 	if (!srv)
 		return (EXIT_FAILURE);
 	g_srv = &srv;
-	reset_term();
+	setup_signal();
 	yellow();
 	printf("Launch srv\n");
 	reset();

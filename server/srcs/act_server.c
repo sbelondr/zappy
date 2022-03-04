@@ -6,11 +6,10 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/23 10:12:44 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:17:33 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "functions.h"
 
 void ft_add_new_client(t_srv *srv, fd_set *readfds)

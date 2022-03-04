@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/25 10:55:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 08:54:03 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,16 @@
 # include "struct.h"
 
 int				asprintf(char **strp, const char *fmt, ...);
+
+/*
+ * SETUP
+ */
+
+void			setup_signal(void);
+void			ft_quit(int sig);
+void			ft_add_new_client(t_srv *srv, fd_set *readfds);
+int				ft_set_max_sd(t_srv *srv, fd_set *readfds);
+t_srv			*init_srv(t_param *param, t_world_state *st);
 
 t_param			parse_input(int ac, char **av);
 t_world_state	init_world(t_param param);
@@ -44,6 +54,8 @@ char			*connect_nbr(t_srv *srv, t_world_state *world, t_client *player);
  * HELPERS
  */
 
+t_egg			*new_egg(t_world_state *world, char const *team_name, t_vector2 pos, int parent_id);
+t_vector2		rotate_vector(t_vector2 vec, int direction);
 int				can_print(t_param *param, t_logtype log_level);
 char			**split_args(char *str, int expected);
 int				is_special_team_member(t_client *client);
@@ -77,6 +89,9 @@ void			ft_lexer(t_srv *srv, char *buf, int i);
 
 void			parse_command_set(t_srv *srv, t_client *tester, char *command);
 void			ft_client_exit(t_srv *srv, int id);
+void			ft_client_exit(t_srv *srv, int i);
+void			ft_client_sent_data(t_srv *srv, char *buff, int valread, int i);
+void			ft_listen_srv(t_srv *srv, fd_set *readfds);
 
 /*
  * RESSOURCE GENERATION
@@ -113,5 +128,17 @@ char			*moniteur_edi(t_egg *egg);
 char			*moniteur_pie(int x, int y, int success);
 char			*moniteur_eht(t_egg *egg);
 void			send_to_all_moniteur(t_srv *srv, char *msg);
+
+/*
+ * COLORS
+ */
+
+void			red(void);
+void			cyan(void);
+void			purple(void);
+void			blue(void);
+void			yellow(void);
+void			green(void);
+void			reset(void);
 
 #endif

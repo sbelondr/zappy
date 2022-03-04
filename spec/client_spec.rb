@@ -117,6 +117,7 @@ RSpec.describe 'Checking if we can do the ritual', :ritual do
   end
   after(:each) do
     @tester.puts "set pdi all"
+    sleep 0.5
   end
 
   context 'with enough materials' do
@@ -253,6 +254,7 @@ RSpec.describe 'Doing ritual', :ritual do
   end
   after(:each) do
     @tester.puts "set pdi all"
+    sleep 0.5
   end
 
   context 'With enough materials' do

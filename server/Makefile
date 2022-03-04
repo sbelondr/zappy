@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/02/25 22:00:58 by sbelondr         ###   ########.fr        #
+#    Updated: 2022/03/04 15:40:33 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,10 +59,12 @@ SRCS_NAMES = server.c\
 	world_map_helper.c\
 	gameplay.c\
 	client.c\
+	egg.c\
 	client_commands_movement.c\
 	client_commands_vision.c\
 	client_commands_items.c\
 	client_commands_social.c\
+	client_commands_ritual.c\
 	command_lexer.c\
 	command_tester.c\
 	listen.c\
@@ -73,7 +75,7 @@ SRCS_NAMES = server.c\
 	helpers.c \
 	moniteur_commands.c
 
-HEADERS_NAMES = constants.h functions.h includes.h server.h struct.h
+HEADERS_NAMES = constants.h functions.h includes.h struct.h
 
 OBJS_NAMES = $(SRCS_NAMES:.c=.o)
 

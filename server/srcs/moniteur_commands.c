@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/25 11:01:56 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/03 09:00:17 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 int asprintf(char **strp, const char *fmt, ...);
 
