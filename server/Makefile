@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/04 15:40:33 by jayache          ###   ########.fr        #
+#    Updated: 2022/03/05 11:07:41 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,7 @@ SRCS_NAMES = server.c\
 	act_client.c\
 	init_srv.c\
 	act_server.c\
+	socket_helper.c\
 	parser.c\
 	init_world.c\
 	world_map_helper.c\
