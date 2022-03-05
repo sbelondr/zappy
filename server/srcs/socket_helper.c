@@ -6,11 +6,11 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 11:07:01 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/05 11:07:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 11:25:43 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "functions"
+#include "functions.h"
 
 /*
  * Simplified way to call send

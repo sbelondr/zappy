@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/01 10:13:21 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 08:49:57 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 12:58:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	kill_player(t_srv *srv, t_client *client)
 		printf("%ld: Client #%d died!\n", srv->frame_nbr, client->id);
 		reset();
 	}
-	simple_send(srv, client->id, strdup("mort\n"));
+	simple_send_no_free(srv, client->id, "mort\n");
 	send_to_all_moniteur(srv, moniteur_pdi(client));
 	ft_client_exit(srv, client->id);
 }

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 09:00:17 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 11:26:20 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,8 +364,8 @@ void	send_to_all_moniteur(t_srv *srv, char *msg)
 	while (current)
 	{
 		c = current->content;
-		if (c && c->team_name && !ft_strcmp(c->team_name, "GRAPHIC"))
-			simple_send(srv, c->id, ft_strdup(msg));
+		if (c && c->team_name && !ft_strcmp(c->team_name, GRAPHIC_TEAM))
+			simple_send_no_free(srv, c->id, msg);
 		current = current->next;
 	}
 	free(msg);

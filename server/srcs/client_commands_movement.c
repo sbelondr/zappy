@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 08:59:27 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 12:59:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 		if (target->p_x == client->p_x + direction.x
 				&& target->p_y == client->p_y + direction.y && !is_special_team_member(target))
 		{
-			simple_send(srv, target->id, strdup(format));
+			simple_send_no_free(srv, target->id, format);
 			target->p_x += direction.x;
 			target->p_y += direction.y;
 			send_to_all_moniteur(srv, moniteur_ppo(target));

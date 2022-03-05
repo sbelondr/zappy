@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 09:42:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 11:29:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 	else if (!ft_strcmp(team_name, TESTER_TEAM) && srv->param->flags & FLAG_TESTER)
 	{
 		c->team_name = TESTER_TEAM;
-		simple_send(srv, c->id, ft_strdup("Test mode enabled. Welcome.\n"));
+		simple_send_no_free(srv, c->id, "Test mode enabled. Welcome.\n");
 		return (1);
 	}
 	current = srv->param->team_list;
@@ -185,7 +185,7 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 			return (perform_add_to_team(srv, team, c));
 		current = current->next;
 	}
-	simple_send(srv, id, strdup("0\n"));
+	simple_send_no_free(srv, id, "0\n");
 	return (0);
 }
 
