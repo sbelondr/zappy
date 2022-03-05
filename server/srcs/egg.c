@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 10:56:24 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/04 17:54:18 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 10:57:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,3 +58,18 @@ void	rotten_egg(t_srv *srv, t_egg *egg)
 		reset();
 	}
 }
+
+t_egg	*get_egg_by_id(t_world_state *world, int id)
+{
+	t_list	*current;
+
+	current = world->egg_list;
+	while (current)
+	{
+		if (((t_egg*)current->content)->id == id)
+			return (current->content);
+		current = current->next;
+	}
+	return (NULL);
+}
+

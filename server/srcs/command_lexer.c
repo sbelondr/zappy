@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/03 09:17:53 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 11:11:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void	parse_command_tester(t_srv *srv, t_client *tester, char *buf)
 
 }
 
-void	ft_lexer(t_srv *srv, char *buf, int i)
+void	command_lexer(t_srv *srv, char *buf, int i)
 {
 	t_client	*c;
 

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/03 09:17:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 11:12:05 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void ft_client_exit(t_srv *srv, int i)
 		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
 		reset();
 	}
-	//shutdown(srv->client_sck[i], SHUT_RD);
 	close(srv->client_sck[i]);
 	srv->client_sck[i] = 0;
 }
@@ -103,7 +102,7 @@ void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 	if (commands == 0)
 	{
 		red();
-		printf("ERROR! Command wasn't complete. Was it too long?\nCommand received: %s", buff);
+		printf("%ld: ERROR! Command sent by [%d] wasn't complete. Was it too long? Command received: %s", srv->frame_nbr, srv->client_sck[i], buff);
 		reset();
 	}
 	offset = 0;
@@ -115,7 +114,7 @@ void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 			printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
 			reset();
 		}
-		ft_lexer(srv, buff + offset, i);
+		command_lexer(srv, buff + offset, i);
 		offset = strlen(buff) + 1;
 	}
 }
