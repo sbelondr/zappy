@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/05 13:31:05 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/05 13:37:30 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,25 +78,15 @@ struct timeval	time_left(struct timeval limit)
 	return (ret);
 }
 
-/* https://www.ibm.com/docs/en/i/7.2?topic=designs-using-poll-instead-select */
+/*
+ * use IBM implementation (poll)
+ * https://www.ibm.com/docs/en/i/7.2?topic=designs-using-poll-instead-select
+ */
 int main(int ac, char **av)
 {
 	t_srv			*srv;
 	t_world_state	st;
 	t_param			param;
-
-	param = parse_input(ac, av);
-	st = init_world(param);
-	srv = init_srv(&param, &st);
-	if (!srv)
-		return (EXIT_FAILURE);
-	g_srv = &srv;
-	reset_term();
-	yellow();
-	printf("Launch srv\n");
-	reset();
-
-
 	struct pollfd	fds[200];
 	char	buffer[1024];
 	int		nfds = 1;
@@ -109,6 +99,19 @@ int main(int ac, char **av)
 	int		compress_array = 0;
 	int		end_server = 0;
 
+
+	param = parse_input(ac, av);
+	st = init_world(param);
+	srv = init_srv(&param, &st);
+	if (!srv)
+		return (EXIT_FAILURE);
+	g_srv = &srv;
+	reset_term();
+	yellow();
+	printf("Launch srv\n");
+	reset();
+
+	// init fds with master socket
 	fds[0].fd = srv->master_sck;
 	fds[0].events = POLLIN;
 
@@ -119,7 +122,7 @@ int main(int ac, char **av)
 
 		if (rc < 0)
 		{
-			dprintf(STDERR_FILENO, "nope\n");
+			dprintf(STDERR_FILENO, "poll() failled\n");
 			break ;
 		}
 		tmp_nfds = nfds;
@@ -130,9 +133,9 @@ int main(int ac, char **av)
 			if (fds[i].revents != POLLIN)
 			{
 				continue ;
-				dprintf(STDERR_FILENO, "Error, revents = %d\n", fds[i].revents);
-				end_server = 1;
-				break ;
+//				dprintf(STDERR_FILENO, "Error, revents = %d\n", fds[i].revents);
+//				end_server = 1;
+//				break ;
 			}
 			if (fds[i].fd == srv->master_sck)
 			{
