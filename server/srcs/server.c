@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/28 16:23:08 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/05 13:31:05 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,9 @@ struct timeval	time_left(struct timeval limit)
 /* https://www.ibm.com/docs/en/i/7.2?topic=designs-using-poll-instead-select */
 int main(int ac, char **av)
 {
-	int				max_sd;
-	int				activity;
-	fd_set			readfds;
-	
-	fd_set			writefds;
 	t_srv			*srv;
-	struct timeval	end;
-	struct timeval	tmp;
 	t_world_state	st;
 	t_param			param;
-	int	timeout = (3 * 60 * 1000);
-
 
 	param = parse_input(ac, av);
 	st = init_world(param);
@@ -104,64 +95,130 @@ int main(int ac, char **av)
 	yellow();
 	printf("Launch srv\n");
 	reset();
-//	timeout = delta_to_time(param.time_delta);
-	gettimeofday(&end, NULL);
-	while (1)
+
+
+	struct pollfd	fds[200];
+	char	buffer[1024];
+	int		nfds = 1;
+	int		timeout = (3 * 60 * 1000);
+	int		rc = 0;
+	int		new_sd;
+	int		tmp_nfds = nfds;
+	int		len = 0;
+	int		close_conn = 0;
+	int		compress_array = 0;
+	int		end_server = 0;
+
+	fds[0].fd = srv->master_sck;
+	fds[0].events = POLLIN;
+
+	do
 	{
-//		timeradd(&end, &timeout, &tmp);
-		end = tmp;
-		FD_ZERO(&readfds);
-		FD_ZERO(&writefds);
+		printf("Waiting on poll() nfds = %d ...\n", nfds);
+		rc = poll(fds, nfds, timeout);
 
-		/*
-		       int poll(struct pollfd *fds, nfds_t nfds, int timeout);
-struct pollfd {
-               int   fd;          file descriptor 
-               short events;      requested events
-               short revents;     returned events 
-           };
-			   int select(int nfds, fd_set *readfds, fd_set *writefds,
-                  fd_set *exceptfds, struct timeval *timeout);
-		*/
-		FD_SET(srv->master_sck, &readfds);
-		max_sd = ft_set_max_sd(srv, &readfds);
-
-		struct pollfd	fds[2];
-		char	buf[1024];
-		int		nfds = 1;
-
-
-		fds[0].fd = srv->master_sck;
-		fds[0].events = POLLIN;
-
-
-		activity = poll(fds, nfds, timetime);
-		if (fds[0].revents & POLLIN)
+		if (rc < 0)
 		{
-			activity = recv(fds[0].fd, buf, 1024, 0);
-			if (activity > 0)
-				printf("%d - [%s]\n", activity, buf);
+			dprintf(STDERR_FILENO, "nope\n");
+			break ;
 		}
-		//timeout = time_left(end);
-//		while (timeout.tv_sec > 0 || timeout.tv_usec > 0) 
-//		{
-			/*
-			activity = select(max_sd + 1, &readfds, &writefds, 0, &timeout);
-			// activity < 0 -> error socket
-			// activity > 0 -> nouvelle connection est detecte ou nouveau message recu
-			// activity = 0 -> rien ne se passe
-			if (activity > 0) //d'après le man ça arrive tout le temps...
-				// le man a tort regarde le commentaire du haut
+		tmp_nfds = nfds;
+		for (int i = 0; i < tmp_nfds; i++)
+		{
+			if (fds[i].revents == 0)
+				continue ;
+			if (fds[i].revents != POLLIN)
 			{
-				ft_add_new_client(srv, &readfds); //ALORS PK CA // cherche si il a recu une nouvelle connexion
-				ft_listen_srv(srv, &readfds);
+				continue ;
+				dprintf(STDERR_FILENO, "Error, revents = %d\n", fds[i].revents);
+				end_server = 1;
+				break ;
 			}
-			//timeout = time_left(end);
-			*/
-//		}
-//		timeout = delta_to_time(param.time_delta);
-		game_tick(srv);
-	}
+			if (fds[i].fd == srv->master_sck)
+			{
+				printf("Listening sck is readable\n");
+				do
+				{
+					new_sd = accept(srv->master_sck,
+							(struct sockaddr *)&(srv->address),
+							(socklen_t *)&(srv->addrlen));
+					//					new_sd = accept(srv->master_sck, NULL, NULL);
+					if (new_sd < 0)
+					{
+						if (errno != EWOULDBLOCK)
+						{
+							perror(" accept() failed");
+							end_server = 1;
+						}
+						break ;
+					}
+					printf("New incoming connection - %d\n", new_sd);
+					fds[nfds].fd = new_sd;
+					fds[nfds].events = POLLIN;
+					//					simple_send(srv, i, ft_strdup("BIENVENUE\n"));
+					send(new_sd, "BIENVENUE\n", \
+							strlen("BIENVENUE\n"), 0);
+					new_sd = -1;
+					++nfds;
+				} while (new_sd != -1);
+			}
+			else
+			{
+				printf("Descriptor %d is readable\n", fds[i].fd);
+				close_conn = 0;
+				do
+				{
+					rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
+					if (rc < 0)
+					{
+						printf("error\n");
+						close_conn = 1;
+						break ;
+					}
+					if (rc == 0)
+					{
+						printf("Connection closed\n");
+						close_conn = 1;
+						break ;
+					}
+					len = rc;
+					printf("%d bytes received: %s\n", len, buffer);
+					rc = 0;
+					//					rc = send(fds[i].fd, buffer, len, 0);
+					if (rc < 0)
+					{
+						printf("send failed\n");
+						close_conn = 1;
+						break ;
+					}
+				} while (1);
+				if (close_conn)
+				{
+					close(fds[i].fd);
+					fds[i].fd = -1;
+					compress_array = 1;
+				}
+			}
+		}
+		if (compress_array)
+		{
+			compress_array = 0;
+			for (int i = 0; i < nfds; i++)
+			{
+				if (fds[i].fd == -1)
+				{
+					for (int j = i; j < nfds; j++)
+					{
+						fds[i].fd = fds[j + 1].fd;
+					}
+					--i;
+					--nfds;
+				}
+
+			}
+		}
+	} while (!end_server);
+	game_tick(srv);
 	ft_quit(0);
 	return (EXIT_SUCCESS);
 }
