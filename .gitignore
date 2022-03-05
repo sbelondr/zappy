@@ -1,6 +1,6 @@
 .import/
 *.import
-server
+server/server
 bin/
 Gemfile.lock
 .bundle/
