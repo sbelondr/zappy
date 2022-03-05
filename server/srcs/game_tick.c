@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 08:59:57 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 13:14:18 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,9 @@ void	game_tick(t_srv *srv)
 	if (can_print(srv->param, LOG_TICK))
 		printf("%ld:TICK!!\n", srv->frame_nbr);
 	client_tick(srv, srv->world->client_list);
-	if (srv->frame_nbr % srv->param->generation_frequency > 0) //TODO: activate it and fix the issue 
+	if (srv->param->generation_frequency != 0 && srv->frame_nbr % srv->param->generation_frequency == 0) //TODO: activate it and fix the issue 
 	{
-		//		generate_ressource(*srv->world);
+		srv->param->generate_function(*srv->world);
 	}
 	egg_tick(srv, srv->world->egg_list);
 }
