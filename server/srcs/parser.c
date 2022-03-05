@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:48:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/05 13:11:48 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ t_param	parse_input(int ac, char **av)
 	param.team_hard_limit = 500;
 	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION;
 	param.generate_function = generate_ressource_standard;
+	param.generation_frequency = 1000;
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
 	{
 		if (is_option(av[i], "-v", "--verification"))
@@ -132,7 +133,7 @@ t_param	parse_input(int ac, char **av)
 		else if (is_option(av[i], "-y", "--height"))
 			param.world_height = get_numeric_parameter(av[++i], 5, 15000);
 		else if (is_option(av[i], "-G", "--gen-frequency"))
-			param.generation_frequency = get_numeric_parameter(av[++i], 1, 100000);
+			param.generation_frequency = get_numeric_parameter(av[++i], 0, 100000);
 		else if (is_option(av[i], "-c", "--clients-allowed"))
 			param.allowed_clients_amount = get_numeric_parameter(av[++i], 1, 150);
 		else if (is_option(av[i], "-m", "--max-clients"))
