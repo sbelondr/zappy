@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 09:58:54 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:05:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef enum	e_colors {
 	BLACK = 30,
 	RED,
 	GREEN,
-	BROWN,
+	YELLOW,
 	BLUE,
 	PURPLE,
 	CYAN,

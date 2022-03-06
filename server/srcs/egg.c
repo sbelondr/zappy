@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 10:56:24 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/05 10:57:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:03:47 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void	rotten_egg(t_srv *srv, t_egg *egg)
 	free(egg);
 	if (can_print(srv->param, LOG_EGGDEATH))
 	{
-		cyan();
+		set_color(CYAN, srv->param->flags);	
 		printf("%ld: An egg died!\n", srv->frame_nbr);
-		reset();
+		set_color(RESET, srv->param->flags);	
 	}
 }
 
