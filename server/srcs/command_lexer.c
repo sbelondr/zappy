@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/05 11:11:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:09:31 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,12 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 {
 	if (!add_to_team(srv, buf, i))
 	{
-		red();
-		printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i]);
-		reset();
+		if (can_print(srv->param, LOG_ERROR) && can_print(srv->param, LOG_CONNEXION))
+		{
+			set_color(RED, srv->param->flags);
+			printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i]);
+			set_color(RESET, srv->param->flags);
+		}
 		ft_client_exit(srv, i);
 	}
 	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !srv->param->flags & FLAG_TESTER))

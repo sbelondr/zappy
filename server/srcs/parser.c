@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 13:11:48 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 09:59:31 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ t_param	parse_input(int ac, char **av)
 	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION;
 	param.generate_function = generate_ressource_standard;
 	param.generation_frequency = 1000;
+	param.flags |= FLAG_COLOR;
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
 	{
 		if (is_option(av[i], "-v", "--verification"))
@@ -114,10 +115,50 @@ t_param	parse_input(int ac, char **av)
 			usage();
 		else if (is_option(av[i], "-H", "--hunger"))
 			param.flags |= FLAG_NOHUNGER;
-		else if (is_option(av[i], "-T", "--ticks"))
-			param.allowed_logs |= LOG_TICK;
 		else if (is_option(av[i], "-s", "--silent"))
 			param.allowed_logs = 0;
+		else if (is_option(av[i], "-V", "--verbose"))
+			param.allowed_logs = 0xFFFF;
+		else if (is_option(av[i], NULL, "--print-ticks"))
+			param.allowed_logs |= LOG_TICK;
+		else if (is_option(av[i], NULL, "--no-print-ticks"))
+			param.allowed_logs &= ~LOG_TICK;
+		else if (is_option(av[i], NULL, "--print-info"))
+			param.allowed_logs |= LOG_INFO;
+		else if (is_option(av[i], NULL, "--no-print-info"))
+			param.allowed_logs &= ~LOG_INFO;
+		else if (is_option(av[i], NULL, "--print-action"))
+			param.allowed_logs |= LOG_ACTION;
+		else if (is_option(av[i], NULL, "--no-print-action"))
+			param.allowed_logs &= ~LOG_ACTION;
+		else if (is_option(av[i], NULL, "--print-received"))
+			param.allowed_logs |= LOG_RECEIVE;
+		else if (is_option(av[i], NULL, "--no-print-received"))
+			param.allowed_logs &= ~LOG_RECEIVE;
+		else if (is_option(av[i], NULL, "--print-death"))
+			param.allowed_logs |= LOG_PLAYERDEATH;
+		else if (is_option(av[i], NULL, "--no-print-death"))
+			param.allowed_logs &= ~LOG_PLAYERDEATH;
+		else if (is_option(av[i], NULL, "--print-egg-death"))
+			param.allowed_logs |= LOG_EGGDEATH;
+		else if (is_option(av[i], NULL, "--no-print-egg-death"))
+			param.allowed_logs &= ~LOG_EGGDEATH;
+		else if (is_option(av[i], NULL, "--print-connexion"))
+			param.allowed_logs |= LOG_CONNEXION;
+		else if (is_option(av[i], NULL, "--no-print-connexion"))
+			param.allowed_logs &= ~LOG_CONNEXION;
+		else if (is_option(av[i], NULL, "--print-error"))
+			param.allowed_logs |= LOG_ERROR;
+		else if (is_option(av[i], NULL, "--no-print-error"))
+			param.allowed_logs &= ~LOG_ERROR;
+		else if (is_option(av[i], NULL, "--print-colors"))
+			param.flags |= FLAG_COLOR;
+		else if (is_option(av[i], NULL, "--no-print-colors"))
+			param.flags &= ~FLAG_COLOR;
+		else if (is_option(av[i], NULL, "--print-sent"))
+			param.allowed_logs |= LOG_SEND;
+		else if (is_option(av[i], NULL, "--no-print-sent"))
+			param.allowed_logs &= ~LOG_SEND;
 		else if (i + 1 >= ac)
 		{
 			printf("Error: unexpected end of argument: %s\n", av[i]);

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/01 10:13:21 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 12:58:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:10:35 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ void	kill_player(t_srv *srv, t_client *client)
 {
 	if (can_print(srv->param, LOG_PLAYERDEATH))
 	{
-		cyan();
+		set_color(CYAN, srv->param->flags);
 		printf("%ld: Client #%d died!\n", srv->frame_nbr, client->id);
-		reset();
+		set_color(RESET, srv->param->flags);
 	}
 	simple_send_no_free(srv, client->id, "mort\n");
 	send_to_all_moniteur(srv, moniteur_pdi(client));

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 11:29:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:06:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		}
 		if (can_print(srv->param, LOG_CONNEXION))
 		{
-			yellow();
+			set_color(YELLOW, srv->param->flags);
 			printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
-			reset();
+			set_color(RESET, srv->param->flags);
 		}
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
@@ -148,9 +148,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	}
 	if (can_print(srv->param, LOG_CONNEXION))
 	{
-		yellow();
+		set_color(YELLOW, srv->param->flags);
 		printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
-		reset();
+		set_color(RESET, srv->param->flags);
 	}
 	return (1);
 }

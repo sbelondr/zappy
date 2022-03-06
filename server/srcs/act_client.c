@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/05 11:12:05 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:01:26 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ void ft_client_exit(t_srv *srv, int i)
 	free(client);
 	if (can_print(srv->param, LOG_INFO))
 	{
-		purple();
+		set_color(PURPLE, srv->param->flags);
 		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
-		reset();
+		set_color(RESET, srv->param->flags);
 	}
 	close(srv->client_sck[i]);
 	srv->client_sck[i] = 0;
@@ -99,20 +99,20 @@ void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 	buff[valread] = 0;
 
 	commands = delete_newline(buff);
-	if (commands == 0)
+	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
-		red();
+		set_color(RED, srv->param->flags);
 		printf("%ld: ERROR! Command sent by [%d] wasn't complete. Was it too long? Command received: %s", srv->frame_nbr, srv->client_sck[i], buff);
-		reset();
+		set_color(RESET, srv->param->flags);
 	}
 	offset = 0;
 	for (int x = 0; x < commands; ++x)
 	{
 		if (can_print(srv->param, LOG_RECEIVE))
 		{
-			green();
+			set_color(GREEN, srv->param->flags);
 			printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
-			reset();
+			set_color(RESET, srv->param->flags);
 		}
 		command_lexer(srv, buff + offset, i);
 		offset = strlen(buff) + 1;
