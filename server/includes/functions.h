@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 11:12:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 09:56:40 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,5 +160,6 @@ void			blue(void);
 void			yellow(void);
 void			green(void);
 void			reset(void);
+void			set_color(t_colors color, int param);
 
 #endif

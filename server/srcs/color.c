@@ -6,11 +6,17 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 15:26:01 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/23 10:10:29 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 09:56:28 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "functions.h"
+
+void	set_color(t_colors color, int flags)
+{
+	if (flags & FLAG_COLOR)
+		printf("\033[0;%dm", color);
+}
 
 void purple(void)
 {

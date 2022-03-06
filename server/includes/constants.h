@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 08:58:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 09:58:54 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,37 @@
 	"-v, --verification         permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
 	"-G, --gen-frequency <N>    regenere des ressources tous les N ticks (1000 par defaut)\n" \
 	"-g, --gen-function <F>     change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
-	"-T, --ticks                imprime le numero de tick quand un nouveau tour commence.\n" \
-	"-s, --silent               n'imprime rien.\n"
+	"-s, --silent               n'imprime rien.\n" \
+	"-V, --verbose              imprime TOUT.\n" \
+	"    --[no-]print-ticks     imprime le numero de tick quand un nouveau tour commence.\n" \
+	"    --[no-]print-sent      imprive ce que le serveur renvoie au client.\n" \
+	"    --[no-]print-received  imprime ce que le serveur recoit des clients.\n" \
+	"    --[no-]print-info      imprime des infos supplementaires.\n" \
+	"    --[no-]print-action    imprime les actions que les entreprennent.\n" \
+	"    --[no-]print-connexion imprime les nouvelles connexions.\n" \
+	"    --[no-]print-egg-death imprime les oeufs qui pourrissent.\n" \
+	"    --[no-]print-death     imprime les morts des joueurs.\n" \
+	"    --[no-]print-error     imprime les erreurs du serveur.\n" \
+	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
+
 
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
 #define FLAG_TICK			4
 #define FLAG_SILENT			8
+#define FLAG_COLOR			16
+
+typedef enum	e_colors {
+	RESET = 0,
+	BLACK = 30,
+	RED,
+	GREEN,
+	BROWN,
+	BLUE,
+	PURPLE,
+	CYAN,
+	GREY
+}				t_colors;
 
 typedef enum	e_ressources {
 	FOOD,
@@ -62,7 +86,8 @@ typedef enum	e_logtype {
 	LOG_PLAYERDEATH	= 16,
 	LOG_EGGDEATH	= 32,
 	LOG_CONNEXION	= 64,
-	LOG_INFO		= 128
+	LOG_INFO		= 128,
+	LOG_ERROR		= 256
 }				t_logtype;
 
 typedef enum	e_command_type

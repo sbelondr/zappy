@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 13:14:18 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 09:46:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	setup_ritual_client(t_srv *srv, t_client *client, t_client *client_bis)
 	{
 		if (client_bis->buffer[0].command != COMMAND_INCANTATION)
 			client_bis->in_incantation = 1;
-		simple_send(srv, client_bis->id, ft_strdup("elevation en cours\n"));
+		simple_send_no_free(srv, client_bis->id, "elevation en cours\n");
 	}
 }
 
@@ -125,7 +125,7 @@ void	game_tick(t_srv *srv)
 	if (can_print(srv->param, LOG_TICK))
 		printf("%ld:TICK!!\n", srv->frame_nbr);
 	client_tick(srv, srv->world->client_list);
-	if (srv->param->generation_frequency != 0 && srv->frame_nbr % srv->param->generation_frequency == 0) //TODO: activate it and fix the issue 
+	if (srv->param->generation_frequency != 0 && srv->frame_nbr % srv->param->generation_frequency == 0)
 	{
 		srv->param->generate_function(*srv->world);
 	}
