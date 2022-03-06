@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/03 09:17:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:26:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void ft_quit(int sig)
 	int i = -1;
 	int sd;
 
+	if (srv->param->replay_fd)
+		close(srv->param->replay_fd);
 	while (srv && ++i < srv->param->allowed_clients_amount)
 	{
 		sd = srv->client_sck[i];
