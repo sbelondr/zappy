@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 09:59:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:39:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,27 @@ t_param	parse_input(int ac, char **av)
 			param.allowed_clients_amount = get_numeric_parameter(av[++i], 1, 150);
 		else if (is_option(av[i], "-m", "--max-clients"))
 			param.team_hard_limit = get_numeric_parameter(av[++i], 1, 1000);
+		else if (is_option(av[i], "-l", "--log-replay"))
+		{
+			int fd = 0;
+			if (param.replay_fd  == 0)
+				fd = open(av[++i], O_CREAT | O_WRONLY, S_IRWXU | S_IRGRP);
+			else
+			{
+				printf("Can only log to 1 file at a time ! Just copy the file if you want more !!\n");
+				usage();
+				exit(1);
+			}
+			if (fd >= 0)
+				param.replay_fd = fd;
+			else
+			{
+				printf("Error: Cannot open %s\n", av[i]);
+				usage();
+				exit(1);
+			}
+
+		}
 		else if (is_option(av[i], "-n", "--name"))
 		{
 			do

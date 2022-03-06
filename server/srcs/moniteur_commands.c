@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 11:26:20 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:40:11 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -367,6 +367,10 @@ void	send_to_all_moniteur(t_srv *srv, char *msg)
 		if (c && c->team_name && !ft_strcmp(c->team_name, GRAPHIC_TEAM))
 			simple_send_no_free(srv, c->id, msg);
 		current = current->next;
+	}
+	if (srv->param->replay_fd)
+	{
+		dprintf(srv->param->replay_fd, "%ld: %s", srv->frame_nbr, msg);
 	}
 	free(msg);
 }
