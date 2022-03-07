@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/06 10:26:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/07 09:05:03 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int main(int ac, char **av)
 		return (EXIT_FAILURE);
 	g_srv = &srv;
 	setup_signal();
+	send_to_all_moniteur(srv, moniteur_mct(srv->world));
 	yellow();
 	printf("Launch srv\n");
 	reset();

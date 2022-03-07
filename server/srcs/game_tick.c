@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 09:46:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/07 09:02:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void	game_tick(t_srv *srv)
 	if (srv->param->generation_frequency != 0 && srv->frame_nbr % srv->param->generation_frequency == 0)
 	{
 		srv->param->generate_function(*srv->world);
+		send_to_all_moniteur(srv, moniteur_mct(srv->world));
 	}
 	egg_tick(srv, srv->world->egg_list);
 }
