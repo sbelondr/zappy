@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/05 12:57:27 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/07 09:10:30 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,21 @@ static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
 			current = current->next;
 			kill_any_client(srv, target, tester);
 		}
+		ft_client_exit(srv, tester->id);
+	}
+	else if (!strcmp("others", command))
+	{
+		current = srv->world->client_list;
+		while (current)
+		{
+			target = current->content;
+			current = current->next;
+			kill_any_client(srv, target, tester);
+		}
+		simple_send_no_free(srv, tester->id, "ok\n");
+	}
+	else if (!strcmp("self", command))
+	{
 		ft_client_exit(srv, tester->id);
 	}
 	else
