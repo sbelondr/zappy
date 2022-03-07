@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:27:26 by selver            #+#    #+#             */
-/*   Updated: 2022/02/19 10:03:09 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/07 09:04:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "struct.h"
+#include "functions.h"
 
 void			generate_ressource_uniform(t_world_state world)
 {
@@ -63,6 +63,6 @@ t_world_state	init_world(t_param params)
 	for (int y = 0; y < ret.params.world_height; y++)
 		for (int x = 0; x < ret.params.world_width; x++)
 			ret.map[y][x] = calloc(7, sizeof(int));
-	generate_ressource_standard(ret);
+	params.generate_function(ret);
 	return (ret);
 }
