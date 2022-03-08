@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/06 10:09:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/07 09:19:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,13 @@ void	command_lexer(t_srv *srv, char *buf, int i)
 	t_client	*c;
 
 	c = get_client_by_id(srv, i);
+	if (!c)
+	{
+		printf("ID SYSTEM FINLLY BROKE ! RIP !\n");
+		printf("Info: [%d] with command %s\n", i, buf);
+		exit(1);
+	}
+
 	if (c->team_name == NULL)
 		connect_client(srv, buf, c, i);
 	else if (!strcmp(c->team_name, GRAPHIC_TEAM))

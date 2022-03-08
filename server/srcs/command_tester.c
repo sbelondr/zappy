@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/07 09:10:30 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 08:40:20 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,24 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 			else
 				simple_send_no_free(srv, tester->id, "sbp\n");
 		}
+	}
+	else if (!strncmp("plv ", command, 4))
+	{
+		error = sscanf(command, "plv #%d %d",  &arg[0], &arg[1]);
+		if (error >= 0)
+		{
+			target = get_client_by_id(srv, arg[0]);
+			if (target)
+			{
+				target->lvl = arg[1];
+				send_to_all_moniteur(srv, moniteur_plv(target));
+				simple_send_no_free(srv, tester->id, "ok\n");
+			}
+			else
+				simple_send(srv, tester->id, strdup("sbp\n"));
+		}
+		else
+			simple_send_no_free(srv, tester->id, "sbp\n");
 	}
 	else if (!strncmp("bct ", command, 4))
 	{
