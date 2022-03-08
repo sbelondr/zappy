@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/08 08:40:20 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 08:58:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,27 @@ static void	parse_edi(t_srv *srv, t_client *tester, char *command)
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
 	}
+}
+
+void	parse_flg(t_srv *srv, t_client *tester, char *command)
+{
+	if (!strncmp(command, "hunger ", 7))
+	{
+		if (!strcmp(command + 7, "on"))
+		{
+			srv->param->flags &= ~FLAG_NOHUNGER;
+			simple_send_no_free(srv, tester->id, "ok\n");
+		}
+		else if (!strcmp(command + 7, "off"))
+		{
+			srv->param->flags |= FLAG_NOHUNGER;
+			simple_send_no_free(srv, tester->id, "ok\n");
+		}
+		else
+			simple_send_no_free(srv, tester->id, "sbp\n");
+	}
+	else
+		simple_send_no_free(srv, tester->id, "sbp\n");
 }
 
 void	parse_command_set(t_srv *srv, t_client *tester, char *command)
@@ -284,6 +305,10 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		}
 		else
 			simple_send_no_free(srv, tester->id, "sbp\n");
+	}
+	else if (!strncmp("flg ", command, 4))
+	{
+		parse_flg(srv, tester, command + 4);
 	}
 	else if (!strncmp("bct ", command, 4))
 	{
