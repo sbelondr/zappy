@@ -50,6 +50,13 @@
 	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
 	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n"
 
+#define LOCFOOD		"NOURRITURE"
+#define LOCLINEMATE	"LINEMATE"
+#define LOCDERAUMERE "DERAUMERE"
+#define LOCSIBUR	"SIBUR"
+#define LOCMENDIANE	"MENDIANE"
+#define LOCPHIRAS	"PHIRAS"
+#define LOCTHYSTAME	"THYSTAME"
 
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
@@ -74,7 +81,7 @@ typedef enum	e_ressources {
 	LINEMATE,
 	DERAUMERE,
 	SIBUR,
-	LAMENDIANE,
+	MENDIANE,
 	PHIRAS,
 	THYSTAME,
 }				t_ressources;
@@ -107,6 +114,7 @@ typedef enum	e_command_type
 	COMMAND_FORK,
 	COMMAND_CONNECT_NBR,
 	COMMAND_UNKNOWN,
+	COMMAND_BAD_PARAMETER,
 	COMMAND_NBR
 }				t_command_type;
 

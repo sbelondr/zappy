@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 10:15:46 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:31:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 			"{nourriture %d, sibur %d, phiras %d, linemate %d,"
 			" thystame %d, lamendiane %d, deraumere %d}",
 			res[FOOD] * 126 + player->hunger, res[SIBUR], res[PHIRAS], res[LINEMATE],
-			res[THYSTAME], res[LAMENDIANE], res[DERAUMERE]);
+			res[THYSTAME], res[MENDIANE], res[DERAUMERE]);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (inventory);
@@ -122,7 +122,7 @@ static int	size_of_string(t_world_state *world, t_client *player)
 		cnt += items[LINEMATE] * strlen(" LINEMATE");
 		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
 		cnt += items[SIBUR] * strlen(" SIBUR");
-		cnt += items[LAMENDIANE] * strlen(" LAMENDIANE");
+		cnt += items[MENDIANE] * strlen(" LAMENDIANE");
 		cnt += items[PHIRAS] * strlen(" PHIRAS");
 		cnt += items[THYSTAME] * strlen(" THYSTAME");
 		cnt += items[FOOD] * strlen(" FOOD");
@@ -166,7 +166,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
 		offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
 		offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
-		offset += build_see_part(ret + offset, " LAMENDIANE", items[LAMENDIANE]);
+		offset += build_see_part(ret + offset, " LAMENDIANE", items[MENDIANE]);
 		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
 		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
 		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);

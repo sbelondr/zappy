@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 09:56:40 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:14:53 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ t_team			*get_team_by_name(t_world_state *world, char *team_name);
  */
 
 t_vector2		rotate_vector(t_vector2 vec, int direction);
+int				is_valid_item(char const *item);
 int				can_print(t_param *param, t_logtype log_level);
 t_game_action	get_action_from_enum(t_command_type command);
 
