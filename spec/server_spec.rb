@@ -15,11 +15,9 @@ RSpec.describe 'Connecting to server' do
     @tester = connect
   end
   after(:each) do
-    @cleanup = connect
-    @cleanup.gets
-    @cleanup.puts "TESTER"
-    @cleanup.gets
-    @cleanup.puts "set pdi all"
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
   it 'says BIENVENUE' do
     expect(@client.gets).to eq("BIENVENUE\n")
@@ -92,13 +90,11 @@ RSpec.describe 'Using the TESTER' do
     @graphic.puts 'GRAPHIC'
   end
   after(:each) do
-    @cleanup = connect
-    @cleanup.gets
-    @cleanup.puts "TESTER"
-    @cleanup.gets
-    @cleanup.puts "set edi all"
-    @cleanup.gets
-    @cleanup.puts "set pdi all"
+    @tester.puts "set edi all"
+    @tester.gets
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
   context 'with well formatted input' do
     it 'can set the position of a player' do
@@ -151,9 +147,6 @@ RSpec.describe 'Using the TESTER' do
           expect(@tester.gets).to eq("bct #{y} #{x} 0 0 0 0 0 0 0\n")
         end
       end
-    end
-    it 'can kill players' do
-      expect(putget @tester, 'set pdi #0').to eq("ok\n")
     end
   end
   context 'with bad inputs' do
@@ -213,11 +206,9 @@ RSpec.describe 'Using the CLIENT' do
     @map_size = @tester.gets.split[1..2].collect &:to_i
   end
   after(:each) do
-    @cleanup = connect
-    @cleanup.gets
-    @cleanup.puts "TESTER"
-    @cleanup.gets
-    @cleanup.puts "set pdi all"
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
   context 'Going forward' do
     context 'in the middle of the map' do

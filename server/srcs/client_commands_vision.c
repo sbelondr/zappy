@@ -97,6 +97,12 @@ static int	player_on_position(t_world_state *world, t_vector2 pos)
 	return (acc);
 }
 
+//Gives the number of cases covered by the vision
+static int	vision_range(int level)
+{
+	return ((int)(((level + 1) / 2.0) * (2 + level * 2)));
+}
+
 static int	size_of_string(t_world_state *world, t_client *player)
 {
 	int			cnt;
@@ -105,7 +111,7 @@ static int	size_of_string(t_world_state *world, t_client *player)
 	t_vector2	target;
 
 	cnt = 0;
-	case_nbr = 4;
+	case_nbr = vision_range(player->lvl);
 	for (int i = 0; i < case_nbr; ++i) 
 	{
 		target = index_to_map_vector(i);
@@ -145,7 +151,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	(void)srv;
 
 	cnt = 0;
-	case_nbr = 4; //Remplacer par nombre de case vues au lvl du joueur
+	case_nbr = vision_range(player->lvl);
 	cnt = size_of_string(world, player);
 	ret = ft_strnew(cnt);
 	ret[0] = '{';
@@ -167,7 +173,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		offset += build_see_part(ret + offset, " PLAYER", player_on_position(world, target));
 		ret[offset++] = ',';
 	}
-	ret[offset++] = '}';
+	ret[offset - 1] = '}';
 	ret[offset++] = '\n';
 	return (ret);
 }

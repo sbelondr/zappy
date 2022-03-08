@@ -14,7 +14,9 @@ RSpec.describe 'Moving to a target direction', :client do
     @tester = connect 'TESTER'
   end
   after(:each) do
-    @tester.puts "set pdi all"
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
 
   context 'in a straight line' do
@@ -116,8 +118,9 @@ RSpec.describe 'Checking if we can do the ritual', :ritual do
     end
   end
   after(:each) do
-    @tester.puts "set pdi all"
-    sleep 0.5
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
 
   context 'with enough materials' do
@@ -253,8 +256,9 @@ RSpec.describe 'Doing ritual', :ritual do
     end
   end
   after(:each) do
-    @tester.puts "set pdi all"
-    sleep 0.5
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
 
   context 'With enough materials' do
@@ -293,7 +297,7 @@ RSpec.describe 'Doing ritual', :ritual do
   end
 end
 
-RSpec.describe 'Seeing', :vision do
+RSpec.describe 'When looking ', :vision do
   def confirmed(index)
     return [0, 0] if index == 0
     return [-1, 1] if index == 1
@@ -312,12 +316,72 @@ RSpec.describe 'Seeing', :vision do
     @client = Client::Trantorien.new('TOTO')
   end
   after(:each) do
-    @tester.puts "set pdi all"
+    @tester.puts "set pdi others"
+    @tester.gets
+    @tester.puts "set pdi self"
   end
 
-  it 'Can see' do
+  it 'should properly translate information' do
     9.times do |i|
       expect(@client.translate_vision_to_map i).to eq(confirmed i)
     end
   end
+
+    describe "should have a vision range proportional to its level" do
+      it ": level 1" do 
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(4)
+      end
+      it ": level 2" do 
+        @tester.puts "set plv #1 2"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(9)
+      end
+      it ": level 3" do 
+        @tester.puts "set plv #1 3"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(16)
+      end
+      it ": level 4" do 
+        @tester.puts "set plv #1 4"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(25)
+      end
+      it ": level 5" do 
+        @tester.puts "set plv #1 5"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(36)
+      end
+      it ": level 6" do 
+        @tester.puts "set plv #1 6"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(49)
+      end
+      it ": level 7" do 
+        @tester.puts "set plv #1 7"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(64)
+      end
+      it ": level 8" do 
+        @tester.puts "set plv #1 8"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(81)
+      end
+
+    end
 end
