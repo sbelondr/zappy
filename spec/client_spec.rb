@@ -375,6 +375,13 @@ RSpec.describe 'When looking ', :vision do
         vision = vision.split ","
         expect(vision.size).to eq(64)
       end
+      it ": level 8" do 
+        @tester.puts "set plv #1 8"
+        @tester.gets
+        vision = @client.do_action "voir"
+        vision = vision.split ","
+        expect(vision.size).to eq(81)
+      end
 
     end
 end
