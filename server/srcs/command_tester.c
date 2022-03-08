@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/05 12:57:27 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:31:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 				target->ressource[LINEMATE] = arg[2];
 				target->ressource[DERAUMERE] = arg[3];
 				target->ressource[SIBUR] = arg[4];
-				target->ressource[LAMENDIANE] = arg[5];
+				target->ressource[MENDIANE] = arg[5];
 				target->ressource[PHIRAS] = arg[6];
 				target->ressource[THYSTAME] = arg[7];
 				simple_send_no_free(srv, tester->id, "ok\n");
@@ -241,7 +241,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 						pos[LINEMATE] = arg[3];
 						pos[DERAUMERE] = arg[4];
 						pos[SIBUR] = arg[5];
-						pos[LAMENDIANE] = arg[6];
+						pos[MENDIANE] = arg[6];
 						pos[PHIRAS] = arg[7];
 						pos[THYSTAME] = arg[8];
 						send_to_all_moniteur(srv, moniteur_bct(srv->world, arg[0], arg[1]));
@@ -277,7 +277,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 				pos[LINEMATE] = arg[3];
 				pos[DERAUMERE] = arg[4];
 				pos[SIBUR] = arg[5];
-				pos[LAMENDIANE] = arg[6];
+				pos[MENDIANE] = arg[6];
 				pos[PHIRAS] = arg[7];
 				pos[THYSTAME] = arg[8];
 				simple_send_no_free(srv, tester->id, "ok\n");

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:27:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/07 09:04:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:30:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void			generate_ressource_uniform(t_world_state world)
 		{
 			world.map[y][x][LINEMATE] += (rand() % 2) * 2;
 			world.map[y][x][DERAUMERE] += (rand() % 2) * 2;
-			world.map[y][x][LAMENDIANE] += (rand() % 2) * 2;
+			world.map[y][x][MENDIANE] += (rand() % 2) * 2;
 			world.map[y][x][SIBUR] += (rand() % 2) * 2;
 			world.map[y][x][PHIRAS] += (rand() % 2) * 2;
 			world.map[y][x][THYSTAME] += (rand() % 2) * 2;
@@ -37,7 +37,7 @@ void			generate_ressource_standard(t_world_state world)
 			if (x > world.params.world_width / 2)
 				world.map[y][x][DERAUMERE] += (rand() % 2) * 2;
 			if (y < world.params.world_height / 2)
-				world.map[y][x][LAMENDIANE] += (rand() % 2) * 2;
+				world.map[y][x][MENDIANE] += (rand() % 2) * 2;
 			if (y > world.params.world_height / 2)
 				world.map[y][x][SIBUR] += (rand() % 2) * 2;
 			world.map[y][x][PHIRAS] += (rand() % 100 < 10);

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 10:05:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:29:50 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,15 @@
 	"    --[no-]print-egg-death imprime les oeufs qui pourrissent.\n" \
 	"    --[no-]print-death     imprime les morts des joueurs.\n" \
 	"    --[no-]print-error     imprime les erreurs du serveur.\n" \
-	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
+	"-C, --[no-]print-colors    colorize les messages selon leur type.\n"
 
+#define LOCFOOD		"NOURRITURE"
+#define LOCLINEMATE	"LINEMATE"
+#define LOCDERAUMERE "DERAUMERE"
+#define LOCSIBUR	"SIBUR"
+#define LOCMENDIANE	"MENDIANE"
+#define LOCPHIRAS	"PHIRAS"
+#define LOCTHYSTAME	"THYSTAME"
 
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
@@ -73,7 +80,7 @@ typedef enum	e_ressources {
 	LINEMATE,
 	DERAUMERE,
 	SIBUR,
-	LAMENDIANE,
+	MENDIANE,
 	PHIRAS,
 	THYSTAME,
 }				t_ressources;
@@ -106,6 +113,7 @@ typedef enum	e_command_type
 	COMMAND_FORK,
 	COMMAND_CONNECT_NBR,
 	COMMAND_UNKNOWN,
+	COMMAND_BAD_PARAMETER,
 	COMMAND_NBR
 }				t_command_type;
 

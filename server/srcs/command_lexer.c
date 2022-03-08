@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/06 10:09:31 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:34:45 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,14 +173,28 @@ void	command_lexer(t_srv *srv, char *buf, int i)
 	else if (!strncmp(buf, "pose", 4))
 	{
 		char **arr = ft_strsplit(buf, ' ');
-		append_command(c, new_command(COMMAND_POSER, arr[1], 7));
+		if (arr[1] && is_valid_item(arr[1]))
+			append_command(c, new_command(COMMAND_POSER, arr[1], 7));
+		else
+		{
+			if (arr[1])
+				free(arr[1]);
+			append_command(c, new_command(COMMAND_BAD_PARAMETER, NULL, 0));
+		}
 		free(arr[0]);
 		free(arr);
 	}
 	else if (!strncmp(buf, "prendre", 7))
 	{
 		char **arr = ft_strsplit(buf, ' ');
-		append_command(c, new_command(COMMAND_PRENDRE, arr[1], 7));
+		if (arr[1] && is_valid_item(arr[1]))
+			append_command(c, new_command(COMMAND_PRENDRE, arr[1], 7));
+		else
+		{
+			if (arr[1])
+				free(arr[1]);
+			append_command(c, new_command(COMMAND_BAD_PARAMETER, NULL, 0));
+		}
 		free(arr[0]);
 		free(arr);
 	}
