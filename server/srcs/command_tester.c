@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/08 08:58:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 10:17:17 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,7 +326,6 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		}
 		else
 		{
-			//error = parse_int_parameters(command, 9, arg);
 			error = sscanf(command, "bct %d %d %d %d %d %d %d %d %d",  &arg[0], &arg[1], &arg[2], &arg[3], &arg[4], &arg[5], &arg[6], &arg[7],&arg[8]);
 			if (error >= 0)
 			{
