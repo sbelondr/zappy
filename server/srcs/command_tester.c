@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/05 12:57:27 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 08:58:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,21 @@ static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
 		}
 		ft_client_exit(srv, tester->id);
 	}
+	else if (!strcmp("others", command))
+	{
+		current = srv->world->client_list;
+		while (current)
+		{
+			target = current->content;
+			current = current->next;
+			kill_any_client(srv, target, tester);
+		}
+		simple_send_no_free(srv, tester->id, "ok\n");
+	}
+	else if (!strcmp("self", command))
+	{
+		ft_client_exit(srv, tester->id);
+	}
 	else
 	{
 		target_id = atoi(command);
@@ -113,6 +128,27 @@ static void	parse_edi(t_srv *srv, t_client *tester, char *command)
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
 	}
+}
+
+void	parse_flg(t_srv *srv, t_client *tester, char *command)
+{
+	if (!strncmp(command, "hunger ", 7))
+	{
+		if (!strcmp(command + 7, "on"))
+		{
+			srv->param->flags &= ~FLAG_NOHUNGER;
+			simple_send_no_free(srv, tester->id, "ok\n");
+		}
+		else if (!strcmp(command + 7, "off"))
+		{
+			srv->param->flags |= FLAG_NOHUNGER;
+			simple_send_no_free(srv, tester->id, "ok\n");
+		}
+		else
+			simple_send_no_free(srv, tester->id, "sbp\n");
+	}
+	else
+		simple_send_no_free(srv, tester->id, "sbp\n");
 }
 
 void	parse_command_set(t_srv *srv, t_client *tester, char *command)
@@ -251,6 +287,28 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 			else
 				simple_send_no_free(srv, tester->id, "sbp\n");
 		}
+	}
+	else if (!strncmp("plv ", command, 4))
+	{
+		error = sscanf(command, "plv #%d %d",  &arg[0], &arg[1]);
+		if (error >= 0)
+		{
+			target = get_client_by_id(srv, arg[0]);
+			if (target)
+			{
+				target->lvl = arg[1];
+				send_to_all_moniteur(srv, moniteur_plv(target));
+				simple_send_no_free(srv, tester->id, "ok\n");
+			}
+			else
+				simple_send(srv, tester->id, strdup("sbp\n"));
+		}
+		else
+			simple_send_no_free(srv, tester->id, "sbp\n");
+	}
+	else if (!strncmp("flg ", command, 4))
+	{
+		parse_flg(srv, tester, command + 4);
 	}
 	else if (!strncmp("bct ", command, 4))
 	{

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 10:05:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:42:56 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 #define USAGE	"Usage: ./serveur -p <port> -x <width> -y <height> -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n" \
 	"-p, --port <port>          numero de port\n" \
-	"-x, --width <n>            largeur du Monden\n"\
+	"-x, --width <n>            largeur du monde\n"\
 	"-y, --height <n>           hauteur du Monde\n"\
 	"-n, --name <name>          nom_equipe_1 nom_equipe_2 ...\n"\
 	"-c, --clients-allowed <n>  nombre de client autorises au commencement du jeu\n" \
@@ -48,6 +48,7 @@
 	"    --[no-]print-death     imprime les morts des joueurs.\n" \
 	"    --[no-]print-error     imprime les erreurs du serveur.\n" \
 	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
+	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n"
 
 
 #define FLAG_TESTER			1
