@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/16 10:20:43 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 09:18:03 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:19:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,15 @@ static char		*unknown_command(t_srv *srv, t_world_state *world, t_client *client
 	(void)world;
 	(void)client;
 	(void)srv;
-	return (ft_strdup("???\n"));
+	return (ft_strdup("suc\n"));
+}
+
+static char		*command_bad_parameter(t_srv *srv, t_world_state *world, t_client *client)
+{
+	(void)world;
+	(void)client;
+	(void)srv;
+	return (ft_strdup("sbp\n"));
 }
 
 t_game_action	get_action_from_enum(t_command_type command)
@@ -39,6 +47,7 @@ t_game_action	get_action_from_enum(t_command_type command)
 	array[COMMAND_EXPULSER] = kick;
 	array[COMMAND_INCANTATION] = ritual;
 	array[COMMAND_CONNECT_NBR] = connect_nbr;
+	array[COMMAND_BAD_PARAMETER] = command_bad_parameter;
 	return (array[command]);
 }
 

@@ -6,11 +6,19 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 11:07:28 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:19:59 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
+
+int			is_valid_item(char const *item)
+{
+	return (!strcmp(item, LOCFOOD) || !strcmp(item, LOCLINEMATE)
+			|| !strcmp(item, LOCDERAUMERE) || !strcmp(item, LOCSIBUR)
+			|| !strcmp(item, LOCMENDIANE) || !strcmp(item, LOCPHIRAS)
+			|| !strcmp(item, LOCTHYSTAME));
+}
 
 t_vector2	rotate_vector(t_vector2 vec, int direction)
 {
