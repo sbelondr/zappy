@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:14:53 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:44:36 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,5 +162,11 @@ void			yellow(void);
 void			green(void);
 void			reset(void);
 void			set_color(t_colors color, int param);
+
+/*
+ * ERROR HANDLING
+ */
+
+void			emergency_exit(char const *perror_prefix);
 
 #endif

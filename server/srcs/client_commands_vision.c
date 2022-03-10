@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:31:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:43:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 			res[FOOD] * 126 + player->hunger, res[SIBUR], res[PHIRAS], res[LINEMATE],
 			res[THYSTAME], res[MENDIANE], res[DERAUMERE]);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (inventory);
 }
 

@@ -6,13 +6,13 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:25:21 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:26:40 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 
-void		emergency_exit(t_srv *srv, char const *perror_prefix) //TODO: Free
+void		emergency_exit(char const *perror_prefix) //TODO: Free
 {
 	if (perror_prefix)
 		perror(perror_prefix);

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 12:59:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:41:32 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 		dir = 1;
 	}
 	if (asprintf(&format, "deplacement %d\n", dir) < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	current = world->client_list;
 	send_to_all_moniteur(srv, moniteur_pex(client));
 	while (current)

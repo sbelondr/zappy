@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:21:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:36:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_world_state init_world(t_param params);
 void	usage(int error)
 {
 	if (error)
-		dprintf(stderr, USAGE);
+		fprintf(stderr, USAGE);
 	else
 		printf(USAGE);
 	exit(error);
@@ -37,18 +37,18 @@ long	get_numeric_parameter(char *numstr, int min, int max)
 	result = strtol(numstr, &endptr, 10);
 	if (*endptr)
 	{
-		dprintf(ERROR_INV_PARAM_NAN, numstr);
-		usage();
+		fprintf(stderr, ERROR_INV_PARAM_NAN, numstr);
+		usage(1);
 	}
 	else if (result < min)
 	{
-		dprintf(ERROR_INV_PARAM_TOO_SMALL, result, min);
-		usage();
+		fprintf(stderr, ERROR_INV_PARAM_TOO_SMALL, result, min);
+		usage(1);
 	}
 	else if (result > max)
 	{
-		dprintf(ERROR_INV_PARAM_TOO_BIG, result, max);
-		usage();
+		fprintf(stderr, ERROR_INV_PARAM_TOO_BIG, result, max);
+		usage(1);
 	}
 	return (result);
 }
@@ -58,32 +58,32 @@ int		is_input_complete(t_param param)
 	int success = 1;
 	if (!param.port)
 	{
-		dprintf(ERROR_MISSING_PARAM_PORT);
+		fprintf(stderr, ERROR_MISSING_PARAM_PORT);
 		success = 0;
 	}
 	if (!param.world_width)
 	{
-		dprintf(ERROR_MISSING_PARAM_WIDTH);
+		fprintf(stderr, ERROR_MISSING_PARAM_WIDTH);
 		success = 0;
 	}
 	if (!param.world_height)
 	{
-		dprintf(ERROR_MISSING_PARAM_HEIGHT);
+		fprintf(stderr, ERROR_MISSING_PARAM_HEIGHT);
 		success = 0;
 	}
 	if (!param.time_delta)
 	{
-		dprintf(ERROR_MISSING_PARAM_DELTA);
+		fprintf(stderr, ERROR_MISSING_PARAM_DELTA);
 		success = 0;
 	}
 	if (!param.allowed_clients_amount)
 	{
-		dprintf(ERROR_MISSING_PARAM_ACA);
+		fprintf(stderr, ERROR_MISSING_PARAM_ACA);
 		success = 0;
 	}
 	if (!param.team_list)
 	{
-		dprintf(ERROR_MISSING_PARAM_TEAM);
+		fprintf(stderr, ERROR_MISSING_PARAM_TEAM);
 		success = 0;
 	}
 	return (success);
@@ -126,7 +126,7 @@ t_param	parse_input(int ac, char **av)
 		if (is_option(av[i], "-v", "--verification"))
 			param.flags |= FLAG_TESTER;
 		else if (is_option(av[i], "-h", "--help"))
-			usage();
+			usage(0);
 		else if (is_option(av[i], "-H", "--hunger"))
 			param.flags |= FLAG_NOHUNGER;
 		else if (is_option(av[i], "-s", "--silent"))
@@ -176,7 +176,7 @@ t_param	parse_input(int ac, char **av)
 		else if (i + 1 >= ac)
 		{
 			printf(ERROR_INV_OPT_END, av[i]);
-			usage();
+			usage(1);
 		}
 		else if (is_option(av[i], "-t", "--time"))
 			param.time_delta = get_numeric_parameter(av[++i], 1, 15000);
@@ -199,16 +199,16 @@ t_param	parse_input(int ac, char **av)
 				fd = open(av[++i], O_CREAT | O_WRONLY, S_IRWXU | S_IRGRP);
 			else
 			{
-				dprintf(ERROR_INV_OPT_TOO_MANY_REPLAYS);
-				usage();
+				fprintf(stderr, ERROR_INV_OPT_TOO_MANY_REPLAYS);
+				usage(1);
 			}
 			if (fd >= 0)
 				param.replay_fd = fd;
 			else
 			{
-				dprintf(stderr, ERROR_INV_PARAM_FILE, av[i]);
+				fprintf(stderr, ERROR_INV_PARAM_FILE, av[i]);
 				perror("");
-				usage();
+				usage(1);
 			}
 
 		}
@@ -229,16 +229,16 @@ t_param	parse_input(int ac, char **av)
 			else if (!strcmp(av[i], "UNIFORM")) {
 				param.generate_function = generate_ressource_uniform;
 			}
-			else
-				usage();
+			else //TODO: add error message
+				usage(1);
 		}
 		else
 		{
 			printf(ERROR_INV_OPT_UNKNOWN,av[i]);
-			usage();
+			usage(1);
 		}
 	}
 	if (!is_input_complete(param))
-		usage();
+		usage(1);
 	return (param);
 }
