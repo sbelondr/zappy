@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:43:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:46:05 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ static int	size_of_string(t_world_state *world, t_client *player)
  * PARAMS: t_world_state *world -> world state
  *			t_client playe -> Observer
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
- * TODO: VIEW SCALES WITH LEVEL 
  */
 
 char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
