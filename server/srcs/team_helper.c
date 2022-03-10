@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 10:06:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 09:36:09 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,14 +126,14 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		egg = get_first_valid_egg(team);
 		if (egg == NULL)
 		{
-			printf("FATAL ERROR: could not find an egg to spawn in.\n");
+			printf(ERROR_NO_EGG);
 			exit(1);
 			return (0);
 		}
 		if (can_print(srv->param, LOG_CONNEXION))
 		{
 			set_color(YELLOW, srv->param->flags);
-			printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
+			printf(LOG_CONNEXION_EGG, egg->id);
 			set_color(RESET, srv->param->flags);
 		}
 		c->p_x = egg->p_x;
@@ -149,7 +149,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	if (can_print(srv->param, LOG_CONNEXION))
 	{
 		set_color(YELLOW, srv->param->flags);
-		printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
+		printf(LOG_CONNEXION_POSITION, c->p_x, c->p_y);
 		set_color(RESET, srv->param->flags);
 	}
 	return (1);

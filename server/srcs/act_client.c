@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/08 10:16:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 09:28:18 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void ft_client_exit(t_srv *srv, int i)
 	if (can_print(srv->param, LOG_INFO))
 	{
 		set_color(PURPLE, srv->param->flags);
-		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
+		printf(LOG_CLIENTS_LEFT, ft_lst_size(srv->world->client_list));
 		set_color(RESET, srv->param->flags);
 	}
 	close(srv->client_sck[i]);
@@ -102,7 +102,7 @@ void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
 		set_color(RED, srv->param->flags);
-		printf("%ld: ERROR! Command sent by [%d] wasn't complete. Was it too long? Command received: %s", srv->frame_nbr, srv->client_sck[i], buff);
+		printf(LOG_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[i], i, buff);
 		set_color(RESET, srv->param->flags);
 	}
 	offset = 0;
