@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:26:40 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 11:01:37 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,4 @@ t_team	*get_team_by_name(t_world_state *world, char *team_name)
 int		can_print(t_param *param, t_logtype log_level)
 {
 	return (param->allowed_logs & log_level);
-	if (log_level == LOG_TICK)
-		return (param->flags & FLAG_TICK);
-	return !(param->flags & FLAG_SILENT);
 }

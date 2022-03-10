@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:36:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 11:07:05 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,9 @@ t_param	parse_input(int ac, char **av)
 			param.allowed_logs |= LOG_SEND;
 		else if (is_option(av[i], NULL, "--no-print-sent"))
 			param.allowed_logs &= ~LOG_SEND;
-		else if (i + 1 >= ac)
+		else if (is_option(av[i], "-P", "--pedantic"))
+			param.flags |= FLAG_PEDANTIC;
+		else if (i + 1 >= ac) //TODO: Improve option parsing
 		{
 			printf(ERROR_INV_OPT_END, av[i]);
 			usage(1);
@@ -229,8 +231,11 @@ t_param	parse_input(int ac, char **av)
 			else if (!strcmp(av[i], "UNIFORM")) {
 				param.generate_function = generate_ressource_uniform;
 			}
-			else //TODO: add error message
+			else 
+			{
+				fprintf(stderr, ERROR_INV_PARAM_GEN, av[i]);
 				usage(1);
+			}
 		}
 		else
 		{

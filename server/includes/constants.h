@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:56:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 11:02:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,17 @@
 #define FLAG_TESTER			1
 #define FLAG_NOHUNGER		2
 #define FLAG_TICK			4
-#define FLAG_SILENT			8
+#define FLAG_PEDANTIC		8
 #define FLAG_COLOR			16
 
-#define FOOD		"NOURRITURE"
-#define LINEMATE	"LINEMATE"
-#define DERAUMERE	"DERAUMERE"
-#define SIBUR		"SIBUR"
-#define MENDIANE	"MENDIANE"
-#define PHIRAS		"PHIRAS"
-#define THYSTAME	"THYSTAME"
-#define PLAYER		"PLAYER"
+#define STRINGFOOD		"NOURRITURE"
+#define STRINGLINEMATE	"LINEMATE"
+#define STRINGDERAUMERE	"DERAUMERE"
+#define STRINGSIBUR		"SIBUR"
+#define STRINGMENDIANE	"MENDIANE"
+#define STRINGPHIRAS	"PHIRAS"
+#define STRINGTHYSTAME	"THYSTAME"
+#define STRINGPLAYER	"PLAYER"
 
 typedef enum	e_colors {
 	RESET = 0,

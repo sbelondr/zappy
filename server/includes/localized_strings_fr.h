@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/10 10:54:32 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 11:06:29 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LOCALIZED_STRINGS
 
 #define USAGE	"Usage: ./serveur -p <port> -x <width> -y <height> -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n" \
+	"Les arguments obligatoires aux options longues le sont aussi pour les options courtes.\n" \
 	"-p, --port <port>          numero de port\n" \
 	"-x, --width <n>            largeur du monde\n"\
 	"-y, --height <n>           hauteur du Monde\n"\
@@ -38,7 +39,8 @@
 	"    --[no-]print-death     imprime les morts des joueurs.\n" \
 	"    --[no-]print-error     imprime les erreurs du serveur.\n" \
 	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
-	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n"
+	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n" \
+	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n"
 
 #define LOCFOOD		"NOURRITURE"
 #define LOCLINEMATE	"LINEMATE"
@@ -65,7 +67,8 @@
 #define ERROR_INV_PARAM_NAN			"Paramètre invalide: '%s' n'est pas un nombre.\n"
 #define ERROR_INV_PARAM_TOO_SMALL	"Paramètre invalide: %ld est trop petit. La valeur minimale acceptée pour ce paramètre est %d\n"
 #define ERROR_INV_PARAM_TOO_BIG		"Paramètre invalide: %ld est trop grand. La valeur maximale acceptée pour ce paramètre est %d\n"
-#define ERROR_INV_PARAM_FILE			"Paramètre invalide: Ne peut pas ouvrir %s: "
+#define ERROR_INV_PARAM_FILE		"Paramètre invalide: Ne peut pas ouvrir %s: "
+#define ERROR_INV_PARAM_GEN			"Paramètre invalide: %s n'est pas une fonction reconnue.\n"
 
 #define ERROR_INV_OPT_TOO_MANY_REPLAYS	"Option invalide: Ne peut générer qu'un seul replay à la fois. Utilisez cp pour le copier !\n"
 #define ERROR_INV_OPT_UNKNOWN			"Option inconnue: %s\n" 
