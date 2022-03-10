@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/10 10:13:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:54:32 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,16 @@
 #define LOCMENDIANE	"MENDIANE"
 #define LOCPHIRAS	"PHIRAS"
 #define LOCTHYSTAME	"THYSTAME"
+#define LOCPLAYER	"PLAYER"
+
+#define LOCLOWERCASEFOOD		"nourriture"
+#define LOCLOWERCASELINEMATE	"linemate"
+#define LOCLOWERCASEDERAUMERE	"deraumere"
+#define LOCLOWERCASESIBUR		"sibur"
+#define LOCLOWERCASEMENDIANE	"mendiane"
+#define LOCLOWERCASEPHIRAS		"phiras"
+#define LOCLOWERCASETHYSTAME	"thystame"
+#define LOCLOWERCASEPLAYER		"player"
 
 #define ERROR_SEND_CLIENT		"Le client #%d n'a pas reçu le message. Je vais lui monter ses morts \n"
 #define ERROR_CLIENT_EXIT		"Le client #%d s'est barré sans payer\n"

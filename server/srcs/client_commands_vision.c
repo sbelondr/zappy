@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:46:05 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:55:43 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,14 +119,14 @@ static int	size_of_string(t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		cnt += items[LINEMATE] * strlen(" LINEMATE");
-		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
-		cnt += items[SIBUR] * strlen(" SIBUR");
-		cnt += items[MENDIANE] * strlen(" LAMENDIANE");
-		cnt += items[PHIRAS] * strlen(" PHIRAS");
-		cnt += items[THYSTAME] * strlen(" THYSTAME");
-		cnt += items[FOOD] * strlen(" FOOD");
-		cnt += player_on_position(world, target) * strlen(" PLAYER");
+		cnt += items[LINEMATE] * strlen(" " LOCLINEMATE);
+		cnt += items[DERAUMERE] * strlen(" " LOCDERAUMERE);
+		cnt += items[SIBUR] * strlen(" " LOCSIBUR);
+		cnt += items[MENDIANE] * strlen(" " LOCMENDIANE);
+		cnt += items[PHIRAS] * strlen(" " LOCPHIRAS);
+		cnt += items[THYSTAME] * strlen(" " LOCTHYSTAME);
+		cnt += items[FOOD] * strlen(" " LOCFOOD);
+		cnt += player_on_position(world, target) * strlen(" " LOCPLAYER);
 	}
 	cnt += case_nbr + 4;
 	return (cnt);
@@ -162,14 +162,14 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
-		offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
-		offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
-		offset += build_see_part(ret + offset, " LAMENDIANE", items[MENDIANE]);
-		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
-		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
-		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-		offset += build_see_part(ret + offset, " PLAYER", player_on_position(world, target));
+		offset += build_see_part(ret + offset, " " LOCLINEMATE, items[LINEMATE]);
+		offset += build_see_part(ret + offset, " " LOCDERAUMERE, items[DERAUMERE]);
+		offset += build_see_part(ret + offset, " " LOCSIBUR, items[SIBUR]);
+		offset += build_see_part(ret + offset, " " LOCMENDIANE, items[MENDIANE]);
+		offset += build_see_part(ret + offset, " " LOCPHIRAS, items[PHIRAS]);
+		offset += build_see_part(ret + offset, " " LOCTHYSTAME, items[THYSTAME]);
+		offset += build_see_part(ret + offset, " " LOCFOOD, items[FOOD]);
+		offset += build_see_part(ret + offset, " " LOCPLAYER, player_on_position(world, target));
 		ret[offset++] = ',';
 	}
 	ret[offset - 1] = '}';
