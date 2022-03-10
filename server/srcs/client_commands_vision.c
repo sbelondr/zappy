@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:55:43 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 11:13:32 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,14 +162,28 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		offset += build_see_part(ret + offset, " " LOCLINEMATE, items[LINEMATE]);
-		offset += build_see_part(ret + offset, " " LOCDERAUMERE, items[DERAUMERE]);
-		offset += build_see_part(ret + offset, " " LOCSIBUR, items[SIBUR]);
-		offset += build_see_part(ret + offset, " " LOCMENDIANE, items[MENDIANE]);
-		offset += build_see_part(ret + offset, " " LOCPHIRAS, items[PHIRAS]);
-		offset += build_see_part(ret + offset, " " LOCTHYSTAME, items[THYSTAME]);
-		offset += build_see_part(ret + offset, " " LOCFOOD, items[FOOD]);
-		offset += build_see_part(ret + offset, " " LOCPLAYER, player_on_position(world, target));
+		if (srv->param->flags & FLAG_PEDANTIC)
+		{
+			offset += build_see_part(ret + offset, " " STANDARDLINEMATE, items[LINEMATE]);
+			offset += build_see_part(ret + offset, " " STANDARDDERAUMERE, items[DERAUMERE]);
+			offset += build_see_part(ret + offset, " " STANDARDSIBUR, items[SIBUR]);
+			offset += build_see_part(ret + offset, " " STANDARDMENDIANE, items[MENDIANE]);
+			offset += build_see_part(ret + offset, " " STANDARDPHIRAS, items[PHIRAS]);
+			offset += build_see_part(ret + offset, " " STANDARDTHYSTAME, items[THYSTAME]);
+			offset += build_see_part(ret + offset, " " STANDARDFOOD, items[FOOD]);
+			offset += build_see_part(ret + offset, " " STANDARDPLAYER, player_on_position(world, target));
+		}
+		else
+		{
+			offset += build_see_part(ret + offset, " " LOCLINEMATE, items[LINEMATE]);
+			offset += build_see_part(ret + offset, " " LOCDERAUMERE, items[DERAUMERE]);
+			offset += build_see_part(ret + offset, " " LOCSIBUR, items[SIBUR]);
+			offset += build_see_part(ret + offset, " " LOCMENDIANE, items[MENDIANE]);
+			offset += build_see_part(ret + offset, " " LOCPHIRAS, items[PHIRAS]);
+			offset += build_see_part(ret + offset, " " LOCTHYSTAME, items[THYSTAME]);
+			offset += build_see_part(ret + offset, " " LOCFOOD, items[FOOD]);
+			offset += build_see_part(ret + offset, " " LOCPLAYER, player_on_position(world, target));
+		}
 		ret[offset++] = ',';
 	}
 	ret[offset - 1] = '}';
