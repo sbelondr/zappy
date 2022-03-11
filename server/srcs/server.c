@@ -6,11 +6,10 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/05 13:37:30 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/07 09:05:03 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "struct.h"
 #include "functions.h"
 
@@ -39,6 +38,8 @@ void ft_quit(int sig)
 	int i = -1;
 	int sd;
 
+	if (srv->param->replay_fd)
+		close(srv->param->replay_fd);
 	while (srv && ++i < srv->param->allowed_clients_amount)
 	{
 		sd = srv->client_sck[i];
@@ -106,7 +107,8 @@ int main(int ac, char **av)
 	if (!srv)
 		return (EXIT_FAILURE);
 	g_srv = &srv;
-	reset_term();
+	setup_signal();
+	send_to_all_moniteur(srv, moniteur_mct(srv->world));
 	yellow();
 	printf("Launch srv\n");
 	reset();

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/14 07:56:18 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:31:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,30 @@ char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 			"{nourriture %d, sibur %d, phiras %d, linemate %d,"
 			" thystame %d, lamendiane %d, deraumere %d}",
 			res[FOOD] * 126 + player->hunger, res[SIBUR], res[PHIRAS], res[LINEMATE],
-			res[THYSTAME], res[LAMENDIANE], res[DERAUMERE]);
+			res[THYSTAME], res[MENDIANE], res[DERAUMERE]);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (inventory);
+}
+
+t_vector2	index_to_map_vector(int index)
+{
+	t_vector2	ret;
+	int			limit;
+
+	limit = 1;
+	ret = ft_vector2(0, 0);
+	for (int i = 0; i < index; ++i)
+	{
+		ret.x++;
+		if (ret.x >= limit)
+		{
+			ret.x *= -1;
+			ret.y++;
+			limit++;
+		}
+	}
+	return (ret);
 }
 
 /*
@@ -59,48 +79,59 @@ static int	build_see_part(char *str, char *name, int count)
 	return (offset);
 }
 
-t_vector2	index_to_map_vector(int index)
+static int	player_on_position(t_world_state *world, t_vector2 pos)
 {
-	if (index == 0) return ft_vector2(0, 0);
-	if (index == 1) return ft_vector2(-1, 1);
-	if (index == 2) return ft_vector2(0, 1);
-	if (index == 3) return ft_vector2(1, 1);
-	if (index == 4) return ft_vector2(-2, 2);
-	if (index == 5) return ft_vector2(-1, 2);
-	if (index == 6) return ft_vector2(0, 2);
-	if (index == 7) return ft_vector2(1, 2);
-	if (index == 8) return ft_vector2(2, 2);
-	printf("ERROR: Index is too far!!\n");
-	return ft_vector2(0, 0);
+	t_client	*client;
+	t_list		*current;
+	int			acc;
+
+	acc = 0;
+	current = world->client_list;
+	while (current)
+	{
+		client = current->content;	
+		if (client->p_x == pos.x && client->p_y == pos.y)
+			acc += 1;
+		current = current->next;
+	}
+	return (acc);
 }
 
-t_vector2	rotate_vector(t_vector2 vec, int direction)
+//Gives the number of cases covered by the vision
+static int	vision_range(int level)
 {
-	int	ca;
-	int	sa;
-
-	if (direction == NORTH)
-	{
-		ca = 1;
-		sa = 0;
-	}
-	else if (direction == EAST)
-	{
-		ca = 0;
-		sa = 1;
-	}
-	else if (direction == SOUTH)
-	{
-		ca = -1;
-		sa = 0;
-	}
-	else if (direction == WEST)
-	{
-		ca = 0;
-		sa = -1;
-	}
-	return (ft_vector2(ca * vec.x - sa * vec.y, sa * vec.x + ca * vec.y));
+	return ((int)(((level + 1) / 2.0) * (2 + level * 2)));
 }
+
+static int	size_of_string(t_world_state *world, t_client *player)
+{
+	int			cnt;
+	int			case_nbr;
+	int			*items;
+	t_vector2	target;
+
+	cnt = 0;
+	case_nbr = vision_range(player->lvl);
+	for (int i = 0; i < case_nbr; ++i) 
+	{
+		target = index_to_map_vector(i);
+		target = rotate_vector(target, player->orientation);
+		target.x += player->p_x;
+		target.y += player->p_y;
+		items = get_case(world, target.x, target.y); 
+		cnt += items[LINEMATE] * strlen(" LINEMATE");
+		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
+		cnt += items[SIBUR] * strlen(" SIBUR");
+		cnt += items[MENDIANE] * strlen(" LAMENDIANE");
+		cnt += items[PHIRAS] * strlen(" PHIRAS");
+		cnt += items[THYSTAME] * strlen(" THYSTAME");
+		cnt += items[FOOD] * strlen(" FOOD");
+		cnt += player_on_position(world, target) * strlen(" PLAYER");
+	}
+	cnt += case_nbr + 4;
+	return (cnt);
+}
+
 /*
  * Donne la chaîne de charactères à retourner au client
  * PARAMS: t_world_state *world -> world state
@@ -115,47 +146,18 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	int		*items;
 	int		cnt;
 	int		case_nbr;
-	int		nbr = 0;
+	int		offset;
 	t_vector2	target;
-	t_client *client;
-	t_list *current;
 	(void)srv;
 
 	cnt = 0;
-	case_nbr = 4; //Remplacer par nombre de case vues au lvl du joueur
-	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
-	{
-		target = index_to_map_vector(i);
-		target = rotate_vector(target, player->orientation);
-		target.x += player->p_x;
-		target.y += player->p_y;
-		items = get_case(world, target.x, target.y); 
-		cnt += items[LINEMATE] * strlen(" LINEMATE");
-		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
-		cnt += items[SIBUR] * strlen(" SIBUR");
-		cnt += items[LAMENDIANE] * strlen(" LAMENDIANE");
-		cnt += items[PHIRAS] * strlen(" PHIRAS");
-		cnt += items[THYSTAME] * strlen(" THYSTAME");
-		cnt += items[FOOD] * strlen(" FOOD");
-		current = world->client_list;
-		nbr = 0;
-		while (current)
-		{
-			client = current->content;	
-			if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
-				nbr += 1;
-			current = current->next;
-		}
-		cnt += nbr * strlen(" PLAYER");
-	}
-	cnt += case_nbr + 4; //Commas, accolades and \0
-	printf("Estimated size of vision string: %d\n", cnt);
+	case_nbr = vision_range(player->lvl);
+	cnt = size_of_string(world, player);
 	ret = ft_strnew(cnt);
 	ret[0] = '{';
-	int offset = 1;
-	for (int i = 0; i < 4; ++i) //remplacer 4 par le nombre de case au niveau
+	offset = 1;
+	for (int i = 0; i < case_nbr; ++i)
 	{
-		nbr = 0;
 		target = index_to_map_vector(i);
 		target = rotate_vector(target, player->orientation);
 		target.x += player->p_x;
@@ -164,22 +166,14 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
 		offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
 		offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
-		offset += build_see_part(ret + offset, " LAMENDIANE", items[LAMENDIANE]);
+		offset += build_see_part(ret + offset, " LAMENDIANE", items[MENDIANE]);
 		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
 		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
 		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-		current = world->client_list;
-		while (current)
-		{
-			client = current->content;	
-			if (client->p_x == target.x && client->p_y == target.y && client->id != player->id)
-				nbr += 1;
-			current = current->next;
-		}
-		offset += build_see_part(ret + offset, " PLAYER", nbr);
+		offset += build_see_part(ret + offset, " PLAYER", player_on_position(world, target));
 		ret[offset++] = ',';
 	}
-	ret[offset++] = '}';
+	ret[offset - 1] = '}';
 	ret[offset++] = '\n';
 	return (ret);
 }

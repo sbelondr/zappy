@@ -19,6 +19,8 @@
 - Develop more commands for the TESTER group.
 
 # Client library
+
+All server actions are blocking unless said otherwise.
 ## Functions:
 
 ### To override:
@@ -27,11 +29,20 @@
 - `on_broadcast_received(msg, direction)`: Override this. Called when receiving a broadcast
 - `on_ritual_started`: Override this. Called when a ritual including the player is started.
 - `on_ritual_completed(new_level)`: Override this. Called once a ritual including the player is finished. `@level` is updated automatically, no need to do it.
+- `broadcast_prefix`: String to prepend to broadcasts.
 - `initialize(*args)`: You *can* override this. Call `super` if you do to call parent constructor.
 
 ### Action helper:
-- `pickup(item)`: Attempts to pickup `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
+- `prendre(item)`: Attempts to pickup `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
+- `pickup(item)`: Alias for `prendre`.
 - `pose(item)`:  Attempts to pose `item` at the current position without verification, and updates inventory on success. Returns true/false depending on result.
+- `incantation`: Do an incantation. Returns true if the level changed.
+- `ritual`: Alias for `incantation`.
+- `voir`: Returns the vision string from the server.
+- `see`: Alias for `voir`.
+- `broadcast`: Sends a broadcast to the server. Prepends `broadcast_prefix` before each call.
+- `inventory`: Updates inventory by asking the server about it. Returns nil, the results are stored in `@inventory`.
+- `inventaire`: Alias for `inventory`.
 - `do_action(action)`: Send `action` to server, and blocks while listening. Returns server answer.
 - `listen(only_one = false)`: Blocks while listening to server and returns answer. Only return upon receiving something other than a broadcast, unless `only_one` is `true`.
 - `find_item(item)`: Returns a vector giving the 2D direction towards `item` if found, `nil` otherwise.
@@ -44,7 +55,11 @@
 - `translate_vision_to_map(index)`: Returns a vector giving the 2D direction towards a given case from the vision string.
 - `available_slots`: Returns available slots on the server for the team.
 - `quantity_of(item, vision_string)`: Returns amount of item on the case the client is.
+- `get_ritual_cost(level)`: Returns the cost of rituals in an array. Includes food (index 0) and players (index 7).
+- `can_do_ritual(vision_string, level)`: Returns true/false depending on whether there are enough materials where the player is to do a ritual.
+- `convert_vision_string(vision_string)`: Transforms the vision string in an array of array.
 - `dead?`: Returns death status.
+- `dead`: Returns level.
 
 ### Class var:
 - `@team_name`: The team name as given in parameter

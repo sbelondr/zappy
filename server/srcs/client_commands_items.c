@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/18 11:09:53 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:29:01 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 static int	attempt_take_item(const char *name, int *quant, int *inv, char *arg)
 {
@@ -38,20 +38,25 @@ static int	string_to_res_id(char *res_name)
 {
 	int	res;
 
-	if (!ft_strcmp("SIBUR", res_name))
+	if (!strcmp(LOCSIBUR, res_name))
 		res = SIBUR;
-	else if (!ft_strcmp("LAMENDIANE", res_name))
-		res = LAMENDIANE;
-	else if (!ft_strcmp("FOOD", res_name))
+	else if (!strcmp(LOCMENDIANE, res_name))
+		res = MENDIANE;
+	else if (!strcmp(LOCPHIRAS, res_name))
+		res = PHIRAS;
+	else if (!strcmp(LOCFOOD, res_name))
 		res = FOOD;
-	else if (!ft_strcmp("LINEMATE", res_name))
+	else if (!strcmp(LOCLINEMATE, res_name))
 		res = LINEMATE;
-	else if (!ft_strcmp("DERAUMERE", res_name))
+	else if (!strcmp(LOCDERAUMERE, res_name))
 		res = DERAUMERE;
-	else if (!ft_strcmp("THYSTAME", res_name))
+	else if (!strcmp(LOCTHYSTAME, res_name))
 		res = THYSTAME;
 	else
+	{
 		res = -1;
+		printf("ERROR: Unknown ressource name\n");
+	}
 	return (res);
 }
 

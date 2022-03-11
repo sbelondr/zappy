@@ -6,11 +6,11 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/02/25 11:01:56 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 09:31:44 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 int asprintf(char **strp, const char *fmt, ...);
 
@@ -254,7 +254,7 @@ char	*moniteur_pin(t_client *client)
 	inv = client->ressource;
 	error = asprintf(&ret, "pin #%d %d %d %d %d %d %d %d %d %d\n", 
 			client->id, client->p_x, client->p_y, inv[FOOD], inv[LINEMATE], inv[DERAUMERE],
-			inv[SIBUR], inv[LAMENDIANE], inv[PHIRAS], inv[THYSTAME]);
+			inv[SIBUR], inv[MENDIANE], inv[PHIRAS], inv[THYSTAME]);
 	if (error < 0)
 		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
 	return (ret);
@@ -364,9 +364,13 @@ void	send_to_all_moniteur(t_srv *srv, char *msg)
 	while (current)
 	{
 		c = current->content;
-		if (c && c->team_name && !ft_strcmp(c->team_name, "GRAPHIC"))
-			simple_send(srv, c->id, ft_strdup(msg));
+		if (c && c->team_name && !ft_strcmp(c->team_name, GRAPHIC_TEAM))
+			simple_send_no_free(srv, c->id, msg);
 		current = current->next;
+	}
+	if (srv->param->replay_fd)
+	{
+		dprintf(srv->param->replay_fd, "%ld: %s", srv->frame_nbr, msg);
 	}
 	free(msg);
 }

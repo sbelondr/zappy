@@ -6,11 +6,10 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/02/23 13:04:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 10:16:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "functions.h"
 
 void	remove_from_client_list(t_world_state *world, t_client *client)
@@ -62,43 +61,60 @@ void ft_client_exit(t_srv *srv, int i)
 	free(client);
 	if (can_print(srv->param, LOG_INFO))
 	{
-		purple();
+		set_color(PURPLE, srv->param->flags);
 		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
-		reset();
+		set_color(RESET, srv->param->flags);
 	}
-	//shutdown(srv->client_sck[i], SHUT_RD);
 	close(srv->client_sck[i]);
 	srv->client_sck[i] = 0;
 }
 
-//returns 0 if no newline, 1 otherwise
-static int		delete_newline(char *buf)
+//Delete the newline on the string/cut the string via newline, returns the number of lines found
+static int		delete_newline(char *buff)
 {
-	size_t	size;
+	int		size;
+	int		occurence;
 
-	size = ft_strlen(buf);
-	if (buf[size - 1] != '\n')
-		return (0);
-	buf[size - 1] = '\0';
-	return (1);
+	occurence = 0;
+	size = strlen(buff);
+	for (int i = 0; i < size; ++i)
+	{
+		if (buff[i] == '\n')
+		{
+			occurence++;
+			buff[i] = '\0';
+		}
+	}
+	return (occurence);
 }
 
 
 void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
 {
+	int	commands;
+	int	offset;
+
 	if (valread < 0)
 		return ;
 	buff[valread] = 0;
-	if (!delete_newline(buff))
+
+	commands = delete_newline(buff);
+	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
-		printf("ERROR: CLIENT DOES NOT RESPECT RFC: '%s'\n", buff);
-		exit(1);
+		set_color(RED, srv->param->flags);
+		printf("%ld: ERROR! Command sent by [%d] wasn't complete. Was it too long? Command received: %s", srv->frame_nbr, srv->client_sck[i], buff);
+		set_color(RESET, srv->param->flags);
 	}
-	if (can_print(srv->param, LOG_RECEIVE))
+	offset = 0;
+	for (int x = 0; x < commands; ++x)
 	{
-		green();
-		printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
-		reset();
+		if (can_print(srv->param, LOG_RECEIVE))
+		{
+			set_color(GREEN, srv->param->flags);
+			printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i], buff); 
+			set_color(RESET, srv->param->flags);
+		}
+		command_lexer(srv, buff + offset, i);
+		offset = strlen(buff) + 1;
 	}
-	ft_lexer(srv, buff, i);
 }

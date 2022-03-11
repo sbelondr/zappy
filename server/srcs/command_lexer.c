@@ -6,13 +6,11 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/25 10:53:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/08 10:16:28 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
-#include "server.h"
-
 
 void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 {
@@ -111,9 +109,12 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 {
 	if (!add_to_team(srv, buf, i))
 	{
-		red();
-		printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i]);
-		reset();
+		if (can_print(srv->param, LOG_ERROR) && can_print(srv->param, LOG_CONNEXION))
+		{
+			set_color(RED, srv->param->flags);
+			printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i]);
+			set_color(RESET, srv->param->flags);
+		}
 		ft_client_exit(srv, i);
 	}
 	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !srv->param->flags & FLAG_TESTER))
@@ -133,11 +134,22 @@ void	parse_command_tester(t_srv *srv, t_client *tester, char *buf)
 
 }
 
-void	ft_lexer(t_srv *srv, char *buf, int i)
+void	command_lexer(t_srv *srv, char *buf, int i)
 {
 	t_client	*c;
 
 	c = get_client_by_id(srv, i);
+	if (!c)
+	{
+		if (can_print(srv->param, LOG_ERROR))
+		{
+			set_color(RED, srv->param->flags);
+			printf("Client #%d is dead, but we are still treating their requests!\n", i);
+			set_color(RESET, srv->param->flags);
+		}
+		return ;
+	}
+
 	if (c->team_name == NULL)
 		connect_client(srv, buf, c, i);
 	else if (!strcmp(c->team_name, GRAPHIC_TEAM))
@@ -172,14 +184,28 @@ void	ft_lexer(t_srv *srv, char *buf, int i)
 	else if (!strncmp(buf, "pose", 4))
 	{
 		char **arr = ft_strsplit(buf, ' ');
-		append_command(c, new_command(COMMAND_POSER, arr[1], 7));
+		if (arr[1] && is_valid_item(arr[1]))
+			append_command(c, new_command(COMMAND_POSER, arr[1], 7));
+		else
+		{
+			if (arr[1])
+				free(arr[1]);
+			append_command(c, new_command(COMMAND_BAD_PARAMETER, NULL, 0));
+		}
 		free(arr[0]);
 		free(arr);
 	}
 	else if (!strncmp(buf, "prendre", 7))
 	{
 		char **arr = ft_strsplit(buf, ' ');
-		append_command(c, new_command(COMMAND_PRENDRE, arr[1], 7));
+		if (arr[1] && is_valid_item(arr[1]))
+			append_command(c, new_command(COMMAND_PRENDRE, arr[1], 7));
+		else
+		{
+			if (arr[1])
+				free(arr[1]);
+			append_command(c, new_command(COMMAND_BAD_PARAMETER, NULL, 0));
+		}
 		free(arr[0]);
 		free(arr);
 	}

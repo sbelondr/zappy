@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include "functions.h"
 
 t_srv *init_srv(t_param *param, t_world_state *st)
 {

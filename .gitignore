@@ -1,6 +1,11 @@
 .import/
 *.import
-server
+server/server
+bin/
+Gemfile.lock
+.bundle/
+rspec_trigger.rb
+.rspec
 
 # Created by https://www.toptal.com/developers/gitignore/api/c,vim
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,vim

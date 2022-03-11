@@ -6,11 +6,10 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 13:04:03 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:06:10 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "functions.h"
 
 int asprintf(char **strp, const char *fmt, ...);
@@ -76,12 +75,11 @@ int			available_slots(t_srv *srv, t_team *team)
 		egg = current->content;
 		valid_eggs += (egg->maturity <= 0);
 		x += (egg->maturity <= 0 && !egg->used);
-
 		i++;
 		current = current->next;
 	}
 	valid_eggs = x;
-	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit) //TODO: Parametize hard limit
+	if (lstsize + remaining_slots + valid_eggs > srv->param->team_hard_limit)
 		remaining_slots = srv->param->team_hard_limit - valid_eggs - lstsize;
 	return (remaining_slots + valid_eggs);
 }
@@ -134,9 +132,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		}
 		if (can_print(srv->param, LOG_CONNEXION))
 		{
-			yellow();
+			set_color(YELLOW, srv->param->flags);
 			printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
-			reset();
+			set_color(RESET, srv->param->flags);
 		}
 		c->p_x = egg->p_x;
 		c->p_y = egg->p_y;
@@ -150,9 +148,9 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	}
 	if (can_print(srv->param, LOG_CONNEXION))
 	{
-		yellow();
+		set_color(YELLOW, srv->param->flags);
 		printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
-		reset();
+		set_color(RESET, srv->param->flags);
 	}
 	return (1);
 }
@@ -176,7 +174,7 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 	else if (!ft_strcmp(team_name, TESTER_TEAM) && srv->param->flags & FLAG_TESTER)
 	{
 		c->team_name = TESTER_TEAM;
-		simple_send(srv, c->id, ft_strdup("Test mode enabled. Welcome.\n"));
+		simple_send_no_free(srv, c->id, "Test mode enabled. Welcome.\n");
 		return (1);
 	}
 	current = srv->param->team_list;
@@ -187,7 +185,7 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 			return (perform_add_to_team(srv, team, c));
 		current = current->next;
 	}
-	simple_send(srv, id, strdup("0\n"));
+	simple_send_no_free(srv, id, "0\n");
 	return (0);
 }
 

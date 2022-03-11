@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/02/23 10:48:26 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/06 10:39:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ t_param	parse_input(int ac, char **av)
 	param.team_hard_limit = 500;
 	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION;
 	param.generate_function = generate_ressource_standard;
+	param.generation_frequency = 1000;
+	param.flags |= FLAG_COLOR;
 	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
 	{
 		if (is_option(av[i], "-v", "--verification"))
@@ -113,10 +115,50 @@ t_param	parse_input(int ac, char **av)
 			usage();
 		else if (is_option(av[i], "-H", "--hunger"))
 			param.flags |= FLAG_NOHUNGER;
-		else if (is_option(av[i], "-T", "--ticks"))
-			param.allowed_logs |= LOG_TICK;
 		else if (is_option(av[i], "-s", "--silent"))
 			param.allowed_logs = 0;
+		else if (is_option(av[i], "-V", "--verbose"))
+			param.allowed_logs = 0xFFFF;
+		else if (is_option(av[i], NULL, "--print-ticks"))
+			param.allowed_logs |= LOG_TICK;
+		else if (is_option(av[i], NULL, "--no-print-ticks"))
+			param.allowed_logs &= ~LOG_TICK;
+		else if (is_option(av[i], NULL, "--print-info"))
+			param.allowed_logs |= LOG_INFO;
+		else if (is_option(av[i], NULL, "--no-print-info"))
+			param.allowed_logs &= ~LOG_INFO;
+		else if (is_option(av[i], NULL, "--print-action"))
+			param.allowed_logs |= LOG_ACTION;
+		else if (is_option(av[i], NULL, "--no-print-action"))
+			param.allowed_logs &= ~LOG_ACTION;
+		else if (is_option(av[i], NULL, "--print-received"))
+			param.allowed_logs |= LOG_RECEIVE;
+		else if (is_option(av[i], NULL, "--no-print-received"))
+			param.allowed_logs &= ~LOG_RECEIVE;
+		else if (is_option(av[i], NULL, "--print-death"))
+			param.allowed_logs |= LOG_PLAYERDEATH;
+		else if (is_option(av[i], NULL, "--no-print-death"))
+			param.allowed_logs &= ~LOG_PLAYERDEATH;
+		else if (is_option(av[i], NULL, "--print-egg-death"))
+			param.allowed_logs |= LOG_EGGDEATH;
+		else if (is_option(av[i], NULL, "--no-print-egg-death"))
+			param.allowed_logs &= ~LOG_EGGDEATH;
+		else if (is_option(av[i], NULL, "--print-connexion"))
+			param.allowed_logs |= LOG_CONNEXION;
+		else if (is_option(av[i], NULL, "--no-print-connexion"))
+			param.allowed_logs &= ~LOG_CONNEXION;
+		else if (is_option(av[i], NULL, "--print-error"))
+			param.allowed_logs |= LOG_ERROR;
+		else if (is_option(av[i], NULL, "--no-print-error"))
+			param.allowed_logs &= ~LOG_ERROR;
+		else if (is_option(av[i], NULL, "--print-colors"))
+			param.flags |= FLAG_COLOR;
+		else if (is_option(av[i], NULL, "--no-print-colors"))
+			param.flags &= ~FLAG_COLOR;
+		else if (is_option(av[i], NULL, "--print-sent"))
+			param.allowed_logs |= LOG_SEND;
+		else if (is_option(av[i], NULL, "--no-print-sent"))
+			param.allowed_logs &= ~LOG_SEND;
 		else if (i + 1 >= ac)
 		{
 			printf("Error: unexpected end of argument: %s\n", av[i]);
@@ -132,11 +174,32 @@ t_param	parse_input(int ac, char **av)
 		else if (is_option(av[i], "-y", "--height"))
 			param.world_height = get_numeric_parameter(av[++i], 5, 15000);
 		else if (is_option(av[i], "-G", "--gen-frequency"))
-			param.generation_frequency = get_numeric_parameter(av[++i], 1, 100000);
+			param.generation_frequency = get_numeric_parameter(av[++i], 0, 100000);
 		else if (is_option(av[i], "-c", "--clients-allowed"))
 			param.allowed_clients_amount = get_numeric_parameter(av[++i], 1, 150);
 		else if (is_option(av[i], "-m", "--max-clients"))
 			param.team_hard_limit = get_numeric_parameter(av[++i], 1, 1000);
+		else if (is_option(av[i], "-l", "--log-replay"))
+		{
+			int fd = 0;
+			if (param.replay_fd  == 0)
+				fd = open(av[++i], O_CREAT | O_WRONLY, S_IRWXU | S_IRGRP);
+			else
+			{
+				printf("Can only log to 1 file at a time ! Just copy the file if you want more !!\n");
+				usage();
+				exit(1);
+			}
+			if (fd >= 0)
+				param.replay_fd = fd;
+			else
+			{
+				printf("Error: Cannot open %s\n", av[i]);
+				usage();
+				exit(1);
+			}
+
+		}
 		else if (is_option(av[i], "-n", "--name"))
 		{
 			do
