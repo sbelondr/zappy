@@ -6,14 +6,14 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 12:07:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:36:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
-#include "localized_strings_fr.h"
+#include "localized_strings_en.h"
 
 #define BUFF_READ			2024
 

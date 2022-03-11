@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 12:00:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:15:55 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ void	setup_ritual_client(t_srv *srv, t_client *client, t_client *client_bis)
 	{
 		if (client_bis->buffer[0].command != COMMAND_INCANTATION)
 			client_bis->in_incantation = 1;
-		simple_send_no_free(srv, client_bis->id, STANDARD_FORK_ANSWER_CURRENT);
+		if (use_localized_string(srv->param))
+			simple_send_no_free(srv, client_bis->id, LOC_FORK_ANSWER_CURRENT);
+		else
+			simple_send_no_free(srv, client_bis->id, STANDARD_FORK_ANSWER_CURRENT);
 	}
 }
 

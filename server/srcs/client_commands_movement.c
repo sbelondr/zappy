@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 12:08:35 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:18:35 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,14 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 		direction = ft_vector2(0, 1);
 		dir = 1;
 	}
-	if (asprintf(&format, STANDARD_KICK_ANSWER, dir) < 0)
-		emergency_exit(__FILE__ ": Fatal: asprintf: ");
+	if (use_localized_string(srv->param))
+	{
+		if (asprintf(&format, LOC_KICK_ANSWER, dir) < 0)
+			emergency_exit(__FILE__ ": Fatal: asprintf: ");
+	}
+	else
+		if (asprintf(&format, STANDARD_KICK_ANSWER, dir) < 0)
+			emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	current = world->client_list;
 	send_to_all_moniteur(srv, moniteur_pex(client));
 	while (current)

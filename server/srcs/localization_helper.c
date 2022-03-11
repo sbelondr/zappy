@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 11:11:02 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 11:34:36 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 12:55:56 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int			use_localized_string(t_param *param)
 	return (!(param->flags & FLAG_PEDANTIC) && (param->flags & FLAG_LOCALIZED));
 }
 
-const char	*ressource_name(int ressource_id, int localized)
+const char	*ressource_name(t_ressources ressource_id, int localized)
 {
 	if (localized)
 	{
@@ -51,7 +51,7 @@ const char	*ressource_name(int ressource_id, int localized)
 	}
 }
 
-const char	*command_name(int command_id, int localized)
+const char	*command_name(t_command_type command_id, int localized)
 {
 	switch(command_id)
 	{

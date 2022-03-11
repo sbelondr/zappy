@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 12:05:42 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:24:22 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 	"-v, --verification         permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
 	"-G, --gen-frequency <N>    regenere des ressources tous les N ticks (1000 par defaut)\n" \
 	"-g, --gen-function <F>     change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
-	"-s, --silent               n'imprime rien.\n" \
+	"-s, --silent               n'imprime rien. Peut etre combine avec les autres options.\n" \
 	"-V, --verbose              imprime TOUT.\n" \
 	"    --[no-]print-ticks     imprime le numero de tick quand un nouveau tour commence.\n" \
 	"    --[no-]print-sent      imprive ce que le serveur renvoie au client.\n" \
