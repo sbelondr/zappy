@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/10 11:06:29 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:06:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,23 @@
 	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n" \
 	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n"
 
-#define LOCFOOD		"NOURRITURE"
-#define LOCLINEMATE	"LINEMATE"
-#define LOCDERAUMERE "DERAUMERE"
-#define LOCSIBUR	"SIBUR"
-#define LOCMENDIANE	"MENDIANE"
-#define LOCPHIRAS	"PHIRAS"
-#define LOCTHYSTAME	"THYSTAME"
-#define LOCPLAYER	"PLAYER"
+#define LOCUPPERCASEFOOD		"NOURRITURE"
+#define LOCUPPERCASELINEMATE	"LINEMATE"
+#define LOCUPPERCASEDERAUMERE	"DERAUMERE"
+#define LOCUPPERCASESIBUR		"SIBUR"
+#define LOCUPPERCASEMENDIANE	"MENDIANE"
+#define LOCUPPERCASEPHIRAS		"PHIRAS"
+#define LOCUPPERCASETHYSTAME	"THYSTAME"
+#define LOCUPPERCASEPLAYER		"PLAYER"
 
-#define LOCLOWERCASEFOOD		"nourriture"
-#define LOCLOWERCASELINEMATE	"linemate"
-#define LOCLOWERCASEDERAUMERE	"deraumere"
-#define LOCLOWERCASESIBUR		"sibur"
-#define LOCLOWERCASEMENDIANE	"mendiane"
-#define LOCLOWERCASEPHIRAS		"phiras"
-#define LOCLOWERCASETHYSTAME	"thystame"
-#define LOCLOWERCASEPLAYER		"player"
+#define LOCFOOD		"nourriture"
+#define LOCLINEMATE	"linemate"
+#define LOCDERAUMERE	"deraumere"
+#define LOCSIBUR		"sibur"
+#define LOCMENDIANE	"mendiane"
+#define LOCPHIRAS		"phiras"
+#define LOCTHYSTAME	"thystame"
+#define LOCPLAYER		"player"
 
 #define ERROR_SEND_CLIENT		"Le client #%d n'a pas reçu le message. Je vais lui monter ses morts \n"
 #define ERROR_CLIENT_EXIT		"Le client #%d s'est barré sans payer\n"

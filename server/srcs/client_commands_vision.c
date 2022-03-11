@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 11:13:32 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:13:47 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,14 +119,28 @@ static int	size_of_string(t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		cnt += items[LINEMATE] * strlen(" " LOCLINEMATE);
-		cnt += items[DERAUMERE] * strlen(" " LOCDERAUMERE);
-		cnt += items[SIBUR] * strlen(" " LOCSIBUR);
-		cnt += items[MENDIANE] * strlen(" " LOCMENDIANE);
-		cnt += items[PHIRAS] * strlen(" " LOCPHIRAS);
-		cnt += items[THYSTAME] * strlen(" " LOCTHYSTAME);
-		cnt += items[FOOD] * strlen(" " LOCFOOD);
-		cnt += player_on_position(world, target) * strlen(" " LOCPLAYER);
+		if (!use_localized_string(world->params))
+		{
+			cnt += items[LINEMATE] * strlen(" " STANDARDLINEMATE);
+			cnt += items[DERAUMERE] * strlen(" " STANDARDDERAUMERE);
+			cnt += items[SIBUR] * strlen(" " STANDARDSIBUR);
+			cnt += items[MENDIANE] * strlen(" " STANDARDMENDIANE);
+			cnt += items[PHIRAS] * strlen(" " STANDARDPHIRAS);
+			cnt += items[THYSTAME] * strlen(" " STANDARDTHYSTAME);
+			cnt += items[FOOD] * strlen(" " STANDARDFOOD);
+			cnt += player_on_position(world, target) * strlen(" " STANDARDPLAYER);
+		}
+		else
+		{
+			cnt += items[LINEMATE] * strlen(" " LOCLINEMATE);
+			cnt += items[DERAUMERE] * strlen(" " LOCDERAUMERE);
+			cnt += items[SIBUR] * strlen(" " LOCSIBUR);
+			cnt += items[MENDIANE] * strlen(" " LOCMENDIANE);
+			cnt += items[PHIRAS] * strlen(" " LOCPHIRAS);
+			cnt += items[THYSTAME] * strlen(" " LOCTHYSTAME);
+			cnt += items[FOOD] * strlen(" " LOCFOOD);
+			cnt += player_on_position(world, target) * strlen(" " LOCPLAYER);
+		}
 	}
 	cnt += case_nbr + 4;
 	return (cnt);
@@ -162,7 +176,7 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		if (srv->param->flags & FLAG_PEDANTIC)
+		if (!use_localized_string(srv->param))
 		{
 			offset += build_see_part(ret + offset, " " STANDARDLINEMATE, items[LINEMATE]);
 			offset += build_see_part(ret + offset, " " STANDARDDERAUMERE, items[DERAUMERE]);

@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/10 10:15:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:02:05 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
 	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n"
 
-#define LOCFOOD		"NOURRITURE"
+#define LOCFOOD		"FOOD"
 #define LOCLINEMATE	"LINEMATE"
 #define LOCDERAUMERE "DERAUMERE"
 #define LOCSIBUR	"SIBUR"

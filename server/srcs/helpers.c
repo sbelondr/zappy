@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 11:01:37 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:14:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@ void		emergency_exit(char const *perror_prefix) //TODO: Free
 	if (perror_prefix)
 		perror(perror_prefix);
 	exit(1);
+}
+
+int			use_localized_string(t_param *param)
+{
+	return (!(param->flags & FLAG_PEDANTIC) && (param->flags & FLAG_LOCALIZED));
 }
 
 int			is_valid_item(char const *item)
