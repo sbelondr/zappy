@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 10:53:03 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 12:07:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@
 #define STANDARD_COMMAND_POSE			"pose"
 #define STANDARD_COMMAND_PRENDRE		"prendre"
 #define STANDARD_COMMAND_FORK			"fork"
+
+#define STANDARD_FORK_ANSWER			"niveau actuel : %d\n"
+#define STANDARD_FORK_ANSWER_CURRENT	"elevation en cours\n"
+#define STANDARD_KICK_ANSWER			"deplacement %d\n"
 
 typedef enum	e_colors {
 	RESET = 0,

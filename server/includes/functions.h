@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 11:00:48 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 11:36:50 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ int				is_valid_item(char const *item);
 int				can_print(t_param *param, t_logtype log_level);
 t_game_action	get_action_from_enum(t_command_type command);
 const char	*ressource_name(int ressource_id, int localized);
+const char	*command_name(int command_id, int localized);
+int			use_localized_string(t_param *param);
 
 /*
  * CLIENT COMMUNICATION

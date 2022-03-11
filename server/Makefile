@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/05 12:50:54 by jayache          ###   ########.fr        #
+#    Updated: 2022/03/11 11:33:52 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ SRCS_NAMES = server.c\
 	gameplay.c\
 	client.c\
 	egg.c\
+	localization_helper.c \
 	client_commands_movement.c\
 	client_commands_vision.c\
 	client_commands_items.c\

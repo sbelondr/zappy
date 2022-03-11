@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 10:56:04 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 11:12:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,44 +19,6 @@ void		emergency_exit(char const *perror_prefix) //TODO: Free
 	exit(1);
 }
 
-int			use_localized_string(t_param *param)
-{
-	return (!(param->flags & FLAG_PEDANTIC) && (param->flags & FLAG_LOCALIZED));
-}
-
-const char	*ressource_name(int ressource_id, int localized)
-{
-	if (localized)
-	{
-		switch(ressource_id)
-		{
-			case FOOD:		return LOCFOOD;			break;
-			case LINEMATE:	return LOCLINEMATE;		break;
-			case DERAUMERE: return LOCDERAUMERE;	break;
-			case SIBUR:		return LOCSIBUR;		break;
-			case MENDIANE:	return LOCMENDIANE;		break;
-			case PHIRAS:	return LOCPHIRAS;		break;
-			case THYSTAME:	return LOCTHYSTAME;		break;
-			case PLAYER:	return LOCPLAYER;		break;
-			default:	return NULL;			break;
-		}
-	}
-	else
-	{
-		switch(ressource_id)
-		{
-			case FOOD:		return STANDARDFOOD;			break;
-			case LINEMATE:	return STANDARDLINEMATE;		break;
-			case DERAUMERE: return STANDARDDERAUMERE;	break;
-			case SIBUR:		return STANDARDSIBUR;		break;
-			case MENDIANE:	return STANDARDMENDIANE;		break;
-			case PHIRAS:	return STANDARDPHIRAS;		break;
-			case THYSTAME:	return STANDARDTHYSTAME;		break;
-			case PLAYER:	return STANDARDPLAYER;		break;
-			default:	return NULL;			break;
-		}
-	}
-}
 
 int			is_valid_item(char const *item)
 {

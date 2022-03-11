@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 10:49:01 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 12:05:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@
 #define LOC_COMMAND_PRENDRE	"prendre"
 #define LOC_COMMAND_FORK	"fork"
 
+#define LOC_FORK_ANSWER				"niveau actuel : %d\n"
+#define LOC_FORK_ANSWER_CURRENT		"elevation en cours\n"
+#define LOC_KICK_ANSWER				"deplacement %d\n"
+
 #define ERROR_SEND_CLIENT		"Le client #%d n'a pas reçu le message. Je vais lui monter ses morts \n"
 #define ERROR_CLIENT_EXIT		"Le client #%d s'est barré sans payer\n"
 #define ERROR_NO_EGG			"ERREUR FATALE: Impossible de trouver un oeuf valide pour le client.!\n"
@@ -98,8 +102,10 @@
 #define LOG_CLIENTS_LEFT		"Il reste encore %ld clients sur le serveur !\n"
 #define LOG_INCOMPLETE_COMMAND	"%ld: ERREUR! La commande envoyée par #%d [%d] n'est pas complète." \
 	"Était-elle trop longue? Commande reçue: %s"
+#define LOG_UNDEAD_CLIENT		"Le client #%d est mort, mais il envoie toujours des requêtes !\n"
 #define LOG_CONNEXION_EGG		"Nouveau client connecté avec l'oeuf #%d\n"
 #define LOG_CONNEXION_POSITION	"Nouveau joueur a la position x: %d y: %d\n"
-
+#define LOG_REFUSED_CONNEXION	"%ld: Connexion refusée pour #%d [%d]\n"
+#define LOG_EGG_READY_TO_HATCH	"%ld: Un oeuf est prêt à éclore!\n"
 
 #endif
