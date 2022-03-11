@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 10:13:47 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 11:09:39 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,16 @@ t_vector2	index_to_map_vector(int index)
  ** RETURNS:	int -> nombre de caractères ajoutés
  */
 
-static int	build_see_part(char *str, char *name, int count)
+static int	build_see_part(char *str, const char *name, int count)
 {
 	int offset;
 
 	offset = 0;
 	for (int i = 0; i < count; ++i)
 	{
-		ft_memmove(str + offset, name, ft_strlen(name));
-		offset += ft_strlen(name);
+		str[offset] = ' ';
+		ft_memmove(str + offset + 1, name, ft_strlen(name));
+		offset += ft_strlen(name) + 1;
 	}
 	return (offset);
 }
@@ -103,7 +104,7 @@ static int	vision_range(int level)
 	return ((int)(((level + 1) / 2.0) * (2 + level * 2)));
 }
 
-static int	size_of_string(t_world_state *world, t_client *player)
+static int	size_of_string(t_world_state *world, t_client *player, int localized)
 {
 	int			cnt;
 	int			case_nbr;
@@ -119,28 +120,14 @@ static int	size_of_string(t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		if (!use_localized_string(world->params))
-		{
-			cnt += items[LINEMATE] * strlen(" " STANDARDLINEMATE);
-			cnt += items[DERAUMERE] * strlen(" " STANDARDDERAUMERE);
-			cnt += items[SIBUR] * strlen(" " STANDARDSIBUR);
-			cnt += items[MENDIANE] * strlen(" " STANDARDMENDIANE);
-			cnt += items[PHIRAS] * strlen(" " STANDARDPHIRAS);
-			cnt += items[THYSTAME] * strlen(" " STANDARDTHYSTAME);
-			cnt += items[FOOD] * strlen(" " STANDARDFOOD);
-			cnt += player_on_position(world, target) * strlen(" " STANDARDPLAYER);
-		}
-		else
-		{
-			cnt += items[LINEMATE] * strlen(" " LOCLINEMATE);
-			cnt += items[DERAUMERE] * strlen(" " LOCDERAUMERE);
-			cnt += items[SIBUR] * strlen(" " LOCSIBUR);
-			cnt += items[MENDIANE] * strlen(" " LOCMENDIANE);
-			cnt += items[PHIRAS] * strlen(" " LOCPHIRAS);
-			cnt += items[THYSTAME] * strlen(" " LOCTHYSTAME);
-			cnt += items[FOOD] * strlen(" " LOCFOOD);
-			cnt += player_on_position(world, target) * strlen(" " LOCPLAYER);
-		}
+		cnt += items[LINEMATE] * (strlen(ressource_name(LINEMATE, localized)) + 1);
+		cnt += items[DERAUMERE] * (strlen(ressource_name(DERAUMERE, localized)) + 1);
+		cnt += items[SIBUR] * (strlen(ressource_name(SIBUR, localized)) + 1);
+		cnt += items[MENDIANE] * (strlen(ressource_name(MENDIANE, localized)) + 1);
+		cnt += items[PHIRAS] * (strlen(ressource_name(PHIRAS, localized)) + 1);
+		cnt += items[THYSTAME] * (strlen(ressource_name(THYSTAME, localized)) + 1);
+		cnt += items[FOOD] * (strlen(ressource_name(FOOD, localized)) + 1);
+		cnt += player_on_position(world, target) * (strlen(ressource_name(PLAYER, localized)) + 1);
 	}
 	cnt += case_nbr + 4;
 	return (cnt);
@@ -160,12 +147,14 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	int		cnt;
 	int		case_nbr;
 	int		offset;
+	int		localized;
 	t_vector2	target;
 	(void)srv;
 
+	localized = use_localized_string(srv->param);
 	cnt = 0;
 	case_nbr = vision_range(player->lvl);
-	cnt = size_of_string(world, player);
+	cnt = size_of_string(world, player, localized);
 	ret = ft_strnew(cnt);
 	ret[0] = '{';
 	offset = 1;
@@ -176,28 +165,14 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		if (!use_localized_string(srv->param))
-		{
-			offset += build_see_part(ret + offset, " " STANDARDLINEMATE, items[LINEMATE]);
-			offset += build_see_part(ret + offset, " " STANDARDDERAUMERE, items[DERAUMERE]);
-			offset += build_see_part(ret + offset, " " STANDARDSIBUR, items[SIBUR]);
-			offset += build_see_part(ret + offset, " " STANDARDMENDIANE, items[MENDIANE]);
-			offset += build_see_part(ret + offset, " " STANDARDPHIRAS, items[PHIRAS]);
-			offset += build_see_part(ret + offset, " " STANDARDTHYSTAME, items[THYSTAME]);
-			offset += build_see_part(ret + offset, " " STANDARDFOOD, items[FOOD]);
-			offset += build_see_part(ret + offset, " " STANDARDPLAYER, player_on_position(world, target));
-		}
-		else
-		{
-			offset += build_see_part(ret + offset, " " LOCLINEMATE, items[LINEMATE]);
-			offset += build_see_part(ret + offset, " " LOCDERAUMERE, items[DERAUMERE]);
-			offset += build_see_part(ret + offset, " " LOCSIBUR, items[SIBUR]);
-			offset += build_see_part(ret + offset, " " LOCMENDIANE, items[MENDIANE]);
-			offset += build_see_part(ret + offset, " " LOCPHIRAS, items[PHIRAS]);
-			offset += build_see_part(ret + offset, " " LOCTHYSTAME, items[THYSTAME]);
-			offset += build_see_part(ret + offset, " " LOCFOOD, items[FOOD]);
-			offset += build_see_part(ret + offset, " " LOCPLAYER, player_on_position(world, target));
-		}
+		offset += build_see_part(ret + offset, ressource_name(LINEMATE, localized), items[LINEMATE]);
+		offset += build_see_part(ret + offset, ressource_name(DERAUMERE, localized), items[DERAUMERE]);
+		offset += build_see_part(ret + offset, ressource_name(SIBUR, localized), items[SIBUR]);
+		offset += build_see_part(ret + offset, ressource_name(MENDIANE, localized), items[MENDIANE]);
+		offset += build_see_part(ret + offset, ressource_name(PHIRAS, localized), items[PHIRAS]);
+		offset += build_see_part(ret + offset, ressource_name(THYSTAME, localized), items[THYSTAME]);
+		offset += build_see_part(ret + offset, ressource_name(FOOD, localized), items[FOOD]);
+		offset += build_see_part(ret + offset, ressource_name(PLAYER, localized), player_on_position(world, target));
 		ret[offset++] = ',';
 	}
 	ret[offset - 1] = '}';

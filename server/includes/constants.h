@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 10:26:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:53:03 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,18 @@
 #define STANDARDTHYSTAME	"thystame"
 #define STANDARDPLAYER		"player"
 
+#define STANDARD_COMMAND_VOIR			"voir"
+#define STANDARD_COMMAND_GAUCHE			"gauche"
+#define STANDARD_COMMAND_DROITE			"droite"
+#define STANDARD_COMMAND_AVANCE			"avance"
+#define STANDARD_COMMAND_KICK			"kick"
+#define STANDARD_COMMAND_INCANTATION	"incantation"
+#define STANDARD_COMMAND_INVENTAIRE		"inventaire"
+#define STANDARD_COMMAND_BROADCAST		"broadcast"
+#define STANDARD_COMMAND_POSE			"pose"
+#define STANDARD_COMMAND_PRENDRE		"prendre"
+#define STANDARD_COMMAND_FORK			"fork"
+
 typedef enum	e_colors {
 	RESET = 0,
 	BLACK = 30,
@@ -58,6 +70,7 @@ typedef enum	e_ressources {
 	MENDIANE,
 	PHIRAS,
 	THYSTAME,
+	PLAYER
 }				t_ressources;
 
 typedef enum	e_logtype {

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:44:36 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 11:00:48 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ t_vector2		rotate_vector(t_vector2 vec, int direction);
 int				is_valid_item(char const *item);
 int				can_print(t_param *param, t_logtype log_level);
 t_game_action	get_action_from_enum(t_command_type command);
+const char	*ressource_name(int ressource_id, int localized);
 
 /*
  * CLIENT COMMUNICATION

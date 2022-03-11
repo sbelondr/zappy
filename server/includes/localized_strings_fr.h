@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 10:06:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:49:01 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@
 	"    --[no-]print-error     imprime les erreurs du serveur.\n" \
 	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
 	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n" \
-	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n"
+	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n" \
+	"-L, --localized			localize les commandes. Aucun effet en français.\n"
 
 #define LOCUPPERCASEFOOD		"NOURRITURE"
 #define LOCUPPERCASELINEMATE	"LINEMATE"
@@ -51,14 +52,26 @@
 #define LOCUPPERCASETHYSTAME	"THYSTAME"
 #define LOCUPPERCASEPLAYER		"PLAYER"
 
-#define LOCFOOD		"nourriture"
-#define LOCLINEMATE	"linemate"
+#define LOCFOOD			"nourriture"
+#define LOCLINEMATE		"linemate"
 #define LOCDERAUMERE	"deraumere"
 #define LOCSIBUR		"sibur"
-#define LOCMENDIANE	"mendiane"
+#define LOCMENDIANE		"mendiane"
 #define LOCPHIRAS		"phiras"
-#define LOCTHYSTAME	"thystame"
+#define LOCTHYSTAME		"thystame"
 #define LOCPLAYER		"player"
+
+#define LOC_COMMAND_VOIR	"voir"
+#define LOC_COMMAND_GAUCHE	"gauche"
+#define LOC_COMMAND_DROITE	"droite"
+#define LOC_COMMAND_AVANCE	"avance"
+#define LOC_COMMAND_KICK	"kick"
+#define LOC_COMMAND_INCANTATION	"incantation"
+#define LOC_COMMAND_INVENTAIRE	"inventaire"
+#define LOC_COMMAND_BROADCAST	"broadcast"
+#define LOC_COMMAND_POSE	"pose"
+#define LOC_COMMAND_PRENDRE	"prendre"
+#define LOC_COMMAND_FORK	"fork"
 
 #define ERROR_SEND_CLIENT		"Le client #%d n'a pas reçu le message. Je vais lui monter ses morts \n"
 #define ERROR_CLIENT_EXIT		"Le client #%d s'est barré sans payer\n"
