@@ -6,38 +6,42 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/03 09:09:27 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:34:04 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 #include <stdio.h>
+
+#define SIZE_BUF 2048
+
 /*
-** wtf genre tu lis ou tu écris 
-*/
-
-void ft_listen_srv(t_srv *srv, fd_set *readfds)
+ * listen message receive
+ */
+void ft_listen_srv(t_srv *srv, int index)
 {
-	char buff[BUFF_READ];
-	int i;
-	int	valread;
+	char	buffer[SIZE_BUF];
+	int		close_conn = 0;
+	int		len_read = 0;
 
-	i = -1;
-	// parcours les sockets pour voir si il a recu une message
-	while (++i < srv->param->team_hard_limit * 2)
+	bzero(buffer, SIZE_BUF);
+	len_read = recv(srv->client_sck[index].fd, buffer, SIZE_BUF, 0);
+	if (len_read > 0)
+		ft_client_sent_data(srv, buffer, len_read, index); 
+	if (len_read < 0)
 	{
-		if (FD_ISSET(srv->client_sck[i], readfds))
-		{
-			bzero(buff, BUFF_READ);
-			if ((valread = read(srv->client_sck[i], buff, BUFF_READ)) == 0)
-			{
-				red();
-				printf("%ld: Kicking #%d because it errored out?\n", srv->frame_nbr, i);
-				reset();
-				ft_client_exit(srv, i);
-			}
-			else
-				ft_client_sent_data(srv, buff, valread, i); //Genre ça ça veut dire que tu envoies des données du serveur au client non ???? // non ca veut dire que j'ai recu un message du client d'ou le nom de la fonction triple buse. // Monsieur va se calmer deja tu l'avais mal ecrit jte rappel
-		}
+		printf("error\n");
+		close_conn = 1;
 	}
+	if (len_read == 0)
+	{
+		printf("Connection closed\n");
+		close_conn = 1;
+	}
+	if (close_conn)
+	{
+		close(srv->client_sck[index].fd);
+		srv->client_sck[index].fd = -1;
+	}
+	printf("end\n");
 }

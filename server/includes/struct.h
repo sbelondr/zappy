@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 10:21:51 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:09:50 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include "includes.h"
 # include "constants.h"
+
+#include <poll.h>
+
 
 /*
  ** Commandes du client
@@ -99,7 +102,8 @@ typedef struct	s_srv
 	int						master_sck;
 	struct sockaddr_in		address;
 	int						addrlen;
-	int						*client_sck;
+	struct pollfd	client_sck[200]; //int						*client_sck;
+	int				n_client_sck;
 	t_param					*param;
 	t_world_state			*world;
 	uint64_t				frame_nbr;
