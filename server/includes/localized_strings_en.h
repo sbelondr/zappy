@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 13:36:30 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/14 10:24:32 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@
 	"    --[no-]print-error     prints non-fatal errors.\n" \
 	"-C, --[no-]print-colors    colorizes output.\n" \
 	"-l, --log-replay [NAME]    save replay of the game in NAME.\n" \
-	"-P, --pedantic				pedantic mode. Removes every extension in order to strictly follow RFC. Rejects clients that do not respect it.\n" \
-	"-L, --localized			localizes command name and output. Overriden by --pedantic.\n"
+	"-P, --pedantic             pedantic mode. Removes every extension in order to strictly follow RFC. Rejects clients that do not respect it.\n" \
+	"-L, --localized            localizes command name and output. Overriden by --pedantic.\n"
 
 #define LOCUPPERCASEFOOD		"FOOD"
 #define LOCUPPERCASELINEMATE	"LINEMATE"
