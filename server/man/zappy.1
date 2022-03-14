@@ -10,15 +10,20 @@ zappy -p  <port> -x <width> -y <width> -n <team> [<team>] [<team>] ... -c <nb> -
 .PP
 Zappy est un jeu entièrement automatique où des programmes informatiques jouent
 entre eux.
+.SS Temps
+.PP
 Le jeu se déroule selon une vitesse définie par une unité de temps.
 Chaque action dans le jeu prend une durée proportionnelle à cette unité de temps.
-.PP
 L'unité de temps est définie par la fonction 1 / delta, autrement dit, il y a
 .I delta
 ticks par secondes.
-
+.SS Victoire
 .PP
-Le jeu se termine quand une équipe réussi à faire atteindre le niveau 8 à 8 de ses membres.
+Le jeu se termine quand une équipe réussi à faire atteindre le niveau 8 à 6 de ses membres. Il n'est pas possible de perdre, mais il est possible de se retrouver incapable de gagner (si la génération de ressources est désactivée et il n'y a plus assez de nourriture pour faire survivre les joueurs, ou simplement à cause d'une mauvaise IA)
+
+.SS Extensions
+.PP
+Cette implémentation possède plusieurs extensions dans le protocole de communication. Listés sont :
 
 .SH OPTIONS
 .B Options obligatoires :
