@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:31:44 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:40:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*moniteur_msz(t_world_state *world)
 	p = world->params;
 	error = asprintf(&ret, "msz %d %d\n", p.world_width, p.world_height);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -39,7 +39,7 @@ char	*moniteur_bct(t_world_state *world, int x, int y)
 	error = asprintf(&ret, "bct %d %d %d %d %d %d %d %d %d\n",
 			x, y, quant[0], quant[1], quant[2], quant[3], quant[4], quant[5], quant[6]); 
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -64,7 +64,7 @@ char	*moniteur_mct(t_world_state *world)
 			error = asprintf(&dup, "%s%s", ret, tmp);
 			free(tmp);
 			if (error < 0)
-				ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+				emergency_exit(__FILE__ ": Fatal: asprintf: ");
 			free(ret);
 			ret = dup;
 			++c_x;
@@ -83,7 +83,7 @@ char	*moniteur_tac(t_world_state *world)
 
 	error = asprintf(&ret, "tac %d\n", world->params.allowed_clients_amount);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 //Unité de temps
@@ -94,7 +94,7 @@ char	*moniteur_mac(t_world_state *world)
 
 	error = asprintf(&ret, "mac %d\n", world->params.team_hard_limit);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 //Unité de temps
@@ -105,7 +105,7 @@ char	*moniteur_sgt(t_world_state *world)
 
 	error = asprintf(&ret, "sgt %d\n", world->params.time_delta);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -123,7 +123,7 @@ char	*moniteur_tna(t_world_state *world)
 	{
 		error = asprintf(&dup, "%stna %s\n", ret, ((t_team*)current->content)->team_name);
 		if (error < 0)
-			ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+			emergency_exit(__FILE__ ": Fatal: asprintf: ");
 		free(ret);
 		ret = dup;
 		current = current->next;
@@ -142,7 +142,7 @@ char	*moniteur_pnw(t_client *client)
 				client->id, client->p_x, client->p_y, client->orientation + 1,
 				client->lvl, client->team_name);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -154,7 +154,7 @@ char	*moniteur_ebo(t_egg *egg)
 
 	error = asprintf(&ret, "ebo #%d\n", egg->id);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -166,7 +166,7 @@ char	*moniteur_eht(t_egg *egg)
 
 	error = asprintf(&ret, "eht #%d\n", egg->id);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -179,7 +179,7 @@ char	*moniteur_enw(t_egg *egg)
 	error = asprintf(&ret, "enw #%d #%d %d %d\n",
 			egg->id, egg->father_id, egg->p_x, egg->p_y);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -192,7 +192,7 @@ char	*moniteur_ppo(t_client *client)
 	error = asprintf(&ret, "ppo #%d %d %d %d\n",
 			client->id, client->p_x, client->p_y, client->orientation + 1);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -204,7 +204,7 @@ char	*moniteur_pdr(t_client *client, int ressource)
 
 	error = asprintf(&ret, "pdr #%d %d\n", client->id, ressource);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -216,7 +216,7 @@ char	*moniteur_pbc(int id, char *msg)
 
 	error = asprintf(&ret, "pbc #%d %s\n", id, msg);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -228,7 +228,7 @@ char	*moniteur_pfk(t_client *client)
 
 	error = asprintf(&ret, "pfk #%d\n", client->id);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -240,7 +240,7 @@ char	*moniteur_pgt(t_client *client, int ressource)
 
 	error = asprintf(&ret, "pgt #%d %d\n", client->id, ressource);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -256,7 +256,7 @@ char	*moniteur_pin(t_client *client)
 			client->id, client->p_x, client->p_y, inv[FOOD], inv[LINEMATE], inv[DERAUMERE],
 			inv[SIBUR], inv[MENDIANE], inv[PHIRAS], inv[THYSTAME]);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -271,7 +271,7 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 
 	error = asprintf(&ret, "pic %d %d %d", client->p_x, client->p_y, client->lvl);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	current = world->client_list;
 	while (current)
 	{
@@ -281,7 +281,7 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 			tmp = ret;
 			error = asprintf(&ret, "%s #%d", tmp, c->id);
 			if (error < 0)
-				ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+				emergency_exit(__FILE__ ": Fatal: asprintf: ");
 			free(tmp);
 		}
 		current = current->next;
@@ -289,7 +289,7 @@ char	*moniteur_pic(t_world_state *world, t_client *client)
 	tmp = ret;
 	error = asprintf(&ret, "%s\n", tmp);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	free(tmp);
 	return (ret);
 }
@@ -302,7 +302,7 @@ char	*moniteur_pdi(t_client *client)
 
 	error = asprintf(&ret, "pdi #%d\n", client->id);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 //Kick
@@ -313,7 +313,7 @@ char	*moniteur_pex(t_client *client)
 
 	error = asprintf(&ret, "pex #%d\n", client->id);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -325,7 +325,7 @@ char	*moniteur_plv(t_client *client)
 
 	error = asprintf(&ret, "plv #%d %d\n", client->id, client->lvl); 
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -337,7 +337,7 @@ char	*moniteur_edi(t_egg *egg)
 
 	error = asprintf(&ret, "edi #%d\n", egg->id); 
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -349,7 +349,7 @@ char	*moniteur_pie(int x, int y, int success)
 
 	error = asprintf(&ret, "pie %d %d %d\n", x, y, success); 
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 

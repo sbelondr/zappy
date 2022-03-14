@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 10:39:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 10:29:14 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,13 @@
 
 t_world_state init_world(t_param params);
 
-void	usage(void)
+void	usage(int error)
 {
-	printf(USAGE);
-	exit(1);
+	if (error)
+		fprintf(stderr, USAGE);
+	else
+		printf(USAGE);
+	exit(error);
 }
 
 long	get_numeric_parameter(char *numstr, int min, int max)
@@ -34,45 +37,56 @@ long	get_numeric_parameter(char *numstr, int min, int max)
 	result = strtol(numstr, &endptr, 10);
 	if (*endptr)
 	{
-		printf("Invalid parameter: Not a number: %s\n", numstr);
-		usage();
+		fprintf(stderr, ERROR_INV_PARAM_NAN, numstr);
+		usage(1);
 	}
 	else if (result < min)
 	{
-		printf("Invalid parameter: Number too small: %ld when min size is %d\n", result, min);
-		usage();
+		fprintf(stderr, ERROR_INV_PARAM_TOO_SMALL, result, min);
+		usage(1);
 	}
 	else if (result > max)
 	{
-		printf("Invalid parameter: Number too big: %ld when max size is %d\n", result, max);
-		usage();
+		fprintf(stderr, ERROR_INV_PARAM_TOO_BIG, result, max);
+		usage(1);
 	}
 	return (result);
 }
 
 int		is_input_complete(t_param param)
 {
+	int success = 1;
 	if (!param.port)
 	{
-		printf("Missing port\n");
-		usage();
+		fprintf(stderr, ERROR_MISSING_PARAM_PORT);
+		success = 0;
 	}
-	if (!param.world_width || !param.world_height)
+	if (!param.world_width)
 	{
-		printf("Missing parameters\n");
-		usage();
+		fprintf(stderr, ERROR_MISSING_PARAM_WIDTH);
+		success = 0;
 	}
-	if (!param.time_delta || !param.allowed_clients_amount)
+	if (!param.world_height)
 	{
-		printf("Missing parameters\n");
-		usage();
+		fprintf(stderr, ERROR_MISSING_PARAM_HEIGHT);
+		success = 0;
+	}
+	if (!param.time_delta)
+	{
+		fprintf(stderr, ERROR_MISSING_PARAM_DELTA);
+		success = 0;
+	}
+	if (!param.allowed_clients_amount)
+	{
+		fprintf(stderr, ERROR_MISSING_PARAM_ACA);
+		success = 0;
 	}
 	if (!param.team_list)
 	{
-		printf("Missing parameters\n");
-		usage();
+		fprintf(stderr, ERROR_MISSING_PARAM_TEAM);
+		success = 0;
 	}
-	return (0);
+	return (success);
 }
 
 t_team	new_team(char *name)
@@ -112,7 +126,7 @@ t_param	parse_input(int ac, char **av)
 		if (is_option(av[i], "-v", "--verification"))
 			param.flags |= FLAG_TESTER;
 		else if (is_option(av[i], "-h", "--help"))
-			usage();
+			usage(0);
 		else if (is_option(av[i], "-H", "--hunger"))
 			param.flags |= FLAG_NOHUNGER;
 		else if (is_option(av[i], "-s", "--silent"))
@@ -159,11 +173,14 @@ t_param	parse_input(int ac, char **av)
 			param.allowed_logs |= LOG_SEND;
 		else if (is_option(av[i], NULL, "--no-print-sent"))
 			param.allowed_logs &= ~LOG_SEND;
-		else if (i + 1 >= ac)
+		else if (is_option(av[i], "-P", "--pedantic"))
+			param.flags |= FLAG_PEDANTIC;
+		else if (is_option(av[i], "-L", "--localized"))
+			param.flags |= FLAG_LOCALIZED;
+		else if (i + 1 >= ac) //TODO: Improve option parsing
 		{
-			printf("Error: unexpected end of argument: %s\n", av[i]);
-			usage();
-			exit(1);
+			printf(ERROR_INV_OPT_END, av[i]);
+			usage(1);
 		}
 		else if (is_option(av[i], "-t", "--time"))
 			param.time_delta = get_numeric_parameter(av[++i], 1, 15000);
@@ -186,17 +203,16 @@ t_param	parse_input(int ac, char **av)
 				fd = open(av[++i], O_CREAT | O_WRONLY, S_IRWXU | S_IRGRP);
 			else
 			{
-				printf("Can only log to 1 file at a time ! Just copy the file if you want more !!\n");
-				usage();
-				exit(1);
+				fprintf(stderr, ERROR_INV_OPT_TOO_MANY_REPLAYS);
+				usage(1);
 			}
 			if (fd >= 0)
 				param.replay_fd = fd;
 			else
 			{
-				printf("Error: Cannot open %s\n", av[i]);
-				usage();
-				exit(1);
+				fprintf(stderr, ERROR_INV_PARAM_FILE, av[i]);
+				perror("");
+				usage(1);
 			}
 
 		}
@@ -217,10 +233,19 @@ t_param	parse_input(int ac, char **av)
 			else if (!strcmp(av[i], "UNIFORM")) {
 				param.generate_function = generate_ressource_uniform;
 			}
-			else
-				usage();
+			else 
+			{
+				fprintf(stderr, ERROR_INV_PARAM_GEN, av[i]);
+				usage(1);
+			}
+		}
+		else
+		{
+			printf(ERROR_INV_OPT_UNKNOWN,av[i]);
+			usage(1);
 		}
 	}
-	is_input_complete(param);
+	if (!is_input_complete(param))
+		usage(1);
 	return (param);
 }

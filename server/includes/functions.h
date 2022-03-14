@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:14:53 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:14:34 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,14 @@ int				can_print(t_param *param, t_logtype log_level);
 t_game_action	get_action_from_enum(t_command_type command);
 
 /*
+ * LOCALIZATION
+ */
+
+const char	*ressource_name(t_ressources ressource_id, int localized);
+const char	*command_name(t_command_type command_id, int localized);
+int			use_localized_string(t_param *param);
+
+/*
  * CLIENT COMMUNICATION
  */
 
@@ -162,5 +170,11 @@ void			yellow(void);
 void			green(void);
 void			reset(void);
 void			set_color(t_colors color, int param);
+
+/*
+ * ERROR HANDLING
+ */
+
+void			emergency_exit(char const *perror_prefix);
 
 #endif

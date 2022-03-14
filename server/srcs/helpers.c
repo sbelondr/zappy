@@ -6,11 +6,19 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:19:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 11:12:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
+
+void		emergency_exit(char const *perror_prefix) //TODO: Free
+{
+	if (perror_prefix)
+		perror(perror_prefix);
+	exit(1);
+}
+
 
 int			is_valid_item(char const *item)
 {
@@ -67,7 +75,4 @@ t_team	*get_team_by_name(t_world_state *world, char *team_name)
 int		can_print(t_param *param, t_logtype log_level)
 {
 	return (param->allowed_logs & log_level);
-	if (log_level == LOG_TICK)
-		return (param->flags & FLAG_TICK);
-	return !(param->flags & FLAG_SILENT);
 }

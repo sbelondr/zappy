@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 14:15:43 by selver            #+#    #+#             */
-/*   Updated: 2022/03/03 09:43:34 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/10 10:42:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*connect_nbr(t_srv *srv, t_world_state *world, t_client *player)
 	slots = available_slots(srv, get_team_by_name(world, player->team_name));
 	error = asprintf(&ret, "%d\n", slots);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);
 }
 
@@ -117,7 +117,7 @@ char	*broadcast(t_srv *srv, t_world_state *world, t_client *player)
 		{
 			error = asprintf(&msg, "message %d, %s\n", b_dir(world, player, c), arg);
 			if (error < 0)
-				ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+				emergency_exit(__FILE__ ": Fatal: asprintf: ");
 			if (!ft_strcmp(c->team_name, "GRAPHIC"))
 				simple_send(srv, c->id, moniteur_pbc(player->id, arg));
 			else if (c->id != player->id)

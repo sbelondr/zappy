@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 09:43:16 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/03 09:44:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:17:55 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,12 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 		success = 1;
 	}
 	send_to_all_moniteur(srv, moniteur_pie(player->p_x, player->p_y, success));
-	error = asprintf(&msg, "niveau actuel : %d\n", player->lvl);
+	if (use_localized_string(srv->param))
+		error = asprintf(&msg, LOC_FORK_ANSWER, player->lvl);
+	else
+		error = asprintf(&msg, STANDARD_FORK_ANSWER, player->lvl);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	current = world->client_list;
 	while (current)
 	{
