@@ -1,0 +1,111 @@
+.TH zappy 1 "14 Mars 2022" "1.0"
+
+.SH NAME
+zappy - serveur de jeu
+
+.SH SYNOPSIS
+zappy -p  <port> -x <width> -y <width> -n <team> [<team>] [<team>] ... -c <nb> -t <delta>
+
+.SH DESCRIPTION
+.PP
+Zappy est un jeu entièrement automatique où des programmes informatiques jouent
+entre eux.
+Le jeu se déroule selon une vitesse définie par une unité de temps.
+Chaque action dans le jeu prend une durée proportionnelle à cette unité de temps.
+.PP
+L'unité de temps est définie par la fonction 1 / delta, autrement dit, il y a
+.I delta
+ticks par secondes.
+
+.PP
+Le jeu se termine quand une équipe réussi à faire atteindre le niveau 8 à 8 de ses membres.
+
+.SH OPTIONS
+.B Options obligatoires :
+.TP
+.BI -p, " " --port " port"
+Numéro de port sur lequel ouvrir le serveur
+.TP
+.BI "-t, --time " delta
+Diviseur de l'unité de temps. Le serveur tourne a une vitesse de 
+.I delta
+ticks par secondes
+.TP
+.BI "-c, --clients-allowed " N
+Nombre de joueurs qui peuvent se connecter sans oeufs disponibles.
+.TP
+.BI "-x, --width" " LARGEUR"
+Taille du monde sur l'axe des ordonnées.
+.TP
+.BI "-y, --height " HAUTEUR
+Taille du monde sur l'axe des abscisses. Note: Malgré le monde est en 2D, il n'y a pas de concept d'élévation.
+.TP
+.BI "-n, --name" " nom1" " " [nom2] " " ...
+Noms des différentes équipes. Au moins une équipe doit exister, mais il peut y en avoir un nombre infini.
+.PP
+.B Autres options :
+.TP
+.BI "-h, --help"
+Affiche l'aide.
+.TP
+.BI "-m, --max" " N"
+Nombre maximum de clients qui peuvent se connecter dans une équipe, y compris avec des oeufs.
+.TP
+.BI "-G, --gen-function " " " < "STANDARD" | "UNIFORM" >
+Change la fonction utilisée pour générer des ressources sur la carte.\n
+
+.I STANDARD
+distribue les ressources en fonction de l'emplacement, de façon à ce que les ressources ne soient pas toutes au même endroit.\n
+
+.I UNIFORM
+génère également les ressources sur toute la carte.
+.TP
+.BI "-g, --gen-frequency" " N"
+Génère des ressources tous les
+.I N
+ticks.
+.TP
+.BI "-H, --hunger"
+Désactive la faim. Les joueurs n'ont plus besoin de nourriture pour survivre.
+.TP
+.BI "-s, --silent"
+Mode silencieux. N'imprime rien sur la sortie standard.
+.TP
+.BI "-V, --verbose"
+Mode verbeux. Imprime tous les logs sur la sortie standard.
+.TP
+.BI "-l, --log-replay" " FILENAME"
+Sauvegarde un replay de la partie dans un fichier.
+.TP
+.BI "-P, --pedantic"
+Désactive toutes les extensions du serveur ne respectant pas la RFC.
+.TP
+.BI "-L, --localized"
+Localize les noms de commandes et de ressources en fonction de la langue dans laquelle a été installé le serveur.
+
+
+
+.SH EXAMPLES
+.B zappy -p 8080 -x 20 -y 20 -n 
+.I toto tata 
+.B -c 4 -t 100
+.RS
+Lance le serveur sur le port 8080 avec deux équipes,
+.I toto 
+et 
+.I tata 
+sur un monde en dimension 20 par 20. Chacune peut connecter 4 joueurs sans avoir besoins d'oeufs. Le jeu tourne au rythme de 100 ticks par secondes.
+.RE
+.B zappy -p 8080 -x 20 -y 20 -n 
+.I toto 
+.B -c 4 -t 100 -G 
+.I UNIFORM 
+.B -g 10000
+.RS
+Lance le serveur avec une seule équipe,
+.I toto
+et change la fonction de génération de ressources par 
+.I UNIFORM
+, et génère des ressources tous les 10000 ticks.
+.RE
+
