@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 10:56:24 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/06 10:03:47 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:19:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ t_egg	*new_egg(t_world_state *w, char const *team_name, t_vector2 pos, int paren
 	return (ret);
 }
 
+static int	mcmp(t_egg *a, t_egg *b) { 	return a->id - b->id; }
+static void	mdel(t_egg *a) { (void)a; }
 void	rotten_egg(t_srv *srv, t_egg *egg)
 {
 	t_team *team;
 
-	int	mcmp(t_egg *a, t_egg *b) { 	return a->id - b->id; }
-	void	mdel(t_egg *a) { (void)a; }
 	send_to_all_moniteur(srv, moniteur_edi(egg));
 	ft_lstdelbyval(&srv->world->egg_list, egg, mcmp, mdel);
 	team = get_team_by_name(srv->world, egg->team_name);

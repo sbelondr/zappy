@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/07 09:05:03 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:15:57 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,11 @@ int main(int ac, char **av)
 
 	param = parse_input(ac, av);
 	st = init_world(param);
+	if (!st.map)
+	{
+		free_params(&param);
+		exit(EXIT_FAILURE);
+	}
 	srv = init_srv(&param, &st);
 	if (!srv)
 		return (EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 13:14:34 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:16:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,5 +176,6 @@ void			set_color(t_colors color, int param);
  */
 
 void			emergency_exit(char const *perror_prefix);
+void			free_params(t_param *param);
 
 #endif
