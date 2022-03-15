@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 10:29:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:15:13 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,16 @@ static	int	is_option(char *argument, char *shortform, char *longform)
 	return (ret);
 }
 
+static void	tmp_free_team(void *data, size_t _size) {
+	free(data);
+	(void)_size;
+}
+
+void	free_params(t_param *param)
+{
+	ft_lstdel(&param->team_list, tmp_free_team);
+}
+
 t_param	parse_input(int ac, char **av)
 {
 	t_param param;
@@ -121,7 +131,7 @@ t_param	parse_input(int ac, char **av)
 	param.generate_function = generate_ressource_standard;
 	param.generation_frequency = 1000;
 	param.flags |= FLAG_COLOR;
-	for (int i = 1; i < ac; i++) //Ya plus de norme nique toi
+	for (int i = 1; i < ac; i++)
 	{
 		if (is_option(av[i], "-v", "--verification"))
 			param.flags |= FLAG_TESTER;
@@ -220,8 +230,15 @@ t_param	parse_input(int ac, char **av)
 		{
 			do
 			{
-				t_team tmp = new_team(av[++i]);
-				ft_lstadd(&param.team_list, ft_lstnew(&tmp, sizeof(t_team)));
+				t_team team = new_team(av[++i]);
+				t_list *tmp = ft_lstnew(&team, sizeof(t_team));
+				if (tmp)
+					ft_lstadd(&param.team_list, tmp);
+				else
+				{
+					perror("malloc: ");
+					exit(1);
+				}
 			} while (ac > i + 1 && av[i + 1][0] != '-');
 		}
 		else if (is_option(av[i], "-g", "--gen-function"))

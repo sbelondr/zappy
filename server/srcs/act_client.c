@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/10 09:28:18 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:18:25 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ void	remove_from_client_list(t_world_state *world, t_client *client)
 	}
 }
 
+static int	mcmp(t_client *a, t_client *b) { return a->id - b->id; }
+static void	mdel(t_client *a) { (void)a; }
 void ft_client_exit(t_srv *srv, int i)
 {
 	t_client	*client;
 	t_team		*team;
 
-	int	mcmp(t_client *a, t_client *b) { return a->id - b->id; }
-	void	mdel(t_client *a) { (void)a; }
 
 	client = get_client_by_id(srv, i);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);

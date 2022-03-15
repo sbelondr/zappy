@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/10 10:40:42 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:24:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,10 +137,9 @@ char	*moniteur_pnw(t_client *client)
 	char	*ret;
 	int		error;
 
-	if (client->team_name != NULL)
-		error = asprintf(&ret, "pnw #%d %d %d %d %d %s\n",
-				client->id, client->p_x, client->p_y, client->orientation + 1,
-				client->lvl, client->team_name);
+	error = asprintf(&ret, "pnw #%d %d %d %d %d %s\n",
+			client->id, client->p_x, client->p_y, client->orientation + 1,
+			client->lvl, client->team_name);
 	if (error < 0)
 		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);

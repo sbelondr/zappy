@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:50:47 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 11:12:21 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:20:35 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ t_vector2	rotate_vector(t_vector2 vec, int direction)
 	int	ca;
 	int	sa;
 
+	ca = 0;
+	sa = 0;
 	if (direction == NORTH)
 	{
 		ca = 1;

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:27:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:30:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:17:48 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,37 @@ void			generate_ressource_standard(t_world_state world)
 		}
 }
 
+void			free_world_state(t_world_state *to_free)
+{
+	if (to_free->map)
+	{
+		for (int  i = 0; i < to_free->params.world_height; i++)
+		{
+			if (to_free->map[i])
+			{
+				for (int x = 0; x < to_free->params.world_width; x++)
+					if (to_free->map[i][x])
+					{
+						free(to_free->map[i][x]);
+						to_free->map[i][x] = NULL;
+					}
+				free(to_free->map[i]);
+				to_free->map[i] = NULL;
+			}
+		}
+		free(to_free->map);
+		to_free->map = NULL;
+	}
+}
+
+t_world_state	free_and_quit(t_world_state ret, char const *error_message)
+{
+	if (error_message)
+		perror(error_message);
+	free_world_state(&ret);
+	return (ret);
+}
+
 t_world_state	init_world(t_param params)
 {
 	t_world_state	ret;
@@ -57,12 +88,21 @@ t_world_state	init_world(t_param params)
 	ret.params = params;
 	ret.client_list = NULL;
 	ret.egg_list = NULL;
-	ret.map = calloc(params.world_height, sizeof(int**));
+	if (!(ret.map = calloc(params.world_height, sizeof(int**))))
+	{
+		return (free_and_quit(ret, "malloc: "));
+	}
 	for (int i = 0; i < params.world_height; i++)
-		ret.map[i] = calloc(params.world_width, sizeof(int*));
+		if (!(ret.map[i] = calloc(params.world_width, sizeof(int*))))
+		{
+			return (free_and_quit(ret, "malloc: "));
+		}
 	for (int y = 0; y < ret.params.world_height; y++)
 		for (int x = 0; x < ret.params.world_width; x++)
-			ret.map[y][x] = calloc(7, sizeof(int));
+			if (!(ret.map[y][x] = calloc(7, sizeof(int))))
+			{
+				return (free_and_quit(ret, "malloc: "));
+			}
 	params.generate_function(ret);
 	return (ret);
 }
