@@ -104,6 +104,14 @@ int				can_print(t_param *param, t_logtype log_level);
 t_game_action	get_action_from_enum(t_command_type command);
 
 /*
+ * LOCALIZATION
+ */
+
+const char	*ressource_name(t_ressources ressource_id, int localized);
+const char	*command_name(t_command_type command_id, int localized);
+int			use_localized_string(t_param *param);
+
+/*
  * CLIENT COMMUNICATION
  */
 
@@ -162,5 +170,12 @@ void			yellow(void);
 void			green(void);
 void			reset(void);
 void			set_color(t_colors color, int param);
+
+/*
+ * ERROR HANDLING
+ */
+
+void			emergency_exit(char const *perror_prefix);
+void			free_params(t_param *param);
 
 #endif

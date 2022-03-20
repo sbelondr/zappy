@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 15:01:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:31:12 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 11:09:39 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*see_inventaire(t_srv *srv,t_world_state *world, t_client *player)
 			res[FOOD] * 126 + player->hunger, res[SIBUR], res[PHIRAS], res[LINEMATE],
 			res[THYSTAME], res[MENDIANE], res[DERAUMERE]);
 	if (error < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (inventory);
 }
 
@@ -66,15 +66,16 @@ t_vector2	index_to_map_vector(int index)
  ** RETURNS:	int -> nombre de caractères ajoutés
  */
 
-static int	build_see_part(char *str, char *name, int count)
+static int	build_see_part(char *str, const char *name, int count)
 {
 	int offset;
 
 	offset = 0;
 	for (int i = 0; i < count; ++i)
 	{
-		ft_memmove(str + offset, name, ft_strlen(name));
-		offset += ft_strlen(name);
+		str[offset] = ' ';
+		ft_memmove(str + offset + 1, name, ft_strlen(name));
+		offset += ft_strlen(name) + 1;
 	}
 	return (offset);
 }
@@ -103,7 +104,7 @@ static int	vision_range(int level)
 	return ((int)(((level + 1) / 2.0) * (2 + level * 2)));
 }
 
-static int	size_of_string(t_world_state *world, t_client *player)
+static int	size_of_string(t_world_state *world, t_client *player, int localized)
 {
 	int			cnt;
 	int			case_nbr;
@@ -119,14 +120,14 @@ static int	size_of_string(t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		cnt += items[LINEMATE] * strlen(" LINEMATE");
-		cnt += items[DERAUMERE] * strlen(" DERAUMERE");
-		cnt += items[SIBUR] * strlen(" SIBUR");
-		cnt += items[MENDIANE] * strlen(" LAMENDIANE");
-		cnt += items[PHIRAS] * strlen(" PHIRAS");
-		cnt += items[THYSTAME] * strlen(" THYSTAME");
-		cnt += items[FOOD] * strlen(" FOOD");
-		cnt += player_on_position(world, target) * strlen(" PLAYER");
+		cnt += items[LINEMATE] * (strlen(ressource_name(LINEMATE, localized)) + 1);
+		cnt += items[DERAUMERE] * (strlen(ressource_name(DERAUMERE, localized)) + 1);
+		cnt += items[SIBUR] * (strlen(ressource_name(SIBUR, localized)) + 1);
+		cnt += items[MENDIANE] * (strlen(ressource_name(MENDIANE, localized)) + 1);
+		cnt += items[PHIRAS] * (strlen(ressource_name(PHIRAS, localized)) + 1);
+		cnt += items[THYSTAME] * (strlen(ressource_name(THYSTAME, localized)) + 1);
+		cnt += items[FOOD] * (strlen(ressource_name(FOOD, localized)) + 1);
+		cnt += player_on_position(world, target) * (strlen(ressource_name(PLAYER, localized)) + 1);
 	}
 	cnt += case_nbr + 4;
 	return (cnt);
@@ -137,7 +138,6 @@ static int	size_of_string(t_world_state *world, t_client *player)
  * PARAMS: t_world_state *world -> world state
  *			t_client playe -> Observer
  * RETURNS:	char* -> A string under the pattern {a b c, a b, c, a}
- * TODO: VIEW SCALES WITH LEVEL 
  */
 
 char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
@@ -147,12 +147,14 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 	int		cnt;
 	int		case_nbr;
 	int		offset;
+	int		localized;
 	t_vector2	target;
 	(void)srv;
 
+	localized = use_localized_string(srv->param);
 	cnt = 0;
 	case_nbr = vision_range(player->lvl);
-	cnt = size_of_string(world, player);
+	cnt = size_of_string(world, player, localized);
 	ret = ft_strnew(cnt);
 	ret[0] = '{';
 	offset = 1;
@@ -163,14 +165,14 @@ char	*action_see_string(t_srv *srv,t_world_state *world, t_client *player)
 		target.x += player->p_x;
 		target.y += player->p_y;
 		items = get_case(world, target.x, target.y); 
-		offset += build_see_part(ret + offset, " LINEMATE", items[LINEMATE]);
-		offset += build_see_part(ret + offset, " DERAUMERE", items[DERAUMERE]);
-		offset += build_see_part(ret + offset, " SIBUR", items[SIBUR]);
-		offset += build_see_part(ret + offset, " LAMENDIANE", items[MENDIANE]);
-		offset += build_see_part(ret + offset, " PHIRAS", items[PHIRAS]);
-		offset += build_see_part(ret + offset, " THYSTAME", items[THYSTAME]);
-		offset += build_see_part(ret + offset, " FOOD", items[FOOD]);
-		offset += build_see_part(ret + offset, " PLAYER", player_on_position(world, target));
+		offset += build_see_part(ret + offset, ressource_name(LINEMATE, localized), items[LINEMATE]);
+		offset += build_see_part(ret + offset, ressource_name(DERAUMERE, localized), items[DERAUMERE]);
+		offset += build_see_part(ret + offset, ressource_name(SIBUR, localized), items[SIBUR]);
+		offset += build_see_part(ret + offset, ressource_name(MENDIANE, localized), items[MENDIANE]);
+		offset += build_see_part(ret + offset, ressource_name(PHIRAS, localized), items[PHIRAS]);
+		offset += build_see_part(ret + offset, ressource_name(THYSTAME, localized), items[THYSTAME]);
+		offset += build_see_part(ret + offset, ressource_name(FOOD, localized), items[FOOD]);
+		offset += build_see_part(ret + offset, ressource_name(PLAYER, localized), player_on_position(world, target));
 		ret[offset++] = ',';
 	}
 	ret[offset - 1] = '}';

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/06 10:06:10 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 10:20:09 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,15 +100,15 @@ t_egg	*get_first_valid_egg(t_team *team)
 	return (NULL);
 }
 
+static int	eggcmp(t_egg *a, t_egg *b) { return a->id == b->id; }
+static void free_egg(t_egg *a) { free(a->team_name); free(a); }
+static void emptydel(t_client *_a) { (void)_a;  }
 static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 {
 	char		*msg;
 	t_egg		*egg;
 	int			remaining_slots;
 
-	int	eggcmp(t_egg *a, t_egg *b) { return a->id == b->id; }
-	void free_egg(t_egg *a) { free(a->team_name); free(a); }
-	void emptydel(t_client *_a) { (void)_a;  }
 	remaining_slots = available_slots(srv, team);
 	asprintf(&msg, "%d\n", remaining_slots);
 	simple_send(srv, c->id, msg);
@@ -126,14 +126,14 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 		egg = get_first_valid_egg(team);
 		if (egg == NULL)
 		{
-			printf("FATAL ERROR: could not find an egg to spawn in.\n");
+			printf(ERROR_NO_EGG);
 			exit(1);
 			return (0);
 		}
 		if (can_print(srv->param, LOG_CONNEXION))
 		{
 			set_color(YELLOW, srv->param->flags);
-			printf("Connecting new client with egg n#%d at position %d %d\n", egg->id, egg->p_x, egg->p_y);
+			printf(LOG_CONNEXION_EGG, egg->id);
 			set_color(RESET, srv->param->flags);
 		}
 		c->p_x = egg->p_x;
@@ -149,7 +149,7 @@ static int	perform_add_to_team(t_srv *srv, t_team *team, t_client *c)
 	if (can_print(srv->param, LOG_CONNEXION))
 	{
 		set_color(YELLOW, srv->param->flags);
-		printf("New player at position x: %d y: %d\n", c->p_x, c->p_y);
+		printf(LOG_CONNEXION_POSITION, c->p_x, c->p_y);
 		set_color(RESET, srv->param->flags);
 	}
 	return (1);
@@ -210,6 +210,8 @@ int		add_egg_to_team(t_world_state *world, char *team_name, int egg_id)
 	return (0);
 }
 
+static int simpleequal(t_client *a, t_client *b) { return a != b; }
+
 int		remove_from_team(t_srv *srv, t_client *c)
 {
 	t_list	*current;
@@ -221,8 +223,6 @@ int		remove_from_team(t_srv *srv, t_client *c)
 		team = current->content;
 		if (!ft_strcmp(team->team_name, c->team_name))
 		{
-			int simpleequal(t_client *a, t_client *b) { return a != b; }
-			void emptydel(t_client *_a) { (void)_a;  }
 			ft_lstdelbyval(&team->team_clients, c, simpleequal, emptydel);
 			return (1);
 		}

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 14:42:39 by selver            #+#    #+#             */
-/*   Updated: 2022/03/05 12:59:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:18:35 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*avance(t_srv *srv, t_world_state *world, t_client *player)
 {
 	move_player(world, player, player->orientation);
 	send_to_all_moniteur(srv, moniteur_ppo(player));
-	return (ft_strdup("ok\n"));
+	return (strdup("ok\n"));
 }
 
 char	*turn_right(t_srv *srv, t_world_state *world, t_client *player)
@@ -29,7 +29,7 @@ char	*turn_right(t_srv *srv, t_world_state *world, t_client *player)
 	(void)world;
 	player->orientation = (player->orientation + 1) % 4;
 	send_to_all_moniteur(srv, moniteur_ppo(player));
-	return (ft_strdup("ok\n"));
+	return (strdup("ok\n"));
 }
 
 char	*turn_left(t_srv *srv, t_world_state *world, t_client *player)
@@ -41,7 +41,7 @@ char	*turn_left(t_srv *srv, t_world_state *world, t_client *player)
 	if ((int)player->orientation > 3)
 		player->orientation = 0;
 	send_to_all_moniteur(srv, moniteur_ppo(player));
-	return (ft_strdup("ok\n"));
+	return (strdup("ok\n"));
 }
 
 char	*kick(t_srv *srv, t_world_state *world, t_client *client)
@@ -72,8 +72,14 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 		direction = ft_vector2(0, 1);
 		dir = 1;
 	}
-	if (asprintf(&format, "deplacement %d\n", dir) < 0)
-		ft_error("Fatal: asprintf a retourné une erreur (" __FILE__ " !!\n");
+	if (use_localized_string(srv->param))
+	{
+		if (asprintf(&format, LOC_KICK_ANSWER, dir) < 0)
+			emergency_exit(__FILE__ ": Fatal: asprintf: ");
+	}
+	else
+		if (asprintf(&format, STANDARD_KICK_ANSWER, dir) < 0)
+			emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	current = world->client_list;
 	send_to_all_moniteur(srv, moniteur_pex(client));
 	while (current)
@@ -90,5 +96,5 @@ char	*kick(t_srv *srv, t_world_state *world, t_client *client)
 		current = current->next;
 	}
 	free(format);
-	return (ft_strdup("ok\n"));
+	return (strdup("ok\n"));
 }

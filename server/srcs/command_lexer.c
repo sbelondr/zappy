@@ -51,7 +51,7 @@ void	parse_command_moniteur(t_srv *srv, t_client *c, char *buf)
 		error = sscanf(buf, "bct %d %d", &args[0], &args[1]);
 		if (error >= 0)
 		{
-			if (args[0] >= 0 && args[1] >= 0 && args[0] < srv->param->world_width && args[2] < srv->param->world_height)
+			if (args[0] >= 0 && args[1] >= 0 && args[0] < srv->param->world_width && args[1] < srv->param->world_height)
 				simple_send(srv, c->id, moniteur_bct(srv->world, args[0], args[1]));
 			else
 				simple_send(srv, c->id, strdup("sbp\n"));	
@@ -112,12 +112,12 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 		if (can_print(srv->param, LOG_ERROR) && can_print(srv->param, LOG_CONNEXION))
 		{
 			set_color(RED, srv->param->flags);
-			printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i].fd);
+			printf(LOG_REFUSED_CONNEXION, srv->frame_nbr, i, srv->client_sck[i]);
 			set_color(RESET, srv->param->flags);
 		}
 		client_exit(srv, i);
 	}
-	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !srv->param->flags & FLAG_TESTER))
+	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !(srv->param->flags & FLAG_TESTER)))
 	{
 		send_to_all_moniteur(srv, moniteur_pnw(client));
 	}
@@ -131,12 +131,17 @@ void	parse_command_tester(t_srv *srv, t_client *tester, char *buf)
 		parse_command_set(srv, tester, buf + 4);
 	else
 		simple_send(srv, tester->id, ft_strdup("suc\n"));
+}
 
+static int is_command(const char *buff, const char *command)
+{
+	return (!strncmp(buff, command, strlen(command)) && buff[strlen(command)] == ' ');
 }
 
 void	command_lexer(t_srv *srv, char *buf, int i)
 {
 	t_client	*c;
+	int			localized;
 
 	c = get_client_by_id(srv, i);
 	if (!c)
@@ -144,44 +149,44 @@ void	command_lexer(t_srv *srv, char *buf, int i)
 		if (can_print(srv->param, LOG_ERROR))
 		{
 			set_color(RED, srv->param->flags);
-			printf("Client #%d is dead, but we are still treating their requests!\n", i);
+			printf(LOG_UNDEAD_CLIENT, i);
 			set_color(RESET, srv->param->flags);
 		}
 		return ;
 	}
-
+	localized = use_localized_string(srv->param);
 	if (c->team_name == NULL)
 		connect_client(srv, buf, c, i);
 	else if (!strcmp(c->team_name, GRAPHIC_TEAM))
 		parse_command_moniteur(srv, c, buf);
 	else if (!strcmp(c->team_name, TESTER_TEAM))
 		parse_command_tester(srv, c, buf);
-	else if (!strcmp(buf, "droite"))
+	else if (!strcmp(buf, command_name(COMMAND_DROITE, localized)))
 		append_command(c, new_command(COMMAND_DROITE, NULL, 7));
-	else if (!strcmp(buf, "gauche"))
+	else if (!strcmp(buf, command_name(COMMAND_GAUCHE, localized)))
 		append_command(c, new_command(COMMAND_GAUCHE, NULL, 7));
-	else if (!strcmp(buf, "avance"))
+	else if (!strcmp(buf, command_name(COMMAND_AVANCE, localized)))
 		append_command(c, new_command(COMMAND_AVANCE, NULL, 7));
-	else if (!strcmp(buf, "kick"))
+	else if (!strcmp(buf, command_name(COMMAND_EXPULSER, localized)))
 		append_command(c, new_command(COMMAND_EXPULSER, NULL, 7));
-	else if (!strcmp(buf, "voir"))
+	else if (!strcmp(buf, command_name(COMMAND_VOIR, localized)))
 		append_command(c, new_command(COMMAND_VOIR, NULL, 7));
-	else if (!strcmp(buf, "incantation"))
+	else if (!strcmp(buf, command_name(COMMAND_INCANTATION, localized)))
 		append_command(c, new_command(COMMAND_INCANTATION, NULL, 300));
-	else if (!strcmp(buf, "fork"))
+	else if (!strcmp(buf, command_name(COMMAND_FORK, localized)))
 		append_command(c, new_command(COMMAND_FORK, NULL, 42));
-	else if (!strcmp(buf, "expulse"))
+	else if (!strcmp(buf, command_name(COMMAND_EXPULSER, localized)))
 		append_command(c, new_command(COMMAND_EXPULSER,	NULL, 7));
-	else if (!strcmp(buf, "connect_nbr"))
+	else if (!strcmp(buf, command_name(COMMAND_CONNECT_NBR, localized)))
 		append_command(c, new_command(COMMAND_CONNECT_NBR, NULL, 0));
-	else if (!strcmp(buf, "inventaire"))
+	else if (!strcmp(buf, command_name(COMMAND_INVENTAIRE, localized)))
 		append_command(c, new_command(COMMAND_INVENTAIRE, NULL, 1));
-	else if (!ft_strncmp(buf, "broadcast ", 10))
+	else if (is_command(buf, command_name(COMMAND_BROADCAST, localized)))
 	{
-		char *arg = ft_strdup(buf + strlen("broadcast "));
+		char *arg = ft_strdup(buf + strlen(command_name(COMMAND_BROADCAST, localized)) + 1);
 		append_command(c, new_command(COMMAND_BROADCAST, arg, 7));
 	}
-	else if (!strncmp(buf, "pose", 4))
+	else if (is_command(buf, command_name(COMMAND_POSER, localized)))
 	{
 		char **arr = ft_strsplit(buf, ' ');
 		if (arr[1] && is_valid_item(arr[1]))
@@ -195,7 +200,7 @@ void	command_lexer(t_srv *srv, char *buf, int i)
 		free(arr[0]);
 		free(arr);
 	}
-	else if (!strncmp(buf, "prendre", 7))
+	else if (is_command(buf, command_name(COMMAND_PRENDRE, localized)))
 	{
 		char **arr = ft_strsplit(buf, ' ');
 		if (arr[1] && is_valid_item(arr[1]))

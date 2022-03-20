@@ -310,7 +310,7 @@ module Client
     options = self.parse
     threads = []
     loop do
-      tt = trantorien.new options[:team] 
+      tt = trantorien.new options[:team], options[:hostname], options[:port]
       if not tt.dead?
         threads << Thread.new { tt.process } 
       end
@@ -320,12 +320,14 @@ module Client
   end
 
   def self.parse
-    options = {:delay => 1}
+    options = {:delay => 1, :port => 8080, :hostname => "localhost"}
     OptionParser.new do |parser|
-      parser.banner = "Usage: #{File.basename($0)} -t team [-d delay]"
+      parser.banner = "Usage: #{File.basename($0)} -t team [-p port] [-h hostname] [-d delay]"
 
-      parser.on("-t", "--team TEAM", String, "Player team")
+      parser.on("-t", "--t TEAM", String, "Player team")
       parser.on("-d", "--delay SECONDS", Float, "Attempt connecting each SECONDS seconds. Defaults to 1. Can take decimal values.")
+      parser.on("-p", "--port PORT", Int, "Port number, 8080 by default")
+      parser.on("-h", "--hostname HOST", Int, "Hostname, localhost by default")
       parser.on("-h", "--help", "Display this help") { puts parser; exit }
 
     end.parse!(into: options)

@@ -17,8 +17,6 @@ void client_exit(t_srv *srv, int id)
 	t_client	*client;
 	t_team		*team;
 
-	int	mcmp(t_client *a, t_client *b) { return a->id - b->id; }
-	void	mdel(t_client *a) { (void)a; }
 
 	client = get_client_by_id(srv, id);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
@@ -34,7 +32,7 @@ void client_exit(t_srv *srv, int id)
 	if (can_print(srv->param, LOG_INFO))
 	{
 		set_color(PURPLE, srv->param->flags);
-		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
+		printf(LOG_CLIENTS_LEFT, ft_lst_size(srv->world->client_list));
 		set_color(RESET, srv->param->flags);
 	}
 	close(srv->client_sck[id].fd);
@@ -74,7 +72,7 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
 		set_color(RED, srv->param->flags);
-		printf("%ld: ERROR! Command sent by [%d] wasn't complete. Was it too long? Command received: %s", srv->frame_nbr, srv->client_sck[i].fd, buff);
+		printf(LOG_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[i], i, buff);
 		set_color(RESET, srv->param->flags);
 	}
 	offset = 0;

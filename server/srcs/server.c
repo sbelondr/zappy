@@ -93,6 +93,11 @@ int main(int ac, char **av)
 
 	param = parse_input(ac, av);
 	st = init_world(param);
+	if (!st.map)
+	{
+		free_params(&param);
+		exit(EXIT_FAILURE);
+	}
 	srv = init_srv(&param, &st);
 	if (!srv)
 		return (EXIT_FAILURE);

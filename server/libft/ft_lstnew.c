@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/08 19:06:45 by jayache           #+#    #+#             */
-/*   Updated: 2018/11/09 15:20:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/15 09:55:43 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 	}
 	else
 	{
-		node->content = malloc(content_size);
+		if (!(node->content = malloc(content_size)))
+		{
+			free(node);
+			return (NULL);
+		}
 		ft_memcpy(node->content, content, content_size);
 		node->content_size = content_size;
 	}
