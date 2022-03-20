@@ -6,6 +6,7 @@ zappy - serveur de jeu
 .SH SYNOPSIS
 zappy -p  <port> -x <width> -y <width> -n <team> [<team>] [<team>] ... -c <nb> -t <delta>
 
+
 .SH DESCRIPTION
 .PP
 Zappy est un jeu entièrement automatique où des programmes informatiques jouent
@@ -23,7 +24,19 @@ Le jeu se termine quand une équipe réussi à faire atteindre le niveau 8 à 6 
 
 .SS Extensions
 .PP
-Cette implémentation possède plusieurs extensions dans le protocole de communication. Listés sont :
+Cette implémentation possède plusieurs extensions dans le protocole de communication. Listés ici :
+
+.TS
+tab(@), left, box;
+c | c
+rB | r.
+COMMAND@DESCRIPTION
+_
+tac N@Nombre de clients pouvant se connecter sans oeufs
+mac N@Nombre de clients max par équipe
+.TE
+
+Il est possible de désactiver toutes les extensions avec l'option -P.
 
 .SH OPTIONS
 .B Options obligatoires :
@@ -57,10 +70,10 @@ Affiche l'aide.
 Nombre maximum de clients qui peuvent se connecter dans une équipe, y compris avec des oeufs.
 .TP
 .BI "-G, --gen-function " " " < "STANDARD" | "UNIFORM" >
-Change la fonction utilisée pour générer des ressources sur la carte.\n
+Change la fonction utilisée pour générer des ressources sur la carte.
 
 .I STANDARD
-distribue les ressources en fonction de l'emplacement, de façon à ce que les ressources ne soient pas toutes au même endroit.\n
+distribue les ressources en fonction de l'emplacement, de façon à ce que les ressources ne soient pas toutes au même endroit.
 
 .I UNIFORM
 génère également les ressources sur toute la carte.
@@ -114,3 +127,10 @@ et change la fonction de génération de ressources par
 , et génère des ressources tous les 10000 ticks.
 .RE
 
+.SH VALEURS DE RETOUR
+.TP
+.B 0
+S'est exécuté avec succès
+.TP
+.B 1
+Une erreur irrécupérable est survenue.
