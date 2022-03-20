@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/11 14:00:37 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/20 10:07:51 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int main(int ac, char **av)
 	if (!srv)
 		return (EXIT_FAILURE);
 	g_srv = &srv;
-//	atexit(ft_quit);
 	setup_signal();
 	send_to_all_moniteur(srv, moniteur_mct(srv->world));
 	yellow();
@@ -111,7 +110,7 @@ int main(int ac, char **av)
 	srv->client_sck[0].events = POLLIN;
 	while (!end_server)
 	{
-		printf("Waiting on poll() srv->n_client_sck = %d ...\n", srv->n_client_sck);
+//		printf("Waiting on poll() srv->n_client_sck = %d ...\n", srv->n_client_sck);
 		rc = poll(srv->client_sck, srv->n_client_sck, timeout);
 		if (rc < 0)
 		{
@@ -121,13 +120,16 @@ int main(int ac, char **av)
 		tmp_n_client_sck = srv->n_client_sck;
 		for (int i = 0; i < tmp_n_client_sck; i++)
 		{
+			// check if there is no action with this socket
 			if (srv->client_sck[i].revents == 0 \
 					|| srv->client_sck[i].revents != POLLIN)
 				continue ;
 			if (srv->client_sck[i].fd == srv->master_sck)
-				end_server = add_client(srv, end_server);
+			{
+				if (!add_client(srv)) break ;
+			}
 			else
-				ft_listen_srv(srv, i);
+				listen_client(srv, i);
 		}
 		game_tick(srv);
 	}

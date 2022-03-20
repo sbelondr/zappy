@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 10:31:50 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/20 11:12:29 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 			printf("%ld: Connexion refused for SD: #%d\n", srv->frame_nbr, srv->client_sck[i].fd);
 			set_color(RESET, srv->param->flags);
 		}
-		ft_client_exit(srv, i);
+		client_exit(srv, i);
 	}
 	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !srv->param->flags & FLAG_TESTER))
 	{

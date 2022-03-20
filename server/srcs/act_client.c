@@ -6,41 +6,13 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/11 10:27:59 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/20 11:18:03 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 
-void	remove_from_client_list(t_world_state *world, t_client *client)
-{
-	t_list		*current;
-	t_list		*last;
-	t_list		*to_free;
-	t_client	*tmp;
-
-	current = world->client_list;
-	last = NULL;
-	while (current)
-	{
-		to_free = NULL;
-		tmp = current->content;
-		if (tmp->id == client->id)
-		{
-			if (last)
-				last->next = current->next;
-			else
-				world->client_list = current->next;
-			to_free = current;
-		}
-		last = current;
-		current = current->next;
-		if (to_free)
-			free(to_free);
-	}
-}
-
-void ft_client_exit(t_srv *srv, int i)
+void client_exit(t_srv *srv, int id)
 {
 	t_client	*client;
 	t_team		*team;
@@ -48,7 +20,7 @@ void ft_client_exit(t_srv *srv, int i)
 	int	mcmp(t_client *a, t_client *b) { return a->id - b->id; }
 	void	mdel(t_client *a) { (void)a; }
 
-	client = get_client_by_id(srv, i);
+	client = get_client_by_id(srv, id);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
 	if (client->team_name && !is_special_team_member(client))
 	{
@@ -65,8 +37,8 @@ void ft_client_exit(t_srv *srv, int i)
 		printf("There is still %ld clients left!\n", ft_lst_size(srv->world->client_list));
 		set_color(RESET, srv->param->flags);
 	}
-	close(srv->client_sck[i].fd);
-	srv->client_sck[i].fd = -1;
+	close(srv->client_sck[id].fd);
+	srv->client_sck[id].fd = -1;
 }
 
 //Delete the newline on the string/cut the string via newline, returns the number of lines found
@@ -89,7 +61,7 @@ static int		delete_newline(char *buff)
 }
 
 
-void ft_client_sent_data(t_srv *srv, char *buff, int valread, int i)
+void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 {
 	int	commands;
 	int	offset;

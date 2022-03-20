@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/11 14:01:28 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/20 10:03:33 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,19 @@
  * add new client
  * Args:
  *	srv: struct server
+ *	end_server: check error with accept
  * Return:
- *	if client is accept
+ *	if error with the accept call: return 1
  */
-int	add_client(t_srv *srv, int end_server)
+int	add_client(t_srv *srv)
 {
 	int	new_sd = 0;
 
-	new_sd = accept(srv->master_sck, NULL, NULL) ;
-	//		(struct sockaddr *)&(srv->address), \
-	(socklen_t *)&(srv->addrlen));
+	new_sd = accept(srv->master_sck, NULL, NULL);
 	if (new_sd < 0)
 	{
 		perror(" accept() failed");
-		end_server = 1;
-		return (end_server);
+		return (-1);
 	}
 	printf("New incoming connection - %d\n", new_sd);
 	srv->client_sck[srv->n_client_sck].fd = new_sd;
@@ -45,7 +43,6 @@ int	add_client(t_srv *srv, int end_server)
 	ft_lst_append(&srv->world->client_list, \
 			ft_lstnew_no_copy(new_client(srv->n_client_sck), \
 				sizeof(t_client)));
-	//		new_sd = -1;
 	++srv->n_client_sck;
-	return (end_server);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 13:06:37 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/20 11:11:36 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int				asprintf(char **strp, const char *fmt, ...);
 void			setup_signal(void);
 void			ft_quit(int sig);
 //void			ft_add_new_client(t_srv *srv, fd_set *readfds);
-int				add_client(t_srv *srv, int end_server);
+int				add_client(t_srv *srv);
 int				ft_set_max_sd(t_srv *srv, fd_set *readfds);
 t_srv			*init_srv(t_param *param, t_world_state *st);
 
@@ -108,10 +108,9 @@ t_game_action	get_action_from_enum(t_command_type command);
  */
 
 void			parse_command_set(t_srv *srv, t_client *tester, char *command);
-void			ft_client_exit(t_srv *srv, int id);
-void			ft_client_exit(t_srv *srv, int i);
-void			ft_client_sent_data(t_srv *srv, char *buff, int valread, int i);
-void			ft_listen_srv(t_srv *srv, int index);
+void			client_exit(t_srv *srv, int id);
+void			client_sent_data(t_srv *srv, char *buff, int valread, int i);
+void			listen_client(t_srv *srv, int index);
 void			simple_send(t_srv *srv, int id, char *msg);
 void			simple_send_no_free(t_srv *srv, int id, char const *msg);
 
