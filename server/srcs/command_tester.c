@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/08 10:17:17 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/21 09:24:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,19 @@ free:
 	return (nb);
 }
 
-static void	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
+static int	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
 {
 	if (!is_special_team_member(target))
 	{
 		kill_player(srv, target);
+		return 1;
 	}
 	else if (target->id != tester->id)
 	{
 		ft_client_exit(srv, target->id);
+		return 1;
 	}
+	return 0;
 }
 
 static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
@@ -91,8 +94,10 @@ static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
 		target = get_client_by_id(srv, target_id);
 		if (target)
 		{
-			kill_any_client(srv, target, tester);
-			simple_send_no_free(srv, tester->id, "ok\n");
+			if (kill_any_client(srv, target, tester))
+				simple_send_no_free(srv, tester->id, "ok\n");
+			else	
+				simple_send_no_free(srv, tester->id, "ko\n");
 		}
 		else
 			simple_send(srv, tester->id, strdup("sbp\n"));
@@ -236,7 +241,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		if (error >= 0 && arg[0] > 0)
 		{
 			srv->world->params.team_hard_limit = arg[0];
-			simple_send_no_free(srv, tester->id, "ok\n");
+			simple_send(srv, tester->id, moniteur_mac(srv->world));
 		}
 		else
 			simple_send_no_free(srv, tester->id, "sbp\n");
@@ -247,7 +252,7 @@ void	parse_command_set(t_srv *srv, t_client *tester, char *command)
 		if (error >= 0 && arg[0] > 0)
 		{
 			srv->world->params.allowed_clients_amount = arg[0];
-			simple_send_no_free(srv, tester->id, "ok\n");
+			simple_send(srv, tester->id, moniteur_tac(srv->world));
 		}
 		else
 			simple_send_no_free(srv, tester->id, "sbp\n");

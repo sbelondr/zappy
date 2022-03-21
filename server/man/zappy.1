@@ -28,16 +28,44 @@ Cette implémentation possède plusieurs extensions dans le protocole de communi
 
 .TS
 tab(@), left, box;
-c | c
-rB | r.
-COMMAND@DESCRIPTION
+c | c | c | c
+lB | l | r | r.
+COMMAND@DESCRIPTION@RETOURNE@CLIENT
 _
-tac N@Nombre de clients pouvant se connecter sans oeufs
-mac N@Nombre de clients max par équipe
+tac@Nombre de clients pouvant se connecter sans oeufs@tac N@GRAPHIC
+mac@Nombre de clients max par équipe@mac N@GRAPHIC
+_
+get COMMAND@Exécute COMMAND comme si le client appartenait au groupe GRAPHIC@Dépend de COMMAND@TESTER
+set pdi #n@Tue le client #n et le déconnecte. Ne peut pas se tuer soi-même@ok/ko@TESTER
+set pdi all@Tue et déconnecte tous les clients@ @TESTER
+set pdi others@Tue et déconnecte tous les clients, excepté celui qui lance la commande@ok@TESTER
+set pdi self@Tue et déconnecte le client qui lance la commande@ @TESTER
+set edi #n@Tue l'oeuf #n@ok@TESTER
+set edi all@Tue tout les oeufs@ok@TESTER
+set flg hunger <on|off>@Active ou désactive la faim sur le serveur@ok@TESTER
+set pin #n q q q q q q q@Change l'inventaire du client #n@ok@TESTER
+set pin #n clear@Vide l'inventaire du client #n@ok@TESTER
+set ppo #n X Y O@Change la position et l'orientation du client #n@ok@TESTER
+set sst T@Change l'unité de temps sur le serveur@sgt T@TESTER
+set mac M@Change la limite de clients par équipe@mac M@TESTER
+set tac A@Change la limite minimale de clients par équipe@tac A@TESTER
+set mct q q q q q q q@Change les ressources présentes sur toutes les cases de la carte@ok@TESTER
+set mct clear@Enlève toutes les ressources de la carte@ok@TESTER
+set bct X Y q q q q q q q@Change les ressources présentes sur une case@ok@TESTER
+set bct X Y clear@Vide les ressources présentes sur une case@ok@TESTER
+set plv #n L@Change le niveau d'un joueur@ok@TESTER
+
 .TE
 
+Note: toutes les commandes et toutes les valeurs de retours sont terminés par un "\\n"
 Il est possible de désactiver toutes les extensions avec l'option -P.
 
+.SS Rôles spéciaux
+Il existe 2 équipes qui ne sont pas soumis aux mêmes règles et n'ont pas accès aux mêmes commande, GRAPHIC et TESTER.
+GRAPHIC peut accéder a tous les paramètres du jeu en lecture seule, mais ne peut modifier que le delta.
+TESTER peut faire tout ce que GRAPHIC peut faire, mais il peut en plus impacter le jeu directement. (voir tableau ci-dessus pour les commandes)
+
+Le client TESTER ne peut se connecter que si l'option -v est passée en paramètre.
 .SH OPTIONS
 .B Options obligatoires :
 .TP
