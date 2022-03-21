@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/05 13:31:41 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/11 10:28:30 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 		dprintf(STDERR_FILENO, "Malloc error\n");
 		exit(EXIT_FAILURE);
 	}
-	if (!(srv->client_sck = (int*)calloc(sizeof(int), param->team_hard_limit * 2))) //TODO call dedicated function
-		ft_error("Can't allocate memory\n");
+//	if (!(srv->client_sck = (int*)calloc(sizeof(int), param->team_hard_limit * 2))) //TODO call dedicated function
+//		ft_error("Can't allocate memory\n");
 	if ((srv->master_sck = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 	{
 		dprintf(STDERR_FILENO, "Socket not respect you\n");

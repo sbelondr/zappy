@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2022/02/15 10:18:02 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/11 13:06:17 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,12 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 	}
 }
 
-struct timeval	delta_to_time(int delta)
+int	delta_to_time(int delta)
 {
-	struct timeval	ret;
+	int				ret;
 	double			time;
 
 	time = 1.0 / delta;
-	ret.tv_sec = (int)time;
-	ret.tv_usec = (time - ret.tv_sec) * 1000000;
+	ret = time * 1000;
 	return (ret);
 }

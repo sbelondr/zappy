@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/15 10:25:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/20 11:12:29 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 			printf(LOG_REFUSED_CONNEXION, srv->frame_nbr, i, srv->client_sck[i]);
 			set_color(RESET, srv->param->flags);
 		}
-		ft_client_exit(srv, i);
+		client_exit(srv, i);
 	}
 	else if (strcmp(client->team_name, GRAPHIC_TEAM) && (strcmp(client->team_name, TESTER_TEAM) || !(srv->param->flags & FLAG_TESTER)))
 	{

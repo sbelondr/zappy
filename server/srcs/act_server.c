@@ -6,74 +6,43 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/03 09:17:33 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/20 10:03:33 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 
-void ft_add_new_client(t_srv *srv, fd_set *readfds)
+/*
+ * add new client
+ * Args:
+ *	srv: struct server
+ *	end_server: check error with accept
+ * Return:
+ *	if error with the accept call: return 1
+ */
+int	add_client(t_srv *srv)
 {
-	int new_socket;
+	int	new_sd = 0;
 
-	// FD_ISSET() tests to see if a file descriptor is part of the set
-	// si il est > a 0, un nouveau client c'est connecte
-	if (FD_ISSET(srv->master_sck, readfds))
+	new_sd = accept(srv->master_sck, NULL, NULL);
+	if (new_sd < 0)
 	{
-		int i;
-		// accept: create new socket and return file descriptor
-		if ((new_socket = accept(srv->master_sck,
-						(struct sockaddr *)&(srv->address),
-						(socklen_t *)&(srv->addrlen))) < 0)
-		{
-			red();
-			dprintf(STDERR_FILENO, "Socket didn't create\n");
-			reset();
-			return; // (EXIT_FAILURE);
-		}
-		if (can_print(srv->param, LOG_CONNEXION))
-		{
-			yellow();
-			printf("New connection: fd -> %d\n", new_socket);
-			reset();
-		}
-		i = -1;
-		while (++i < srv->param->team_hard_limit * 2) //TODO: change 2 by number of teams 
-		{
-			if (srv->client_sck[i] == 0)
-			{
-				srv->client_sck[i] = new_socket;
-				if (can_print(srv->param, LOG_CONNEXION))
-				{
-					yellow();
-					printf("Add new client: %d\n", i);
-					reset();
-				}
-				simple_send(srv, i, ft_strdup("BIENVENUE\n"));
-				ft_lst_append(&srv->world->client_list, ft_lstnew_no_copy(new_client(i), sizeof(t_client)));
-				break;
-			}
-		}
-		//loops through eggs
+		perror(" accept() failed");
+		return (-1);
 	}
-}
-
-// use ft_set_max_sd to detect new activity -> max_sd + 1
-int ft_set_max_sd(t_srv *srv, fd_set *readfds)
-{
-	int sd, max_sd;
-	int i;
-
-	max_sd = srv->master_sck;
-	i = -1;
-	while (++i < srv->param->team_hard_limit * 2)
+	printf("New incoming connection - %d\n", new_sd);
+	srv->client_sck[srv->n_client_sck].fd = new_sd;
+	srv->client_sck[srv->n_client_sck].events = POLLIN;
+	if (can_print(srv->param, LOG_CONNEXION))
 	{
-		sd = srv->client_sck[i];
-		if (sd > 0)
-			FD_SET(sd, readfds);
-		// increase sd
-		if (sd > max_sd)
-			max_sd = sd;
+		yellow();
+		printf("Add new client: %d\n", srv->n_client_sck);
+		reset();
 	}
-	return (max_sd);
+	simple_send(srv, srv->n_client_sck, ft_strdup("BIENVENUE\n"));
+	ft_lst_append(&srv->world->client_list, \
+			ft_lstnew_no_copy(new_client(srv->n_client_sck), \
+				sizeof(t_client)));
+	++srv->n_client_sck;
+	return (1);
 }
