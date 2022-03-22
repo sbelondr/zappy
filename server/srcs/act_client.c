@@ -6,14 +6,14 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/22 09:16:15 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 09:34:06 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 
-static int	mcmp(t_egg *a, t_egg *b) { 	return a->id - b->id; }
-static void	mdel(t_egg *a) { (void)a; }
+static int	mcmp(t_client *a, t_client *b) { 	return a->id - b->id; }
+static void	mdel(t_client *a) { (void)a; }
 
 void client_exit(t_srv *srv, int id)
 {
