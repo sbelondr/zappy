@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/20 11:12:29 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/22 09:39:59 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	connect_client(t_srv *srv, char *buf, t_client *client, int i)
 		if (can_print(srv->param, LOG_ERROR) && can_print(srv->param, LOG_CONNEXION))
 		{
 			set_color(RED, srv->param->flags);
-			printf(LOG_REFUSED_CONNEXION, srv->frame_nbr, i, srv->client_sck[i]);
+			printf(LOG_REFUSED_CONNEXION, srv->frame_nbr, i, srv->client_sck[i].fd);
 			set_color(RESET, srv->param->flags);
 		}
 		client_exit(srv, i);
