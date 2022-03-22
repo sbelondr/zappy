@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 10:12:45 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 10:15:15 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 	"-t, --time <n>             diviseur de l'unité de temps (plus t est grand, plus le jeu va vite)\n"\
 	"-m, --max <n>              nombre maximum de clients par équipe (300 par défaut)\n" \
 	"-h, --help                 affiche l'usage\n" \
-	"-H, --hunger               désactive la faim\n" \
+	"-H, --no-hunger            désactive la faim\n" \
+	"-R, --no-res-generation    désactive la génération de ressources.\n" \
 	"-v, --verification         permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
 	"-G, --gen-frequency <N>    régénère des ressources tous les N ticks (1000 par defaut)\n" \
 	"-g, --gen-function <F>     change l'algorithme de génération de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
@@ -42,7 +43,6 @@
 	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en paramètre.\n" \
 	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n" \
 	"-L, --localized			localize les commandes. Aucun effet en français.\n" \
-	"-R, --no-res-generation    désactive la génération de ressources.\n"
 
 #define LOCUPPERCASEFOOD		"NOURRITURE"
 #define LOCUPPERCASELINEMATE	"LINEMATE"

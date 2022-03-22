@@ -43,7 +43,7 @@ set pdi self@Tue et déconnecte le client qui lance la commande@ @TESTER
 set edi #n@Tue l'oeuf #n@ok@TESTER
 set edi all@Tue tout les oeufs@ok@TESTER
 set flg hunger <on|off>@Active ou désactive la faim sur le serveur@ok@TESTER
-set flg resgen <on|off>@Active ou désactive la génération des ressources@ok@TESTEr
+set flg resgen <on|off>@Active ou désactive la génération des ressources@ok@TESTER
 set pin #n q q q q q q q@Change l'inventaire du client #n@ok@TESTER
 set pin #n clear@Vide l'inventaire du client #n@ok@TESTER
 set ppo #n X Y O@Change la position et l'orientation du client #n@ok@TESTER
@@ -78,6 +78,8 @@ TESTER peut faire tout ce que GRAPHIC peut faire, mais il peut en plus impacter 
 Ces équipes ne peuvent PAS gagner la partie et ne peuvent PAS mourir naturellement, elles ne sont pas considérées comme des joueurs.
 
 Le groupe TESTER n'est spécial QUE si l'option -v est passée en paramètre. Si ce n'est pas le cas, il se comporte comme un joueur normal.
+.SS Localisation
+Il est possible de localiser les commandes des clients avec -L. Cette option n'a aucun effet en français car le standard est déjà prévu pour cette langue.
 .SH OPTIONS
 .B Options obligatoires :
 .TP
@@ -123,7 +125,7 @@ Génère des ressources tous les
 .I N
 ticks.
 .TP
-.BI "-H, --hunger"
+.BI "-H, --no-hunger"
 Désactive la faim. Les joueurs n'ont plus besoin de nourriture pour survivre.
 .TP
 .BI "-R, --no-ressource-generation"
