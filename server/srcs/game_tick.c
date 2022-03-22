@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 10:04:21 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:11:05 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,9 @@ void	client_tick(t_srv *srv, t_list *player_list)
 
 static int can_generate(t_srv *srv)
 {
-	return (srv->param->generation_frequency != 0 &&
-			srv->frame_nbr % srv->param->generation_frequency == 0 &&
-			!(srv->param->flags & FLAG_NORESGEN));
+	if (srv->param->flags & FLAG_NORESGEN || srv->param->generation_frequency == 0)
+		return 0;
+	return !(srv->frame_nbr % srv->param->generation_frequency);
 }
 
 void	game_tick(t_srv *srv)
