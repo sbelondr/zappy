@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 11:11:02 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 12:55:56 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:02:12 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,14 @@ const char	*command_name(t_command_type command_id, int localized)
 		case COMMAND_GAUCHE:		return (localized ? LOC_COMMAND_GAUCHE		: STANDARD_COMMAND_GAUCHE		); 	break;
 		case COMMAND_DROITE:		return (localized ? LOC_COMMAND_DROITE		: STANDARD_COMMAND_DROITE		); 	break;
 		case COMMAND_VOIR:			return (localized ? LOC_COMMAND_VOIR		: STANDARD_COMMAND_VOIR			); 	break;
+		case COMMAND_FORK:			return (localized ? LOC_COMMAND_FORK		: STANDARD_COMMAND_FORK			); 	break;
 		case COMMAND_EXPULSER:		return (localized ? LOC_COMMAND_KICK		: STANDARD_COMMAND_KICK			); 	break;
 		case COMMAND_INCANTATION:	return (localized ? LOC_COMMAND_INCANTATION : STANDARD_COMMAND_INCANTATION	); 	break;
 		case COMMAND_INVENTAIRE:	return (localized ? LOC_COMMAND_INVENTAIRE	: STANDARD_COMMAND_INVENTAIRE	); 	break;
 		case COMMAND_BROADCAST:		return (localized ? LOC_COMMAND_BROADCAST	: STANDARD_COMMAND_BROADCAST	); 	break;
 		case COMMAND_PRENDRE:		return (localized ? LOC_COMMAND_PRENDRE		: STANDARD_COMMAND_PRENDRE		); 	break;
 		case COMMAND_POSER:			return (localized ? LOC_COMMAND_POSE		: STANDARD_COMMAND_POSE			); 	break;
+		case COMMAND_CONNECT_NBR:	return (localized ? LOC_COMMAND_CONNECT_NBR	: STANDARD_COMMAND_CONNECT_NBR  ); 	break;
 		default:					return NULL;																	break;
 	}
 }

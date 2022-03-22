@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 10:15:15 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:02:43 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 	"    --[no-]print-ticks     imprime le numero de tick quand un nouveau tour commence.\n" \
 	"    --[no-]print-sent      imprive ce que le serveur renvoie au client.\n" \
 	"    --[no-]print-received  imprime ce que le serveur reçoit des clients.\n" \
-	"    --[no-]print-info      imprime des infos suppl mentaires.\n" \
+	"    --[no-]print-info      imprime des infos supplémentaires.\n" \
 	"    --[no-]print-action    imprime les actions que les entreprennent.\n" \
 	"    --[no-]print-connexion imprime les nouvelles connexions.\n" \
 	"    --[no-]print-egg-death imprime les oeufs qui pourrissent.\n" \
@@ -73,6 +73,7 @@
 #define LOC_COMMAND_POSE	"pose"
 #define LOC_COMMAND_PRENDRE	"prendre"
 #define LOC_COMMAND_FORK	"fork"
+#define LOC_COMMAND_CONNECT_NBR	"connect_nbr"
 
 #define LOC_FORK_ANSWER				"niveau actuel : %d\n"
 #define LOC_FORK_ANSWER_CURRENT		"elevation en cours\n"
