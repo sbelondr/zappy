@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/20 10:07:51 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/22 09:10:47 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ int main(int ac, char **av)
 	reset();
 	timeout = delta_to_time(srv->param->time_delta);
 
-	srv->n_client_sck = 1;
 	tmp_n_client_sck = srv->n_client_sck;
 	srv->client_sck[0].fd = srv->master_sck;
 	srv->client_sck[0].events = POLLIN;

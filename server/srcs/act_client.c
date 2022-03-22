@@ -6,11 +6,14 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/20 11:18:03 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/22 09:16:15 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
+
+static int	mcmp(t_egg *a, t_egg *b) { 	return a->id - b->id; }
+static void	mdel(t_egg *a) { (void)a; }
 
 void client_exit(t_srv *srv, int id)
 {
@@ -72,7 +75,7 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
 		set_color(RED, srv->param->flags);
-		printf(LOG_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[i], i, buff);
+		printf(LOG_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[i].fd, i, buff);
 		set_color(RESET, srv->param->flags);
 	}
 	offset = 0;
@@ -84,6 +87,7 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 			printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i].fd, buff); 
 			set_color(RESET, srv->param->flags);
 		}
+		printf("%d\n", i);
 		command_lexer(srv, buff + offset, i);
 		offset = strlen(buff) + 1;
 	}

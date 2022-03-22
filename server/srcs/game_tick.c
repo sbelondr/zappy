@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 13:15:55 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 09:19:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	treat_command(t_srv *srv, t_client *client, int client_id)
 
 	t_game_action act = get_action_from_enum(client->buffer[0].command);
 	msg = act(srv, srv->world, client);
-	simple_send(srv, client_id, msg);
+	simple_send(srv, client->id, msg);
 	shift_command(client);
 }
 
