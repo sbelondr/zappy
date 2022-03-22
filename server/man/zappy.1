@@ -43,6 +43,7 @@ set pdi self@Tue et déconnecte le client qui lance la commande@ @TESTER
 set edi #n@Tue l'oeuf #n@ok@TESTER
 set edi all@Tue tout les oeufs@ok@TESTER
 set flg hunger <on|off>@Active ou désactive la faim sur le serveur@ok@TESTER
+set flg resgen <on|off>@Active ou désactive la génération des ressources@ok@TESTER
 set pin #n q q q q q q q@Change l'inventaire du client #n@ok@TESTER
 set pin #n clear@Vide l'inventaire du client #n@ok@TESTER
 set ppo #n X Y O@Change la position et l'orientation du client #n@ok@TESTER
@@ -57,15 +58,28 @@ set plv #n L@Change le niveau d'un joueur@ok@TESTER
 
 .TE
 
-Note: toutes les commandes et toutes les valeurs de retours sont terminés par un "\\n"
+.TP
+.B *
+Toutes les commandes et toutes les valeurs de retours sont terminés par un "\\n".
+.TP
+.B *
 Il est possible de désactiver toutes les extensions avec l'option -P.
+.TP 
+.B *
+Une valeur de retour vide signifie que le serveur ne renvoie aucune réponse.
+.TP 
+.B *
+Toutes ces commandes sont exécutées dès que le serveur reçoit la requête.
 
 .SS Rôles spéciaux
 Il existe 2 équipes qui ne sont pas soumis aux mêmes règles et n'ont pas accès aux mêmes commande, GRAPHIC et TESTER.
 GRAPHIC peut accéder a tous les paramètres du jeu en lecture seule, mais ne peut modifier que le delta.
 TESTER peut faire tout ce que GRAPHIC peut faire, mais il peut en plus impacter le jeu directement. (voir tableau ci-dessus pour les commandes)
+Ces équipes ne peuvent PAS gagner la partie et ne peuvent PAS mourir naturellement, elles ne sont pas considérées comme des joueurs.
 
-Le client TESTER ne peut se connecter que si l'option -v est passée en paramètre.
+Le groupe TESTER n'est spécial QUE si l'option -v est passée en paramètre. Si ce n'est pas le cas, il se comporte comme un joueur normal.
+.SS Localisation
+Il est possible de localiser les commandes des clients avec -L. Cette option n'a aucun effet en français car le standard est déjà prévu pour cette langue.
 .SH OPTIONS
 .B Options obligatoires :
 .TP
@@ -97,7 +111,7 @@ Affiche l'aide.
 .BI "-m, --max" " N"
 Nombre maximum de clients qui peuvent se connecter dans une équipe, y compris avec des oeufs.
 .TP
-.BI "-G, --gen-function " " " < "STANDARD" | "UNIFORM" >
+.BI "-g, --gen-function " " " < "STANDARD" | "UNIFORM" >
 Change la fonction utilisée pour générer des ressources sur la carte.
 
 .I STANDARD
@@ -106,13 +120,18 @@ distribue les ressources en fonction de l'emplacement, de façon à ce que les r
 .I UNIFORM
 génère également les ressources sur toute la carte.
 .TP
-.BI "-g, --gen-frequency" " N"
+.BI "-G, --gen-frequency" " N"
 Génère des ressources tous les
 .I N
 ticks.
 .TP
-.BI "-H, --hunger"
+.BI "-H, --no-hunger"
 Désactive la faim. Les joueurs n'ont plus besoin de nourriture pour survivre.
+.TP
+.BI "-R, --no-ressource-generation"
+Désactive la génération de ressource. Même effet que 
+.B -G 0
+, utile si vous comptez l'activer plus tard avec un client TESTER.
 .TP
 .BI "-s, --silent"
 Mode silencieux. N'imprime rien sur la sortie standard.
@@ -128,6 +147,9 @@ Désactive toutes les extensions du serveur ne respectant pas la RFC.
 .TP
 .BI "-L, --localized"
 Localize les noms de commandes et de ressources en fonction de la langue dans laquelle a été installé le serveur.
+.TP
+.BI "-M, --MIT"
+Imprime la license du projet.
 
 
 
@@ -162,3 +184,12 @@ S'est exécuté avec succès
 .TP
 .B 1
 Une erreur irrécupérable est survenue.
+.TP
+.B 2
+Mauvais paramètre.
+
+.SH AUTEURS
+jayache et sbelondr
+
+.SH COPYRIGHT
+L'entièreté du projet est mise à disposition sous les termes de la MIT License.

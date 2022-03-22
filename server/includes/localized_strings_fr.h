@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 13:24:22 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:31:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,35 @@
 
 #define USAGE	"Usage: ./serveur -p <port> -x <width> -y <height> -n <team> [<team>] [<team>] ... -c <nb> -t <t>\n" \
 	"Les arguments obligatoires aux options longues le sont aussi pour les options courtes.\n" \
-	"-p, --port <port>          numero de port\n" \
+	"-p, --port <port>          numéro de port\n" \
 	"-x, --width <n>            largeur du monde\n"\
-	"-y, --height <n>           hauteur du Monde\n"\
+	"-y, --height <n>           hauteur du monde\n"\
 	"-n, --name <name>          nom_equipe_1 nom_equipe_2 ...\n"\
 	"-c, --clients-allowed <n>  nombre de client autorises au commencement du jeu\n" \
-	"-t, --time <n>             diviseur de l'unite de temps (plus t est grand, plus le jeu va vite)\n"\
-	"-m, --max <n>              nombre maximum de clients par equipe (300 par defaut)\n" \
+	"-t, --time <n>             diviseur de l'unité de temps (plus t est grand, plus le jeu va vite)\n"\
+	"-m, --max <n>              nombre maximum de clients par équipe (300 par défaut)\n" \
 	"-h, --help                 affiche l'usage\n" \
-	"-H, --hunger               desactive la faim\n" \
+	"-H, --no-hunger            désactive la faim\n" \
+	"-R, --no-res-generation    désactive la génération de ressources.\n" \
 	"-v, --verification         permet la connexion du groupe special TESTER, pour passer les tests unitaires\n" \
-	"-G, --gen-frequency <N>    regenere des ressources tous les N ticks (1000 par defaut)\n" \
-	"-g, --gen-function <F>     change l'algorithme de generation de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
-	"-s, --silent               n'imprime rien. Peut etre combine avec les autres options.\n" \
+	"-G, --gen-frequency <N>    régénère des ressources tous les N ticks (1000 par defaut)\n" \
+	"-g, --gen-function <F>     change l'algorithme de génération de ressources. Valeurs possibles : STANDARD, UNIFORM\n" \
+	"-s, --silent               n'imprime rien. Peut être combiné avec les autres options.\n" \
 	"-V, --verbose              imprime TOUT.\n" \
 	"    --[no-]print-ticks     imprime le numero de tick quand un nouveau tour commence.\n" \
 	"    --[no-]print-sent      imprive ce que le serveur renvoie au client.\n" \
-	"    --[no-]print-received  imprime ce que le serveur recoit des clients.\n" \
-	"    --[no-]print-info      imprime des infos supplementaires.\n" \
+	"    --[no-]print-received  imprime ce que le serveur reçoit des clients.\n" \
+	"    --[no-]print-info      imprime des infos supplémentaires.\n" \
 	"    --[no-]print-action    imprime les actions que les entreprennent.\n" \
 	"    --[no-]print-connexion imprime les nouvelles connexions.\n" \
 	"    --[no-]print-egg-death imprime les oeufs qui pourrissent.\n" \
 	"    --[no-]print-death     imprime les morts des joueurs.\n" \
 	"    --[no-]print-error     imprime les erreurs du serveur.\n" \
 	"-C, --[no-]print-colors    colorize les messages selon leur type.\n" \
-	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en parametre.\n" \
+	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en paramètre.\n" \
 	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n" \
-	"-L, --localized			localize les commandes. Aucun effet en français.\n"
+	"-L, --localized			localize les commandes. Aucun effet en français.\n" \
+	"-M, --MIT                  imprime la license (en anglais).\n" \
 
 #define LOCUPPERCASEFOOD		"NOURRITURE"
 #define LOCUPPERCASELINEMATE	"LINEMATE"
@@ -72,6 +74,7 @@
 #define LOC_COMMAND_POSE	"pose"
 #define LOC_COMMAND_PRENDRE	"prendre"
 #define LOC_COMMAND_FORK	"fork"
+#define LOC_COMMAND_CONNECT_NBR	"connect_nbr"
 
 #define LOC_FORK_ANSWER				"niveau actuel : %d\n"
 #define LOC_FORK_ANSWER_CURRENT		"elevation en cours\n"

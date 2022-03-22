@@ -6,14 +6,15 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 13:36:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:27:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
-#include "localized_strings_en.h"
+#include "localized_strings_fr.h"
+#include "license.h"
 
 #define BUFF_READ			2024
 
@@ -28,6 +29,7 @@
 #define FLAG_LOCALIZED		4
 #define FLAG_PEDANTIC		8
 #define FLAG_COLOR			16
+#define FLAG_NORESGEN		32
 
 #define STANDARDFOOD		"nourriture"
 #define STANDARDLINEMATE	"linemate"
@@ -49,10 +51,13 @@
 #define STANDARD_COMMAND_POSE			"pose"
 #define STANDARD_COMMAND_PRENDRE		"prendre"
 #define STANDARD_COMMAND_FORK			"fork"
+#define STANDARD_COMMAND_CONNECT_NBR	"connect_nbr"
 
 #define STANDARD_FORK_ANSWER			"niveau actuel : %d\n"
 #define STANDARD_FORK_ANSWER_CURRENT	"elevation en cours\n"
 #define STANDARD_KICK_ANSWER			"deplacement %d\n"
+
+#define EXIT_BAD_PARAMETER				2
 
 typedef enum	e_colors {
 	RESET = 0,
