@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 11:02:43 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:31:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@
 	"-l, --log-replay [NAME]    sauvegarde la partie sous le nom donne en paramètre.\n" \
 	"-P, --pedantic				fait tourner le serveur en mode strictement conformant au sujet, sans extensions.\n" \
 	"-L, --localized			localize les commandes. Aucun effet en français.\n" \
+	"-M, --MIT                  imprime la license (en anglais).\n" \
 
 #define LOCUPPERCASEFOOD		"NOURRITURE"
 #define LOCUPPERCASELINEMATE	"LINEMATE"

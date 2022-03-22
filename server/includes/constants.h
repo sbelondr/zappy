@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 11:03:08 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 11:27:02 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CONSTANTS_H
 
 #include "localized_strings_fr.h"
+#include "license.h"
 
 #define BUFF_READ			2024
 
