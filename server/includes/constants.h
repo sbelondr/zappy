@@ -6,14 +6,14 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 09:44:16 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 10:10:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
-#include "localized_strings_en.h"
+#include "localized_strings_fr.h"
 
 #define BUFF_READ			2024
 
@@ -28,6 +28,7 @@
 #define FLAG_LOCALIZED		4
 #define FLAG_PEDANTIC		8
 #define FLAG_COLOR			16
+#define FLAG_NORESGEN		32
 
 #define STANDARDFOOD		"nourriture"
 #define STANDARDLINEMATE	"linemate"

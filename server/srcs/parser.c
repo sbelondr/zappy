@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 09:45:45 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 10:07:30 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ t_param	parse_input(int ac, char **av)
 			usage(0);
 		else if (is_option(av[i], "-H", "--hunger"))
 			param.flags |= FLAG_NOHUNGER;
+		else if (is_option(av[i], "-R", "--no-ressource-generation"))
+			param.flags |= FLAG_NORESGEN;
 		else if (is_option(av[i], "-s", "--silent"))
 			param.allowed_logs = 0;
 		else if (is_option(av[i], "-V", "--verbose"))

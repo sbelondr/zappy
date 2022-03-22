@@ -43,6 +43,7 @@ set pdi self@Tue et déconnecte le client qui lance la commande@ @TESTER
 set edi #n@Tue l'oeuf #n@ok@TESTER
 set edi all@Tue tout les oeufs@ok@TESTER
 set flg hunger <on|off>@Active ou désactive la faim sur le serveur@ok@TESTER
+set flg resgen <on|off>@Active ou désactive la génération des ressources@ok@TESTEr
 set pin #n q q q q q q q@Change l'inventaire du client #n@ok@TESTER
 set pin #n clear@Vide l'inventaire du client #n@ok@TESTER
 set ppo #n X Y O@Change la position et l'orientation du client #n@ok@TESTER
@@ -57,15 +58,26 @@ set plv #n L@Change le niveau d'un joueur@ok@TESTER
 
 .TE
 
-Note: toutes les commandes et toutes les valeurs de retours sont terminés par un "\\n"
+.TP
+.B *
+Toutes les commandes et toutes les valeurs de retours sont terminés par un "\\n".
+.TP
+.B *
 Il est possible de désactiver toutes les extensions avec l'option -P.
+.TP 
+.B *
+Une valeur de retour vide signifie que le serveur ne renvoie aucune réponse.
+.TP 
+.B *
+Toutes ces commandes sont exécutées dès que le serveur reçoit la requête.
 
 .SS Rôles spéciaux
 Il existe 2 équipes qui ne sont pas soumis aux mêmes règles et n'ont pas accès aux mêmes commande, GRAPHIC et TESTER.
 GRAPHIC peut accéder a tous les paramètres du jeu en lecture seule, mais ne peut modifier que le delta.
 TESTER peut faire tout ce que GRAPHIC peut faire, mais il peut en plus impacter le jeu directement. (voir tableau ci-dessus pour les commandes)
+Ces équipes ne peuvent PAS gagner la partie et ne peuvent PAS mourir naturellement, elles ne sont pas considérées comme des joueurs.
 
-Le client TESTER ne peut se connecter que si l'option -v est passée en paramètre.
+Le groupe TESTER n'est spécial QUE si l'option -v est passée en paramètre. Si ce n'est pas le cas, il se comporte comme un joueur normal.
 .SH OPTIONS
 .B Options obligatoires :
 .TP
@@ -113,6 +125,11 @@ ticks.
 .TP
 .BI "-H, --hunger"
 Désactive la faim. Les joueurs n'ont plus besoin de nourriture pour survivre.
+.TP
+.BI "-R, --no-ressource-generation"
+Désactive la génération de ressource. Même effet que 
+.B -g 0
+, utile si vous comptez l'activer plus tard avec un client TESTER.
 .TP
 .BI "-s, --silent"
 Mode silencieux. N'imprime rien sur la sortie standard.

@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/20 11:12:55 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/22 10:02:52 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,22 @@ static void	parse_edi(t_srv *srv, t_client *tester, char *command)
 
 void	parse_flg(t_srv *srv, t_client *tester, char *command)
 {
-	if (!strncmp(command, "hunger ", 7))
+	if (!strncmp(command, "resgen ", 7))
+	{
+		if (!strcmp(command + 7, "on"))
+		{
+			srv->param->flags &= ~FLAG_NORESGEN;
+			simple_send_no_free(srv, tester->id, "ok\n");
+		}
+		else if (!strcmp(command + 7, "off"))
+		{
+			srv->param->flags |= FLAG_NORESGEN;
+			simple_send_no_free(srv, tester->id, "ok\n");
+		}
+		else
+			simple_send_no_free(srv, tester->id, "sbp\n");
+	}
+	else if (!strncmp(command, "hunger ", 7))
 	{
 		if (!strcmp(command + 7, "on"))
 		{
