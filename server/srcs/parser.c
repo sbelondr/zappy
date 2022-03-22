@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/15 10:15:13 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 09:45:45 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,17 @@ long	get_numeric_parameter(char *numstr, int min, int max)
 	if (*endptr)
 	{
 		fprintf(stderr, ERROR_INV_PARAM_NAN, numstr);
-		usage(1);
+		usage(EXIT_BAD_PARAMETER);
 	}
 	else if (result < min)
 	{
 		fprintf(stderr, ERROR_INV_PARAM_TOO_SMALL, result, min);
-		usage(1);
+		usage(EXIT_BAD_PARAMETER);
 	}
 	else if (result > max)
 	{
 		fprintf(stderr, ERROR_INV_PARAM_TOO_BIG, result, max);
-		usage(1);
+		usage(EXIT_BAD_PARAMETER);
 	}
 	return (result);
 }
@@ -190,7 +190,7 @@ t_param	parse_input(int ac, char **av)
 		else if (i + 1 >= ac) //TODO: Improve option parsing
 		{
 			printf(ERROR_INV_OPT_END, av[i]);
-			usage(1);
+			usage(EXIT_BAD_PARAMETER);
 		}
 		else if (is_option(av[i], "-t", "--time"))
 			param.time_delta = get_numeric_parameter(av[++i], 1, 15000);
@@ -214,7 +214,7 @@ t_param	parse_input(int ac, char **av)
 			else
 			{
 				fprintf(stderr, ERROR_INV_OPT_TOO_MANY_REPLAYS);
-				usage(1);
+				usage(EXIT_BAD_PARAMETER);
 			}
 			if (fd >= 0)
 				param.replay_fd = fd;
@@ -222,7 +222,7 @@ t_param	parse_input(int ac, char **av)
 			{
 				fprintf(stderr, ERROR_INV_PARAM_FILE, av[i]);
 				perror("");
-				usage(1);
+				usage(EXIT_BAD_PARAMETER);
 			}
 
 		}
@@ -237,7 +237,7 @@ t_param	parse_input(int ac, char **av)
 				else
 				{
 					perror("malloc: ");
-					exit(1);
+					exit(EXIT_BAD_PARAMETER);
 				}
 			} while (ac > i + 1 && av[i + 1][0] != '-');
 		}
@@ -253,16 +253,16 @@ t_param	parse_input(int ac, char **av)
 			else 
 			{
 				fprintf(stderr, ERROR_INV_PARAM_GEN, av[i]);
-				usage(1);
+				usage(EXIT_BAD_PARAMETER);
 			}
 		}
 		else
 		{
 			printf(ERROR_INV_OPT_UNKNOWN,av[i]);
-			usage(1);
+			usage(EXIT_BAD_PARAMETER);
 		}
 	}
 	if (!is_input_complete(param))
-		usage(1);
+		usage(EXIT_BAD_PARAMETER);
 	return (param);
 }

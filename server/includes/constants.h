@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 13:36:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 09:44:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@
 #define STANDARD_FORK_ANSWER			"niveau actuel : %d\n"
 #define STANDARD_FORK_ANSWER_CURRENT	"elevation en cours\n"
 #define STANDARD_KICK_ANSWER			"deplacement %d\n"
+
+#define EXIT_BAD_PARAMETER				2
 
 typedef enum	e_colors {
 	RESET = 0,
