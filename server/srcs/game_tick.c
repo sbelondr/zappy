@@ -6,13 +6,13 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 09:19:27 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/22 09:40:11 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
 
-static void	treat_command(t_srv *srv, t_client *client, int client_id)
+static void	treat_command(t_srv *srv, t_client *client)
 {
 	char *msg;
 
@@ -101,7 +101,7 @@ void	client_tick(t_srv *srv, t_list *player_list)
 		{
 			if (client->buffer[0].command != COMMAND_NONE)
 			{
-				treat_command(srv, client, i);
+				treat_command(srv, client);
 			}
 		}
 		current = current->next;
