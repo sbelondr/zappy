@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/15 10:20:09 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/23 10:39:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ static void	welcome_moniteur(t_srv *srv, int id)
 	simple_send(srv, id, msg);
 	msg = moniteur_tna(srv->world);
 	simple_send(srv, id, msg);
+	if (!(srv->param->flags & FLAG_PEDANTIC))
+	{
+		msg = moniteur_tac(srv->world);
+		simple_send(srv, id, msg);
+		msg = moniteur_mac(srv->world);
+		simple_send(srv, id, msg);
+	}
 	current = srv->world->client_list;
 	while (current)
 	{	
