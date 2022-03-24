@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 11:30:01 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 10:05:59 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ t_param	parse_input(int ac, char **av)
 
 	bzero(&param, sizeof(t_param));
 	param.team_hard_limit = 500;
-	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION;
+	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION | LOG_ERROR;
 	param.generate_function = generate_ressource_standard;
 	param.generation_frequency = 1000;
 	param.flags |= FLAG_COLOR;
