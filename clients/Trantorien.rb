@@ -326,8 +326,8 @@ module Client
 
       parser.on("-t", "--t TEAM", String, "Player team")
       parser.on("-d", "--delay SECONDS", Float, "Attempt connecting each SECONDS seconds. Defaults to 1. Can take decimal values.")
-      parser.on("-p", "--port PORT", Int, "Port number, 8080 by default")
-      parser.on("-h", "--hostname HOST", Int, "Hostname, localhost by default")
+      parser.on("-p", "--port PORT", Integer, "Port number, 8080 by default")
+      parser.on("-h", "--hostname HOST", Integer, "Hostname, localhost by default")
       parser.on("-h", "--help", "Display this help") { puts parser; exit }
 
     end.parse!(into: options)
