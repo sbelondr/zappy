@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/20 11:11:36 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/24 09:29:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int				quantity_of_elements(int *square);
 void			game_tick(t_srv *srv);
 void			command_lexer(t_srv *srv, char *buf, int i);
 int				delta_to_time(int delta);
+clock_t			delta_to_clock_t(int delta);
 
 /*
  * GAME LOGIC

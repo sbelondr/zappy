@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/22 09:10:47 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 09:31:41 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int main(int ac, char **av)
 	t_srv			*srv;
 	t_world_state	st;
 	t_param			param;
-	int				timeout;// = (1000);
 	int				rc;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
@@ -107,33 +106,36 @@ int main(int ac, char **av)
 	yellow();
 	printf("Launch srv\n");
 	reset();
-	timeout = delta_to_time(srv->param->time_delta);
 
 	tmp_n_client_sck = srv->n_client_sck;
 	srv->client_sck[0].fd = srv->master_sck;
 	srv->client_sck[0].events = POLLIN;
+	srv->last_frame_stamp = clock();
 	while (!end_server)
 	{
-//		printf("Waiting on poll() srv->n_client_sck = %d ...\n", srv->n_client_sck);
-		rc = poll(srv->client_sck, srv->n_client_sck, timeout);
-		if (rc < 0)
+		clock_t last_until = delta_to_clock_t(srv->param->time_delta);
+		while (clock() - srv->last_frame_stamp < last_until)
 		{
-			dprintf(STDERR_FILENO, "poll() failled\n");
-			break ;
-		}
-		tmp_n_client_sck = srv->n_client_sck;
-		for (int i = 0; i < tmp_n_client_sck; i++)
-		{
-			// check if there is no action with this socket
-			if (srv->client_sck[i].revents == 0 \
-					|| srv->client_sck[i].revents != POLLIN)
-				continue ;
-			if (srv->client_sck[i].fd == srv->master_sck)
+			rc = poll(srv->client_sck, srv->n_client_sck, 0);
+			if (rc < 0)
 			{
-				if (!add_client(srv)) break ;
+				dprintf(STDERR_FILENO, "poll() failled\n");
+				break ;
 			}
-			else
-				listen_client(srv, i);
+			tmp_n_client_sck = srv->n_client_sck;
+			for (int i = 0; i < tmp_n_client_sck; i++)
+			{
+				// check if there is no action with this socket
+				if (srv->client_sck[i].revents == 0 \
+						|| srv->client_sck[i].revents != POLLIN)
+					continue ;
+				if (srv->client_sck[i].fd == srv->master_sck)
+				{
+					if (!add_client(srv)) break ;
+				}
+				else
+					listen_client(srv, i);
+			}
 		}
 		game_tick(srv);
 	}

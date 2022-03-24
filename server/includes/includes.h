@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:45 by selver            #+#    #+#             */
-/*   Updated: 2021/06/30 11:26:08 by selver           ###   ########.fr       */
+/*   Updated: 2022/03/24 09:18:32 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/time.h>
+#include <time.h>
 #include "stdint.h"
 #include "libft.h"
 

@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 13:06:17 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/24 09:15:25 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,3 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 	}
 }
 
-int	delta_to_time(int delta)
-{
-	int				ret;
-	double			time;
-
-	time = 1.0 / delta;
-	ret = time * 1000;
-	return (ret);
-}

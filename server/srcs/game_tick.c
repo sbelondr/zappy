@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 11:11:05 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 09:26:36 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ static int can_generate(t_srv *srv)
 void	game_tick(t_srv *srv)
 {
 	srv->frame_nbr += 1;
+	srv->last_frame_stamp = clock();
 	if (can_print(srv->param, LOG_TICK))
 		printf("%ld:TICK!!\n", srv->frame_nbr);
 	client_tick(srv, srv->world->client_list);
