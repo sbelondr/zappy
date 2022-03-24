@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/22 09:34:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 10:04:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void client_exit(t_srv *srv, int id)
 		set_color(RESET, srv->param->flags);
 	}
 	close(srv->client_sck[id].fd);
-	srv->client_sck[id].fd = -1;
+	srv->client_sck[id].fd = 0;
 }
 
 //Delete the newline on the string/cut the string via newline, returns the number of lines found
@@ -88,7 +88,7 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 			set_color(RESET, srv->param->flags);
 		}
 		printf("%d\n", i);
-		command_lexer(srv, buff + offset, i);
+		command_lexer(srv, buff + offset, i - 1);
 		offset = strlen(buff) + 1;
 	}
 }

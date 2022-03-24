@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/03/24 09:25:35 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 09:50:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ typedef struct	s_srv
 	int						master_sck;
 	struct sockaddr_in		address;
 	int						addrlen;
-	struct pollfd	client_sck[200]; //int						*client_sck;
-	int				n_client_sck;
+	struct pollfd			*client_sck;
+	int						n_client_sck;
 	t_param					*param;
 	t_world_state			*world;
 	uint64_t				frame_nbr;

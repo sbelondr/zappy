@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 09:31:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 09:34:54 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,6 @@
 #include "functions.h"
 
 static t_srv **g_srv = NULL;
-
-void	ft_arraydel(char ***line)
-{
-	int	i;
-
-	i = -1;
-	if (*line)
-	{
-		while ((*line)[++i])
-			free((*line)[i]);
-		free(*line);
-		*line = NULL;
-	}
-}
 
 void ft_quit(int sig)
 {
@@ -60,23 +46,6 @@ void ft_quit(int sig)
 	exit(sig);
 }
 
-//Returns timeval timeout for select
-struct timeval	time_left(struct timeval limit)
-{
-	struct timeval current;
-	struct timeval ret;
-
-	gettimeofday(&current, NULL);
-	ret.tv_sec = 0;
-	ret.tv_usec = 0;
-	if (timercmp(&current, &limit, >) > 0)
-		return (ret);
-	timersub(&limit, &current, &ret);
-	if (ret.tv_sec > 1000)
-		timerclear(&ret);
-	return (ret);
-}
-
 /*
  * use IBM implementation (poll)
  * https://www.ibm.com/docs/en/i/7.2?topic=designs-using-poll-instead-select
@@ -86,7 +55,6 @@ int main(int ac, char **av)
 	t_srv			*srv;
 	t_world_state	st;
 	t_param			param;
-	int				rc;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
 
@@ -116,11 +84,10 @@ int main(int ac, char **av)
 		clock_t last_until = delta_to_clock_t(srv->param->time_delta);
 		while (clock() - srv->last_frame_stamp < last_until)
 		{
-			rc = poll(srv->client_sck, srv->n_client_sck, 0);
-			if (rc < 0)
+			if (poll(srv->client_sck, srv->n_client_sck, 0) < 0)
 			{
-				dprintf(STDERR_FILENO, "poll() failled\n");
-				break ;
+				perror("poll");
+				exit(EXIT_FAILURE);
 			}
 			tmp_n_client_sck = srv->n_client_sck;
 			for (int i = 0; i < tmp_n_client_sck; i++)
