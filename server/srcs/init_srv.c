@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 09:50:51 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 10:09:08 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	emergency_free_srv(t_srv *srv, t_param *param, char *perror_string)
 	}
 	exit(EXIT_FAILURE);
 }
+
 t_srv *init_srv(t_param *param, t_world_state *st)
 {
 	t_srv	*srv;
@@ -38,7 +39,7 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 		ft_error("No param where given to init_srv\n");
 	if (!(srv = (t_srv *)calloc(sizeof(t_srv), 1)))
 		emergency_free_srv(srv, param, "calloc");
-	if (!(srv->client_sck = (struct pollfd*)calloc(sizeof(struct pollfd), param->team_hard_limit * 2))) //TODO call dedicated function
+	if (!(srv->client_sck = (struct pollfd*)calloc(sizeof(struct pollfd), param->team_hard_limit * 2)))
 		emergency_free_srv(srv, param, "calloc");
 	if ((srv->master_sck = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 		emergency_free_srv(srv, param, "socket");

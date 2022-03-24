@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 10:04:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/24 10:14:07 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void client_exit(t_srv *srv, int id)
 {
 	t_client	*client;
 	t_team		*team;
-
 
 	client = get_client_by_id(srv, id);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
@@ -38,8 +37,8 @@ void client_exit(t_srv *srv, int id)
 		printf(LOG_CLIENTS_LEFT, ft_lst_size(srv->world->client_list));
 		set_color(RESET, srv->param->flags);
 	}
-	close(srv->client_sck[id].fd);
-	srv->client_sck[id].fd = 0;
+	close(srv->client_sck[id + 1].fd);
+	srv->client_sck[id + 1].fd = 0;
 }
 
 //Delete the newline on the string/cut the string via newline, returns the number of lines found
