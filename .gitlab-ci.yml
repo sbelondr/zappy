@@ -29,7 +29,7 @@ unit-test-job:   # This job runs in the test stage.
   dependencies:
     - build-job
   script:
-    - make -C server
+    - make -C server > /dev/null
     - ruby -v
     - bundle -v
     - bundle install --binstubs
