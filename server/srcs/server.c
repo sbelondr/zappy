@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 09:34:54 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/26 11:09:43 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,7 @@ int main(int ac, char **av)
 						|| srv->client_sck[i].revents != POLLIN)
 					continue ;
 				if (srv->client_sck[i].fd == srv->master_sck)
-				{
-					if (!add_client(srv)) break ;
-				}
+					add_client(srv);
 				else
 					listen_client(srv, i);
 			}
