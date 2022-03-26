@@ -20,6 +20,9 @@
 ## Please tell us about your environment:
 
 Version: 1.0.0
+
 OS: <distribution> <version>
+
 Ruby: <version>
+
 GCC: <version>
