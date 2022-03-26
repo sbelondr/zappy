@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 11:23:12 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 11:30:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/26 11:16:49 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define LICENSE_H
 
 #define MIT_LICENSE "MIT License \n" \
-	"Copyright (c) 2022 Jordan Ayache & Samuel Béllondrade\n" \
+	"Copyright (c) 2022 Jordan Ayache & Samuel Bélondrade\n" \
 	"\n" \
 	"Permission is hereby granted, free of charge, to any person obtaining a copy\n" \
 	"of this software and associated documentation files (the \"Software\"), to deal\n" \
