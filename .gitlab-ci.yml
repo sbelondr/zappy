@@ -30,8 +30,6 @@ unit-test-job:   # This job runs in the test stage.
     - build-job
   script:
     - make -C server > /dev/null
-    - pwd
-    - ls server
     - ruby -v
     - bundle -v
     - bundle install --binstubs

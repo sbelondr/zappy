@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 10:16:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/26 11:07:08 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,5 @@ void listen_client(t_srv *srv, int index)
 		close_conn = 1;
 	}
 	if (close_conn)
-	{
-		close(srv->client_sck[index].fd);
-		srv->client_sck[index].fd = 0;
-	}
+		client_exit(srv, index - 1);
 }

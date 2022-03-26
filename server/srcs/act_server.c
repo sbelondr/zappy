@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 10:01:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/26 10:44:08 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,10 @@ int	add_client(t_srv *srv)
 			break ;
 		}
 		else
-		{
 			printf("%d\n", srv->client_sck[i].fd);
-		}
 	}
 	if (!found)
-	{
 		printf("NO MORE ROOM\n");
-	}
 	++srv->n_client_sck;
 	return (1);
 }
