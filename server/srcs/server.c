@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/26 11:09:43 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/28 23:00:19 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ int main(int ac, char **av)
 			for (int i = 0; i < tmp_n_client_sck; i++)
 			{
 				// check if there is no action with this socket
-				if (srv->client_sck[i].revents == 0 \
+				if ((i > 0 && srv->client_sck[i].fd == 0) \
+						|| srv->client_sck[i].revents == 0 \
 						|| srv->client_sck[i].revents != POLLIN)
 					continue ;
 				if (srv->client_sck[i].fd == srv->master_sck)
@@ -101,6 +102,25 @@ int main(int ac, char **av)
 				else
 					listen_client(srv, i);
 			}
+			/*
+			 * TODO: a remettre en place
+			if (compress_array)
+			{
+				compress_array = 0;
+				for (int i = 1; i < srv->n_client_sck; i++)
+				{
+					if (srv->client_sck[i].fd == 0)
+					{
+						for (int j = i; j < nfds; j++)
+						{
+							srv->client_sck[i].fd = srv->client_sck[j + 1].fd;
+						}
+						--i;
+						--srv->n_client_sck;
+					}
+				}
+			}
+			*/
 		}
 		game_tick(srv);
 	}

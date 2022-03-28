@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/26 10:44:08 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/03/28 23:00:03 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,11 @@ int	add_client(t_srv *srv)
 			printf("%d\n", srv->client_sck[i].fd);
 	}
 	if (!found)
-		printf("NO MORE ROOM\n");
-	++srv->n_client_sck;
+	{
+		dprintf(STDERR_FILENO, "NO MORE ROOM\n");
+		return (-1);
+	}
+	// TODO: a remettre lors du fix
+//	++srv->n_client_sck;
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 10:09:08 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/28 23:06:21 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,6 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 	srv->param = param;
 	srv->world = st;
 	srv->frame_nbr = 0;
-	srv->n_client_sck = 1;
+	srv->n_client_sck = param->allowed_clients_amount + 1;
 	return (srv);
 }
