@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/24 10:14:07 by jayache          ###   ########.fr       */
+/*   Updated: 2022/04/01 11:51:14 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	mcmp(t_client *a, t_client *b) { 	return a->id - b->id; }
 static void	mdel(t_client *a) { (void)a; }
 
-void client_exit(t_srv *srv, int id)
+void client_exit(t_srv *srv, int id, int index)
 {
 	t_client	*client;
 	t_team		*team;
@@ -37,8 +37,13 @@ void client_exit(t_srv *srv, int id)
 		printf(LOG_CLIENTS_LEFT, ft_lst_size(srv->world->client_list));
 		set_color(RESET, srv->param->flags);
 	}
-	close(srv->client_sck[id + 1].fd);
-	srv->client_sck[id + 1].fd = 0;
+	if (index == -1)
+	{
+		dprintf(STDERR_FILENO, "index not found: %d\n", index);
+		return ;
+	}
+	close(srv->client_sck[index].fd);
+	srv->client_sck[index].fd = -1;
 }
 
 //Delete the newline on the string/cut the string via newline, returns the number of lines found
@@ -87,7 +92,7 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 			set_color(RESET, srv->param->flags);
 		}
 		printf("%d\n", i);
-		command_lexer(srv, buff + offset, i - 1);
+		command_lexer(srv, buff + offset, srv->id_clients[i]);
 		offset = strlen(buff) + 1;
 	}
 }

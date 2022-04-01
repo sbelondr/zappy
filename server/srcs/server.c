@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/28 23:00:19 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/01 10:42:44 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int main(int ac, char **av)
 	t_param			param;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
+	int				compress_array = 0;
 
 	param = parse_input(ac, av);
 	st = init_world(param);
@@ -100,27 +101,28 @@ int main(int ac, char **av)
 				if (srv->client_sck[i].fd == srv->master_sck)
 					add_client(srv);
 				else
-					listen_client(srv, i);
+				{
+					if (!listen_client(srv, i))
+						compress_array = 1;
+				}
 			}
-			/*
-			 * TODO: a remettre en place
 			if (compress_array)
 			{
 				compress_array = 0;
 				for (int i = 1; i < srv->n_client_sck; i++)
 				{
-					if (srv->client_sck[i].fd == 0)
+					if (srv->client_sck[i].fd == -1)
 					{
-						for (int j = i; j < nfds; j++)
+						for (int j = i; j < srv->n_client_sck; j++)
 						{
 							srv->client_sck[i].fd = srv->client_sck[j + 1].fd;
+							srv->id_clients[i] = srv->id_clients[j + 1];
 						}
 						--i;
 						--srv->n_client_sck;
 					}
 				}
 			}
-			*/
 		}
 		game_tick(srv);
 	}

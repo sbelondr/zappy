@@ -6,11 +6,41 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/28 23:00:03 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/01 11:43:32 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "functions.h"
+
+#define CLIENT_VALUE(x) (t_client*)(x->content)
+
+int	search_new_id_client(t_list *client_list)
+{
+	t_client	*client;
+	int			id = -1;
+
+	while (client_list)
+	{
+		client = CLIENT_VALUE(client_list);
+		if (id < client->id)
+			id = client->id;
+		client_list = client_list->next;
+	}
+	return (id + 1);
+}
+
+int	search_client_index_by_id(t_srv *srv, int id)
+{
+	int			i = -1;
+	int			*list_id = srv->id_clients;
+
+	while (list_id[++i])
+	{
+		if (list_id[i] == id)
+			return (i);
+	}
+	return (-1);
+}
 
 /*
  * add new client
@@ -23,7 +53,7 @@
 int	add_client(t_srv *srv)
 {
 	int		new_sd = 0;
-	char	found = 0;
+//	char	found = 0;
 
 	new_sd = accept(srv->master_sck, NULL, NULL);
 	if (new_sd < 0)
@@ -32,16 +62,25 @@ int	add_client(t_srv *srv)
 		return (-1);
 	}
 	printf("New incoming connection - %d\n", new_sd);
-	for (int i = 1; i < srv->n_client_sck + 2; ++i)
+	int	i = srv->n_client_sck;
+	if (i >= (srv->world->params.allowed_clients_amount + 1))
 	{
-		if (srv->client_sck[i].fd == 0)
-		{
+		dprintf(STDERR_FILENO, "NO MORE ROOM\n");
+		return (-1);
+	}
+
+//	for (int i = 1; i < srv->n_client_sck + 2; ++i)
+//	{
+//		if (srv->client_sck[i].fd == -1)
+//		{
+			int new_id = search_new_id_client(srv->world->client_list);
 			srv->client_sck[i].fd = new_sd;
+			srv->id_clients[i] = new_id;
 			srv->client_sck[i].events = POLLIN;
 			ft_lst_append(&srv->world->client_list, \
-					ft_lstnew_no_copy(new_client(i - 1), \
+					ft_lstnew_no_copy(new_client(new_id), \
 						sizeof(t_client)));
-			found = 1;
+//			found = 1;
 			if (can_print(srv->param, LOG_CONNEXION))
 			{
 				yellow();
@@ -49,17 +88,12 @@ int	add_client(t_srv *srv)
 				reset();
 			}
 			simple_send_no_free(srv, i - 1, "BIENVENUE\n");
-			break ;
-		}
-		else
-			printf("%d\n", srv->client_sck[i].fd);
-	}
-	if (!found)
-	{
-		dprintf(STDERR_FILENO, "NO MORE ROOM\n");
-		return (-1);
-	}
-	// TODO: a remettre lors du fix
-//	++srv->n_client_sck;
+//			break ;
+//		}
+//		else
+//			printf("%d\n", srv->client_sck[i].fd);
+//	}
+//	if (!found)
+	++srv->n_client_sck;
 	return (1);
 }
