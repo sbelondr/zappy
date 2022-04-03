@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/01 10:42:44 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/03 15:06:01 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,49 @@ void ft_quit(int sig)
 	exit(sig);
 }
 
+void	debug_sock(t_srv *srv)
+{
+	int	i = -1;
+
+	if (srv->n_client_sck < 2)
+		return ;
+	printf("==========================================\n");
+	yellow();
+	while (++i < srv->n_client_sck)
+	{
+		printf("J'ai open ca)\tid:  %d\t\tindex: %d\t\tfd: %d\n", \
+				srv->id_clients[i], i, srv->client_sck[i].fd);
+	}
+	reset();
+}
+
+int compress_client_sck(t_srv *srv, int compress_array)
+{
+	if (compress_array)
+	{
+		compress_array = 0;
+		for (int i = 0; i < srv->n_client_sck; i++)
+		{
+			if (srv->client_sck[i].fd == -1)
+			{
+//				purple();
+//				printf("Je close)\t\tindex: %d\t\tfd: %d\n", \
+//						i, srv->client_sck[i].fd);
+//				reset();
+				for (int j = i; j < srv->n_client_sck; j++)
+				{
+					srv->client_sck[i].fd = srv->client_sck[j + 1].fd;
+					srv->id_clients[i] = srv->id_clients[j + 1];
+				}
+				--i;
+				--srv->n_client_sck;
+			}
+		}
+//		debug_sock(srv);
+	}
+	return (compress_array);
+}
+
 /*
  * use IBM implementation (poll)
  * https://www.ibm.com/docs/en/i/7.2?topic=designs-using-poll-instead-select
@@ -55,6 +98,7 @@ int main(int ac, char **av)
 	t_srv			*srv;
 	t_world_state	st;
 	t_param			param;
+	clock_t			last_until;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
 	int				compress_array = 0;
@@ -82,7 +126,7 @@ int main(int ac, char **av)
 	srv->last_frame_stamp = clock();
 	while (!end_server)
 	{
-		clock_t last_until = delta_to_clock_t(srv->param->time_delta);
+		last_until = delta_to_clock_t(srv->param->time_delta);
 		while (clock() - srv->last_frame_stamp < last_until)
 		{
 			if (poll(srv->client_sck, srv->n_client_sck, 0) < 0)
@@ -94,8 +138,7 @@ int main(int ac, char **av)
 			for (int i = 0; i < tmp_n_client_sck; i++)
 			{
 				// check if there is no action with this socket
-				if ((i > 0 && srv->client_sck[i].fd == 0) \
-						|| srv->client_sck[i].revents == 0 \
+				if (srv->client_sck[i].revents == 0 \
 						|| srv->client_sck[i].revents != POLLIN)
 					continue ;
 				if (srv->client_sck[i].fd == srv->master_sck)
@@ -106,23 +149,7 @@ int main(int ac, char **av)
 						compress_array = 1;
 				}
 			}
-			if (compress_array)
-			{
-				compress_array = 0;
-				for (int i = 1; i < srv->n_client_sck; i++)
-				{
-					if (srv->client_sck[i].fd == -1)
-					{
-						for (int j = i; j < srv->n_client_sck; j++)
-						{
-							srv->client_sck[i].fd = srv->client_sck[j + 1].fd;
-							srv->id_clients[i] = srv->id_clients[j + 1];
-						}
-						--i;
-						--srv->n_client_sck;
-					}
-				}
-			}
+			compress_array = compress_client_sck(srv, compress_array);
 		}
 		game_tick(srv);
 	}

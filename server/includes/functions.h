@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/04/01 10:52:02 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/02 09:59:43 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ void			generate_ressource_uniform(t_world_state world);
 
 char			*moniteur_msz(t_world_state *world);
 char			*moniteur_bct(t_world_state *world, int x, int y);
+char			*moniteur_seg(char *team_name);
 char			*moniteur_mct(t_world_state *world);
 char			*moniteur_sgt(t_world_state *world);
 char			*moniteur_tna(t_world_state *world);

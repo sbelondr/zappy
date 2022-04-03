@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:05 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/01 10:10:34 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/03 15:05:07 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 		emergency_free_srv(srv, param, "calloc");
 	if (!(srv->client_sck = (struct pollfd*)calloc(sizeof(struct pollfd), param->team_hard_limit * 2)))
 		emergency_free_srv(srv, param, "calloc");
+	int	i = -1;
+	while (++i < (param->team_hard_limit * 2))
+		srv->client_sck[i].fd = -1;
 	if (!(srv->id_clients = (int*)calloc(sizeof(int), param->team_hard_limit * 2)))
 		emergency_free_srv(srv, param, "calloc");
 	if ((srv->master_sck = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -64,6 +67,6 @@ t_srv *init_srv(t_param *param, t_world_state *st)
 	srv->param = param;
 	srv->world = st;
 	srv->frame_nbr = 0;
-	srv->n_client_sck = 1; //param->allowed_clients_amount + 1;
+	srv->n_client_sck = 1;
 	return (srv);
 }

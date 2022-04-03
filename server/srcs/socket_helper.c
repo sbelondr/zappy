@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 11:07:01 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/24 10:01:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/04/02 10:22:20 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@
 
 void simple_send(t_srv *srv, int id, char *msg)
 {
+	int index = search_client_index_by_id(srv, id);
 	if (can_print(srv->param, LOG_SEND))
 	{
 		set_color(BLUE, srv->param->flags);
-		printf("[%d] <- %s", srv->client_sck[id + 1].fd, msg);
+		printf("[%d] <- %s", srv->client_sck[index].fd, msg);
 		set_color(RESET, srv->param->flags);
 	}
-	if ((int)send(srv->client_sck[id + 1].fd, msg, \
+	if ((int)send(srv->client_sck[index].fd, msg, \
 				strlen(msg), 0) != (int)strlen(msg))
 		perror("send");
 	free(msg);
@@ -38,13 +39,15 @@ void simple_send(t_srv *srv, int id, char *msg)
 
 void simple_send_no_free(t_srv *srv, int id, char const *msg)
 {
+	int index = search_client_index_by_id(srv, id);
+	printf("index: %d\n", index);
 	if (can_print(srv->param, LOG_SEND))
 	{
 		set_color(BLUE, srv->param->flags);
-		printf("[%d] <- %s", srv->client_sck[id + 1].fd, msg);
+		printf("[%d] <- %s", srv->client_sck[index].fd, msg);
 		set_color(RESET, srv->param->flags);
 	}
-	if ((int)send(srv->client_sck[id + 1].fd, msg, \
+	if ((int)send(srv->client_sck[index].fd, msg, \
 				strlen(msg), 0) != (int)strlen(msg))
 		perror("send");
 }
