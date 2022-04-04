@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/03 15:06:01 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/04 10:30:00 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ void	debug_sock(t_srv *srv)
 	reset();
 }
 
-int compress_client_sck(t_srv *srv, int compress_array)
+void	compress_client_sck(t_srv *srv)
 {
-	if (compress_array)
+	if (srv->compress_socket)
 	{
-		compress_array = 0;
+		srv->compress_socket = 0;
 		for (int i = 0; i < srv->n_client_sck; i++)
 		{
 			if (srv->client_sck[i].fd == -1)
@@ -84,9 +84,8 @@ int compress_client_sck(t_srv *srv, int compress_array)
 				--srv->n_client_sck;
 			}
 		}
-//		debug_sock(srv);
+		debug_sock(srv);
 	}
-	return (compress_array);
 }
 
 /*
@@ -101,7 +100,6 @@ int main(int ac, char **av)
 	clock_t			last_until;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
-	int				compress_array = 0;
 
 	param = parse_input(ac, av);
 	st = init_world(param);
@@ -144,12 +142,9 @@ int main(int ac, char **av)
 				if (srv->client_sck[i].fd == srv->master_sck)
 					add_client(srv);
 				else
-				{
-					if (!listen_client(srv, i))
-						compress_array = 1;
-				}
+					listen_client(srv, i);
 			}
-			compress_array = compress_client_sck(srv, compress_array);
+			compress_client_sck(srv);
 		}
 		game_tick(srv);
 	}

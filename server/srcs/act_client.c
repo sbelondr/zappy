@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/03 14:55:19 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/04 10:30:09 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ void client_exit(t_srv *srv, int id, int index)
 		perror("close");
 	srv->client_sck[index].fd = -1;
 	srv->id_clients[index] = -1;
+	srv->compress_socket = 1;
+//	printf("srv->compress_socket: %d\n", srv->compress_socket);
+//	sleep(2);
 }
 
 //Delete the newline on the string/cut the string via newline, returns the number of lines found

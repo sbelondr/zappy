@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/03 14:51:53 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/04 11:13:50 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,35 @@
 
 #define CLIENT_VALUE(x) (t_client*)(x->content)
 
-int	search_new_id_client(t_list *client_list)
+int	search_new_id_client(int *id_clients, int team_hard_limit)
 {
-	t_client	*client;
-	int			id = -1;
+	int			is_exist;
+	int			i;
+	int			j;
+	int			client_max = team_hard_limit * 2;
 
-	while (client_list)
+	while (++i < client_max)
 	{
-		client = CLIENT_VALUE(client_list);
-		if (id < client->id)
-			id = client->id;
-		client_list = client_list->next;
+		j = -1;
+		is_exist = 0;
+		while (++j < client_max)
+		{
+			if (id_clients[j] == i)
+			{
+				is_exist = 1;
+				break ;
+			}
+		}
+		if (!is_exist)
+		{
+			printf("%d - %d\n", i, j);
+			sleep(1);
+			return (i);
+		}
 	}
-	return (id + 1);
+	printf("iiii -1\n");
+	sleep(1);
+	return (-1);
 }
 
 int	search_client_index_by_id(t_srv *srv, int id)
@@ -38,8 +54,8 @@ int	search_client_index_by_id(t_srv *srv, int id)
 	{
 		if (list_id[i] == id)
 		{
-//			printf("index: %d, id: %d, fd: %d\n", i, list_id[i], \
-//					srv->client_sck[i].fd);
+			//			printf("index: %d, id: %d, fd: %d\n", i, list_id[i], \
+			//					srv->client_sck[i].fd);
 			return (i);
 		}
 	}
@@ -72,7 +88,8 @@ int	add_client(t_srv *srv)
 		return (-1);
 	}
 
-	int new_id = search_new_id_client(srv->world->client_list);
+	int new_id = search_new_id_client(srv->id_clients, \
+			srv->param->team_hard_limit);
 	srv->client_sck[i].fd = new_sd;
 	srv->id_clients[i] = new_id;
 	srv->client_sck[i].events = POLLIN;
