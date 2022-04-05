@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/26 11:09:43 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:59:38 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_quit(int sig)
 
 	if (srv->param->replay_fd)
 		close(srv->param->replay_fd);
-	while (srv && ++i < srv->param->allowed_clients_amount)
+	while (srv && ++i < srv->n_client_sck)
 	{
 		sd = srv->client_sck[i].fd;
 		if (sd > 0)
@@ -39,11 +39,31 @@ void ft_quit(int sig)
 		}
 	}
 	free(srv->client_sck);
-	if (close(srv->master_sck))
-		perror("close");
+	free(srv->id_clients);
 	free(*g_srv);
 	printf("Quit: %d", sig);
 	exit(sig);
+}
+
+void	compress_client_sck(t_srv *srv)
+{
+	if (srv->compress_socket)
+	{
+		srv->compress_socket = 0;
+		for (int i = 0; i < srv->n_client_sck; i++)
+		{
+			if (srv->client_sck[i].fd == -1)
+			{
+				for (int j = i; j < srv->n_client_sck; j++)
+				{
+					srv->client_sck[j].fd = srv->client_sck[j + 1].fd;
+					srv->id_clients[j] = srv->id_clients[j + 1];
+				}
+				--i;
+				--srv->n_client_sck;
+			}
+		}
+	}
 }
 
 /*
@@ -55,6 +75,7 @@ int main(int ac, char **av)
 	t_srv			*srv;
 	t_world_state	st;
 	t_param			param;
+	clock_t			last_until;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
 
@@ -81,7 +102,7 @@ int main(int ac, char **av)
 	srv->last_frame_stamp = clock();
 	while (!end_server)
 	{
-		clock_t last_until = delta_to_clock_t(srv->param->time_delta);
+		last_until = delta_to_clock_t(srv->param->time_delta);
 		while (clock() - srv->last_frame_stamp < last_until)
 		{
 			if (poll(srv->client_sck, srv->n_client_sck, 0) < 0)
@@ -101,6 +122,7 @@ int main(int ac, char **av)
 				else
 					listen_client(srv, i);
 			}
+			compress_client_sck(srv);
 		}
 		game_tick(srv);
 	}

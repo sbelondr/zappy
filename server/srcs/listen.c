@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/26 11:07:08 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:00:02 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 /*
  * listen message receive
  */
-void listen_client(t_srv *srv, int index)
+int	listen_client(t_srv *srv, int index)
 {
 	char	buffer[SIZE_BUF];
 	int		close_conn = 0;
-	int		len_read = 0;
+	int		len_read;
 
 	bzero(buffer, SIZE_BUF);
 	len_read = recv(srv->client_sck[index].fd, buffer, SIZE_BUF, 0);
@@ -35,9 +35,13 @@ void listen_client(t_srv *srv, int index)
 	}
 	else if (len_read == 0)
 	{
-		printf("Connection closed: %d\n", index);
+		printf("Connection closed: %d\n", srv->client_sck[index].fd);
 		close_conn = 1;
 	}
 	if (close_conn)
-		client_exit(srv, index - 1);
+	{
+		client_exit(srv, srv->id_clients[index]);
+		return (0);
+	}
+	return (1);
 }

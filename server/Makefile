@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/24 09:15:37 by jayache          ###   ########.fr        #
+#    Updated: 2022/04/05 09:40:16 by sbelondr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ VPATH = objs:\
 
 CC = gcc
 ifeq ($(DEBUG), yes)
-	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -g3  -fsanitize=address
+	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -g3  #-fsanitize=address
 else
 	CFLAGS = -Wall -Wextra -Werror -O3
 endif

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/03/24 09:50:19 by jayache          ###   ########.fr       */
+/*   Updated: 2022/04/04 10:04:40 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,9 @@ typedef struct	s_srv
 	struct sockaddr_in		address;
 	int						addrlen;
 	struct pollfd			*client_sck;
+	int						*id_clients;
 	int						n_client_sck;
+	int						compress_socket;
 	t_param					*param;
 	t_world_state			*world;
 	uint64_t				frame_nbr;
