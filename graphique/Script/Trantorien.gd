@@ -51,7 +51,7 @@ func set_level(new_level: int) -> void:
 		return
 	idle()
 	if level < new_level:
-		scale += Vector3(0.1, 0.1, 0.1)
+		scale += Vector3(0.01, 0.01, 0.01)
 	else:
 		scale -= Vector3(0.1, 0.1, 0.1)
 	level = new_level

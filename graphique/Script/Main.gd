@@ -30,9 +30,9 @@ func _ready():
 
 func _process(_delta):
 	if Input.is_action_just_pressed("+"):
-		command_server.incdectime(false)
+		command_server.inc_dec_time(false)
 	if Input.is_action_just_pressed("-"):
-		command_server.incdectime(true)
+		command_server.inc_dec_time(true)
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 	if Input.is_action_just_pressed("reload"):
