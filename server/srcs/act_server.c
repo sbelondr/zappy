@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/04 11:13:50 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 11:00:56 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,12 @@
 int	search_new_id_client(int *id_clients, int team_hard_limit)
 {
 	int			is_exist;
-	int			i;
 	int			j;
 	int			client_max = team_hard_limit * 2;
 
-	while (++i < client_max)
+	for (int i = 0; i < client_max; i++)
 	{
-		j = -1;
+		j = 0;
 		is_exist = 0;
 		while (++j < client_max)
 		{
@@ -34,14 +33,8 @@ int	search_new_id_client(int *id_clients, int team_hard_limit)
 			}
 		}
 		if (!is_exist)
-		{
-			printf("%d - %d\n", i, j);
-			sleep(1);
 			return (i);
-		}
 	}
-	printf("iiii -1\n");
-	sleep(1);
 	return (-1);
 }
 
@@ -53,11 +46,7 @@ int	search_client_index_by_id(t_srv *srv, int id)
 	while (++i < srv->n_client_sck)
 	{
 		if (list_id[i] == id)
-		{
-			//			printf("index: %d, id: %d, fd: %d\n", i, list_id[i], \
-			//					srv->client_sck[i].fd);
 			return (i);
-		}
 	}
 	return (-1);
 }
@@ -80,7 +69,6 @@ int	add_client(t_srv *srv)
 		perror("accept");
 		return (-1);
 	}
-	printf("New incoming connection - %d\n", new_sd);
 	int	i = srv->n_client_sck;
 	if (i >= (srv->world->params.allowed_clients_amount + 1))
 	{

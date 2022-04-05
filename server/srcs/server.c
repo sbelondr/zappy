@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/04 10:30:00 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:59:38 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void ft_quit(int sig)
 
 	if (srv->param->replay_fd)
 		close(srv->param->replay_fd);
-	while (srv && ++i < srv->param->allowed_clients_amount)
+	while (srv && ++i < srv->n_client_sck)
 	{
 		sd = srv->client_sck[i].fd;
 		if (sd > 0)
@@ -39,27 +39,10 @@ void ft_quit(int sig)
 		}
 	}
 	free(srv->client_sck);
-	if (close(srv->master_sck))
-		perror("close");
+	free(srv->id_clients);
 	free(*g_srv);
 	printf("Quit: %d", sig);
 	exit(sig);
-}
-
-void	debug_sock(t_srv *srv)
-{
-	int	i = -1;
-
-	if (srv->n_client_sck < 2)
-		return ;
-	printf("==========================================\n");
-	yellow();
-	while (++i < srv->n_client_sck)
-	{
-		printf("J'ai open ca)\tid:  %d\t\tindex: %d\t\tfd: %d\n", \
-				srv->id_clients[i], i, srv->client_sck[i].fd);
-	}
-	reset();
 }
 
 void	compress_client_sck(t_srv *srv)
@@ -71,20 +54,15 @@ void	compress_client_sck(t_srv *srv)
 		{
 			if (srv->client_sck[i].fd == -1)
 			{
-//				purple();
-//				printf("Je close)\t\tindex: %d\t\tfd: %d\n", \
-//						i, srv->client_sck[i].fd);
-//				reset();
 				for (int j = i; j < srv->n_client_sck; j++)
 				{
-					srv->client_sck[i].fd = srv->client_sck[j + 1].fd;
-					srv->id_clients[i] = srv->id_clients[j + 1];
+					srv->client_sck[j].fd = srv->client_sck[j + 1].fd;
+					srv->id_clients[j] = srv->id_clients[j + 1];
 				}
 				--i;
 				--srv->n_client_sck;
 			}
 		}
-		debug_sock(srv);
 	}
 }
 

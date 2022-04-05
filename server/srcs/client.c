@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/01 10:13:21 by selver            #+#    #+#             */
-/*   Updated: 2022/04/01 10:51:10 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 09:54:35 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,5 @@ void	kill_player(t_srv *srv, t_client *client)
 	}
 	simple_send_no_free(srv, client->id, "mort\n");
 	send_to_all_moniteur(srv, moniteur_pdi(client));
-	int	index = search_client_index_by_id(srv, client->id);
-	client_exit(srv, client->id, index);
+	client_exit(srv, client->id);
 }

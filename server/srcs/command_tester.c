@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/04/01 10:55:59 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 09:55:07 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ static int	kill_any_client(t_srv *srv, t_client *target, t_client *tester)
 	}
 	else if (target->id != tester->id)
 	{
-		int index = search_client_index_by_id(srv, target->id);
-		client_exit(srv, target->id, index);
+		client_exit(srv, target->id);
 		return 1;
 	}
 	return 0;
@@ -72,8 +71,7 @@ static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
 			current = current->next;
 			kill_any_client(srv, target, tester);
 		}
-		int index = search_client_index_by_id(srv, tester->id);
-		client_exit(srv, tester->id, index);
+		client_exit(srv, tester->id);
 	}
 	else if (!strcmp("others", command))
 	{
@@ -87,10 +85,7 @@ static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
 		simple_send_no_free(srv, tester->id, "ok\n");
 	}
 	else if (!strcmp("self", command))
-	{
-		int index = search_client_index_by_id(srv, tester->id);
-		client_exit(srv, tester->id, index);
-	}
+		client_exit(srv, tester->id);
 	else
 	{
 		target_id = atoi(command);

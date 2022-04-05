@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/04/02 09:59:43 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:55:21 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@ int				asprintf(char **strp, const char *fmt, ...);
 /*
  * SETUP
  */
-
 void			setup_signal(void);
 void			ft_quit(int sig);
-//void			ft_add_new_client(t_srv *srv, fd_set *readfds);
 int				add_client(t_srv *srv);
 int				search_client_index_by_id(t_srv *srv, int id);
 int				ft_set_max_sd(t_srv *srv, fd_set *readfds);
@@ -118,7 +116,7 @@ int			use_localized_string(t_param *param);
  */
 
 void			parse_command_set(t_srv *srv, t_client *tester, char *command);
-void			client_exit(t_srv *srv, int id, int index);
+void			client_exit(t_srv *srv, int id);
 void			client_sent_data(t_srv *srv, char *buff, int valread, int i);
 int				listen_client(t_srv *srv, int index);
 void			simple_send(t_srv *srv, int id, char *msg);

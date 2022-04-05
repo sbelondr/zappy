@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 11:07:01 by jayache           #+#    #+#             */
-/*   Updated: 2022/04/02 10:22:20 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:57:50 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void simple_send(t_srv *srv, int id, char *msg)
 void simple_send_no_free(t_srv *srv, int id, char const *msg)
 {
 	int index = search_client_index_by_id(srv, id);
-	printf("index: %d\n", index);
 	if (can_print(srv->param, LOG_SEND))
 	{
 		set_color(BLUE, srv->param->flags);
