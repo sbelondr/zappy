@@ -15,7 +15,6 @@ onready var level = get_node("World/Level")
 
 func _ready():
 	command_server = CommandServer.new(level)
-	#command_server = CommandServer.new(get_node("World/Level")) #instance()
 	# manage connection socket
 	add_child(_client)
 # warning-ignore:return_value_discarded

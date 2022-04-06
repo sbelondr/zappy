@@ -102,6 +102,7 @@ func player_die(id_player: String) -> void:
 	if id_player in list_player:
 		var player = list_player[id_player]
 		player.dead()
+		_hud_delete_player(player.team, id_player)
 		player.queue_free()
 		list_player.erase(id_player)
 
@@ -243,6 +244,13 @@ func _hud_add_player(team: String, id_trantorien: String) -> void:
 	subchild1.set_text(0, id_trantorien)
 	$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" \
 			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
+
+func _hud_delete_player(team: String, id_trantorien: String) -> void:
+	var obj_team = list_team[team]
+#	var children: TreeItem = tree.get_root().get_children()
+#	for child in children:
+#		print(child)
+#	print(children)
 
 ###############################################################################
 # Signals
