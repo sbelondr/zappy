@@ -1,6 +1,6 @@
 extends Spatial
 
-var level: int = 1
+var level: int = 0
 
 var inventory: Array = [0, 0, 0, 0, 0, 0, 0]
 
@@ -53,7 +53,7 @@ func set_level(new_level: int) -> void:
 	if level < new_level:
 		scale += Vector3(0.01, 0.01, 0.01)
 	else:
-		scale -= Vector3(0.1, 0.1, 0.1)
+		scale -= Vector3(0.01, 0.01, 0.01)
 	level = new_level
 	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_level").text = str(new_level)
 	get_node("NodeHUD/HUDPlayer/info_player/pb_level").value = new_level

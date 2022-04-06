@@ -102,6 +102,7 @@ func player_die(id_player: String) -> void:
 	if id_player in list_player:
 		var player = list_player[id_player]
 		player.dead()
+		player.queue_free()
 		list_player.erase(id_player)
 
 func player_kicked(id_player: String) -> void:
