@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/05 10:00:02 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/06 09:57:55 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ int	listen_client(t_srv *srv, int index)
 	}
 	if (close_conn)
 	{
-		client_exit(srv, srv->id_clients[index]);
+		if (is_special_team_member(get_client_by_id(srv, srv->id_clients[index])))
+			client_exit(srv, srv->id_clients[index]);
+		else
+			kill_player(srv, get_client_by_id(srv, srv->id_clients[index]));
 		return (0);
 	}
 	return (1);
