@@ -1,6 +1,6 @@
 extends Spatial
 
-var level: int = 1
+var level: int = 0
 
 var inventory: Array = [0, 0, 0, 0, 0, 0, 0]
 
@@ -51,9 +51,9 @@ func set_level(new_level: int) -> void:
 		return
 	idle()
 	if level < new_level:
-		scale += Vector3(0.1, 0.1, 0.1)
+		scale += Vector3(0.01, 0.01, 0.01)
 	else:
-		scale -= Vector3(0.1, 0.1, 0.1)
+		scale -= Vector3(0.01, 0.01, 0.01)
 	level = new_level
 	get_node("NodeHUD/HUDPlayer/info_player/GC_player/lab_level").text = str(new_level)
 	get_node("NodeHUD/HUDPlayer/info_player/pb_level").value = new_level
@@ -75,9 +75,15 @@ func set_inventory(new_inventory: Array) -> void:
 # edit: permet de savoir si on est sur le bord ou non, donc savoir si on utilise
 # la fonction interpolate ou non
 func is_interpolate(val: float, new_val: float) -> bool:
-	if val == new_val or val + 1 == new_val or val - 1 == new_val:
+	if val == new_val or (val + 1) == new_val or (val - 1) == new_val:
 		return true
 	return false
+
+func rotation_trantorien(dest: int, time: float) -> void:
+	goal_rotation = deg2rad(dest)
+	current_rotation = rotation.y
+	rotation_speed = max(time, 0.001)
+	rotation_progress = 0
 
 func manage_orientation_trantorien(orientation_trantorien: int, time: float):
 	if (orientation_trantorien == 1):
@@ -104,12 +110,6 @@ func move(dest: Vector3, orientation_player: int, time: float) -> void:
 		animPlayer.queue("WalkCycle")
 	else:
 		translation = dest
-
-func rotation_trantorien(dest: int, time: float) -> void:
-	goal_rotation = deg2rad(dest)
-	current_rotation = rotation.y
-	rotation_speed = max(time, 0.001)
-	rotation_progress = 0
 
 #Handle fork animation and fade into fork loop, PLEASE CALL THIS
 func fork_start() -> void:
@@ -230,9 +230,10 @@ func _death_animation_finished(animation_name: String) -> void:
 		animPlayer.play("Ponte loop")
 
 func _process(delta: float):
+	rotation_progress = clamp(rotation_progress, 0, 1)
 	if rotation_progress < 1:
-		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
 		rotation_progress += (1 / rotation_speed) * delta
+		rotation.y = lerp_angle(current_rotation, goal_rotation, min(1, rotation_progress))
 
 func _on_input_event(_camera, event, _position, _normal, _shape_idx):
 	if event is InputEventMouseButton:

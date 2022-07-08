@@ -15,7 +15,6 @@ onready var level = get_node("World/Level")
 
 func _ready():
 	command_server = CommandServer.new(level)
-	#command_server = CommandServer.new(get_node("World/Level")) #instance()
 	# manage connection socket
 	add_child(_client)
 # warning-ignore:return_value_discarded
@@ -30,9 +29,9 @@ func _ready():
 
 func _process(_delta):
 	if Input.is_action_just_pressed("+"):
-		command_server.incdectime(false)
+		command_server.inc_dec_time(false)
 	if Input.is_action_just_pressed("-"):
-		command_server.incdectime(true)
+		command_server.inc_dec_time(true)
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 	if Input.is_action_just_pressed("reload"):
