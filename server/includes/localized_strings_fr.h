@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 11:31:41 by jayache          ###   ########.fr       */
+/*   Updated: 2022/06/22 09:25:42 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,6 @@
 #define LOG_CONNEXION_POSITION	"Nouveau joueur a la position x: %d y: %d\n"
 #define LOG_REFUSED_CONNEXION	"%ld: Connexion refusée pour #%d [%d]\n"
 #define LOG_EGG_READY_TO_HATCH	"%ld: Un oeuf est prêt à éclore!\n"
+#define LOG_PLAYER_NEW_POSITION	"Le joueur #%d est à la position x:%d y:%d\n"
 
 #endif

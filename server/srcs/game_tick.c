@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/03/24 09:26:36 by jayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 10:22:24 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,10 @@ void	game_tick(t_srv *srv)
 	client_tick(srv, srv->world->client_list);
 	if (can_generate(srv))
 	{
+		if (can_print(srv->param, LOG_INFO))
+		{
+			printf("%ld:Generate more ressources!\n", srv->frame_nbr);
+		}
 		srv->param->generate_function(*srv->world);
 		send_to_all_moniteur(srv, moniteur_mct(srv->world));
 	}

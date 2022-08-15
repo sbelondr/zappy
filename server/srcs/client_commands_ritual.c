@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 09:43:16 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/27 10:49:49 by jayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 10:38:28 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,13 @@ static int	is_enough_for_ritual(int level, int players, int *objs)
 	for (int i = 0; i < 7; ++i)
 	{
 		if (objs[i] < required[i])
+		{
+			printf("Not enough %d\n", i);
 			return (0);
+		}
 	}
+	if (required[7] > players)
+		printf("Not enough players");
 	return (required[7] <= players);
 }
 

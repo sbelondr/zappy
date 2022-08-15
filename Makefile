@@ -17,6 +17,5 @@ $(PATH_GODOT):
 
 
 graphique: $(PATH_GODOT)
-	$(PATH_GODOT) --export  "$(PLATEFORME_GODOT)" $(PROJECT_GODOT)
 
 .PHONY : all server graphique

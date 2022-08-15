@@ -14,7 +14,7 @@ class Leveler < Client::Trantorien
 
   def foraging
     puts "#{broadcast_prefix}Currently foraging!!"
-    puts "Gathering food first..."
+    puts "#{broadcast_prefix}Gathering food first..."
     if gather_item "nourriture"
       puts "Found food!"
     else
@@ -24,18 +24,19 @@ class Leveler < Client::Trantorien
       if @inventory[i] < @needed[i]
         item_name = id_to_item_name i
         if gather_item item_name
-          puts "Found #{item_name}!"
+          puts "#{broadcast_prefix}Found #{item_name}!"
         else
-          puts "Found no #{item_name}."
+          puts "#{broadcast_prefix}Found no #{item_name}."
         end
         return if @mode != :foraging
         if enough_for_ritual
+          broadcast "START RITUAL"
           broadcast "HERE"
           @mode = :waiting_for_ritual
           @reached = true
-          puts "ENOUGH FOR RITUAL"
+          puts "#{broadcast_prefix}ENOUGH FOR RITUAL"
         else
-          puts "Not enough for ritual"
+          puts "#{broadcast_prefix}Not enough for ritual"
         end
       end
     end
@@ -53,17 +54,21 @@ class Leveler < Client::Trantorien
     end
   end
 
+  def generate_ritual
+    pose_tout
+    broadcast "HERE"
+    vision = do_action "voir"
+    if quantity_of("player", vision) > 5 and can_do_ritual(vision, @level)
+      puts "#{broadcast_prefix}Starting incantation !!"
+      incantation
+    end
+    puts "#{broadcast_prefix}Not enough to begin"
+    puts "#{broadcast_prefix}There is only #{quantity_of "player", vision}/5 players!"
+  end
+
   def waiting_for_ritual
-      #puts "#{broadcast_prefix}Ritual status: #{enough_for_ritual}"
-      pose_tout
-      broadcast "HERE"
-      vision = do_action "voir"
-      if quantity_of("player", vision) > 5 and can_do_ritual(vision, @level)
-        puts "#{broadcast_prefix}Starting incantation !!"
-        incantation
-      end
-      puts "#{broadcast_prefix}Not enough to begin"
-      puts "#{broadcast_prefix}There is only #{quantity_of "player", vision}/5 players!"
+    voir
+    puts "#{broadcast_prefix}Waiting"
   end
 
   def on_ritual_started
@@ -132,9 +137,16 @@ class Leveler < Client::Trantorien
       puts "#{broadcast_prefix}ignored a broadcast because it wasnt my level"
       return
     end
+    if info[2].start_with? "START RITUAL"
+      puts "#{broadcast_prefix}STARTING CONVERGING"
+      @mode = :converging
+    end
     if info[2].start_with? "HERE"
       @goal = translate_broadcast_to_vector direction
       @reached = direction.zero?
+      if @mode != :converging && @mode != :waiting_for_ritual
+        puts "ERROR: RECEIVED HERE FROM #{info[0]} OUT OF ORDER"
+      end
       @mode = :converging if @mode != :waiting_for_ritual
     end
   end

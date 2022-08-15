@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/05 11:00:56 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/07/11 10:54:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,6 @@ int	add_client(t_srv *srv)
 		return (-1);
 	}
 	int	i = srv->n_client_sck;
-	if (i >= (srv->world->params.allowed_clients_amount + 1))
-	{
-		dprintf(STDERR_FILENO, "NO MORE ROOM\n");
-		return (-1);
-	}
 
 	int new_id = search_new_id_client(srv->id_clients, \
 			srv->param->team_hard_limit);

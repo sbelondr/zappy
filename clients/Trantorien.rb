@@ -16,13 +16,18 @@ module Client
       @level = 1
       @inventory = [0, 0, 0, 0, 0, 0, 0]
       @socket = TCPSocket.new ip, port 
-      @socket.recv(99)
-      @socket.puts @team_name 
-      data = @socket.gets
-      if data[0].to_i == 0
+      ready = IO.select([@socket], nil, nil, 1)
+      if not ready
         @dead = true
+      else
+        @socket.recv(99)
+        @socket.puts @team_name 
+        data = @socket.gets
+        if data[0].to_i == 0
+          @dead = true
+        end
+        @socket.gets
       end
-      @socket.gets
     end
 
     def dead?
@@ -314,8 +319,10 @@ module Client
         threads << Thread.new { tt.process } 
       end
       sleep options[:delay]
+      puts "-----------------"
     end
     threads.each { |thr| thr.join }
+    puts "Mystheeeere"
   end
 
   def self.parse
@@ -331,7 +338,7 @@ module Client
 
     end.parse!(into: options)
     if options[:team].nil?
-      exit
+      abort "Missing team name"
     end
     options 
   end

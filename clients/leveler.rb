@@ -63,7 +63,8 @@ class Leveler < Client::Trantorien
         do_action "incantation"
       else
         puts "#{broadcast_prefix}Not enough to begin"
-        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision}/5 players!"
+        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision}/6 players!"
+        puts "Or we can't do the ritual."
       end
     end
   end
