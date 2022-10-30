@@ -28,6 +28,7 @@ var player_id: String
 var player_name: String
 var orientation: int
 var team: String
+var my_tree: Object
 
 onready var animPlayer : AnimationPlayer = get_node("AnimationPlayer")
 onready var tween : Tween = get_node("Tween")
@@ -206,7 +207,7 @@ func _ready():
 	animPlayer.get_animation("Ritual3").set_loop(true)
 	animPlayer.get_animation("Ritual4").set_loop(true)
 	animPlayer.get_animation("Pose").set_loop(true)
-	animPlayer.get_animation("Ponte loop").set_loop(true)
+	animPlayer.get_animation("Ponte").set_loop(true)
 	current_rotation = rotation.y
 	goal_rotation = current_rotation
 	rotation_progress = 0

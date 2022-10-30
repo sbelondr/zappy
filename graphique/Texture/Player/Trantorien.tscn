@@ -67,9 +67,6 @@ shape = SubResource( 1 )
 
 [node name="NodeHUD" type="Control" parent="." index="7"]
 theme = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HUDPlayer" type="CanvasLayer" parent="NodeHUD" index="0"]
 

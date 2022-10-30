@@ -43,7 +43,6 @@ shape = SubResource( 1 )
 [node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
 visible = false
 mesh = SubResource( 2 )
-material/0 = null
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 5, 48.7962 )
@@ -76,9 +75,11 @@ visible = false
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
+autoplay = true
 
 [connection signal="input_event" from="StaticBody" to="StaticBody" method="_on_StaticBody_input_event"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="debug_me" from="HUD" to="." method="_on_HUD_debug_me"]
 [connection signal="mode_doom" from="HUD" to="." method="_on_HUD_mode_doom"]
 [connection signal="player_deselected" from="HUD" to="." method="_on_Tree_item_deselected"]
 [connection signal="player_selected" from="HUD" to="." method="_on_Tree_item_selected"]

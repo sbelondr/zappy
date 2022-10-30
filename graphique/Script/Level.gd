@@ -210,6 +210,7 @@ func game_over(name_team: String) -> void:
 func _ready():
 	root_tree = tree.create_item()
 	$HUD/Tree.set_hide_root(true)
+	$AudioStreamPlayer.playing = true
 
 # set map
 # Args:
@@ -239,18 +240,31 @@ func _set_camera() -> void:
 #	teams: team of player
 #	id_trantorien: new player to add
 func _hud_add_player(team: String, id_trantorien: String) -> void:
+	if not team in list_team:
+		hud_add_team(team)
 	var obj_team = list_team[team]
 	var subchild1 = tree.create_item(obj_team)
 	subchild1.set_text(0, id_trantorien)
+	var tr = list_player[id_trantorien]
+	tr.my_tree = subchild1
 	$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" \
 			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
 
 func _hud_delete_player(team: String, id_trantorien: String) -> void:
-	var obj_team = list_team[team]
-#	var children: TreeItem = tree.get_root().get_children()
+#	var _obj_team = list_team[team]
+#	var children: Array = tree.get_children()
+	print("Dans la suppression")
+	var obj_player = list_player[id_trantorien].my_tree
+	root_tree.remove_child(obj_player)
+##	tree.remove_child(child)
+##	while children:
+##		print(children)
+##		print(children.get_children())
+##		children = children.get_next()
+#	print(children)
 #	for child in children:
 #		print(child)
-#	print(children)
+#	print(children[1].get_children())
 
 ###############################################################################
 # Signals
@@ -274,3 +288,9 @@ func _on_Tree_item_selected(id: String) -> void:
 
 func _on_HUD_mode_doom() -> void:
 	get_node("AudioStreamPlayer").playing = true
+
+func _on_HUD_debug_me(id: String) -> void:
+	var obj_player = list_player[id].my_tree
+	root_tree.remove_child(obj_player)
+#	for child in children:
+#		parcour_child(child)
