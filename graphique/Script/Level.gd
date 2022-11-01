@@ -251,20 +251,10 @@ func _hud_add_player(team: String, id_trantorien: String) -> void:
 			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
 
 func _hud_delete_player(team: String, id_trantorien: String) -> void:
-#	var _obj_team = list_team[team]
-#	var children: Array = tree.get_children()
-	print("Dans la suppression")
 	var obj_player = list_player[id_trantorien].my_tree
-	root_tree.remove_child(obj_player)
-##	tree.remove_child(child)
-##	while children:
-##		print(children)
-##		print(children.get_children())
-##		children = children.get_next()
-#	print(children)
-#	for child in children:
-#		print(child)
-#	print(children[1].get_children())
+	var parent = obj_player.get_parent()
+	parent.remove_child(obj_player)
+	tree.update()
 
 ###############################################################################
 # Signals
@@ -290,7 +280,4 @@ func _on_HUD_mode_doom() -> void:
 	get_node("AudioStreamPlayer").playing = true
 
 func _on_HUD_debug_me(id: String) -> void:
-	var obj_player = list_player[id].my_tree
-	root_tree.remove_child(obj_player)
-#	for child in children:
-#		parcour_child(child)
+	print("here")
