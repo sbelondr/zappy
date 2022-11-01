@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 10:56:24 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/15 10:19:08 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/01 09:11:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_egg	*new_egg(t_world_state *w, char const *team_name, t_vector2 pos, int paren
 	ret->father_id = parent_id;
 	ret->food = 10;
 	ret->maturity = 600;
+	ret->used = 0;
 	current = w->egg_list;
 	while (current)
 	{

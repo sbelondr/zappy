@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 09:43:16 by jayache           #+#    #+#             */
-/*   Updated: 2022/07/11 10:38:28 by jayache          ###   ########.fr       */
+/*   Updated: 2022/10/31 09:35:19 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int		game_is_won(t_srv *srv)
 			gods += player->lvl == 8;
 			current_player = current_player->next;
 		}
+		printf("Gods: %d/6\n", gods);
 		if (gods >= 6)
 			return (1);
 		current_team = current_team->next;
@@ -140,6 +141,9 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 	}
 	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
 	if (game_is_won(srv))
+	{
 	   send_to_all_moniteur(srv, moniteur_seg(player->team_name));
+	   printf("Team %s won the game!\n", player->team_name);
+	}
 	return (msg);
 }

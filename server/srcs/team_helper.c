@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 10:45:04 by selver            #+#    #+#             */
-/*   Updated: 2022/03/23 10:39:08 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/01 09:22:57 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int			get_maximum_players_in_game(t_srv *srv)
 	return (srv->param->team_hard_limit * 2); //TODO: change constant by number of teams
 }
 
-int			available_slots(t_srv *srv, t_team *team)
+int			available_slots(t_srv *srv, t_team *team) //TODO: this doesnt work?
 {
 	int		lstsize;
 	int		remaining_slots;
@@ -177,7 +177,7 @@ int		add_to_team(t_srv *srv, char *team_name, int id)
 	{
 		welcome_moniteur(srv, id);
 		return (1);
-	}	
+	}
 	else if (!ft_strcmp(team_name, TESTER_TEAM) && srv->param->flags & FLAG_TESTER)
 	{
 		c->team_name = TESTER_TEAM;
