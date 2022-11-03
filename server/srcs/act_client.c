@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/05 10:56:09 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/11/03 10:30:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int index)
 	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
 		set_color(RED, srv->param->flags);
-		printf(LOG_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[index].fd, \
+		printf(ERROR_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[index].fd, \
 				index, buff);
 		set_color(RESET, srv->param->flags);
 	}

@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2022/06/22 09:30:04 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:49:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 	}
 	else
 	{
-		printf("ERROR: move_player!! dir = %d player = %d\n", dir, target->id);
+		printf(ERROR_INVALID_DIRECTION, dir, target->id);
 	}
 	if (can_print(&world->params, LOG_INFO))
 	{
-		purple();
+		set_color(PURPLE, world->params.flags);
 		printf(LOG_PLAYER_NEW_POSITION, target->id, target->p_x, target->p_y);
-		reset(); 
+		set_color(RESET, world->params.flags);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 09:22:38 by jayache           #+#    #+#             */
-/*   Updated: 2022/06/22 09:25:14 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:42:23 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 	"-n, --name <name>          team_name_1 team_name_2 ...\n"\
 	"-c, --clients-allowed <n>  number of allowed clients authorized when game starts\n" \
 	"-t, --time <n>             time unit diviser (game goes faster as it gets bigger)\n"\
-	"-m, --max <n>              maximum amount of players per team (default: 300)\n" \
+	"-m, --max-clients <n>      maximum amount of players per team (default: 300)\n" \
 	"-h, --help                 show this help\n" \
 	"-H, --hunger               disable hunger\n" \
 	"-v, --verification         allow the connexion of the special group TESTER (to pass unit tests)\n" \
@@ -71,6 +71,7 @@
 #define LOC_COMMAND_POSE	"put"
 #define LOC_COMMAND_PRENDRE	"take"
 #define LOC_COMMAND_FORK	"fork"
+#define LOC_COMMAND_CONNECT_NBR	"connect_nbr"
 
 #define LOC_FORK_ANSWER				"current level : %d\n"
 #define LOC_FORK_ANSWER_CURRENT		"elevation in process\n"
@@ -90,6 +91,9 @@
 #define ERROR_INV_OPT_UNKNOWN			"Unknown option: %s\n" 
 #define ERROR_INV_OPT_END				"Error: unexpected end of argument: %s\n"
 
+#define ERROR_UNKNOWN_RESSOURCE		"Error: Unknown ressource name: %s\n"
+#define ERROR_INVALID_DIRECTION		"FATAL ERROR: Player #%2$d has an invalid orientation (%1$d)"
+
 #define ERROR_MISSING_PARAM_PORT	"Missing parameter: Port number (-p)\n"
 #define ERROR_MISSING_PARAM_WIDTH	"Missing parameter: World width (-x)\n"
 #define ERROR_MISSING_PARAM_HEIGHT	"Missing parameter: World height (-y)\n"
@@ -97,15 +101,26 @@
 #define ERROR_MISSING_PARAM_ACA		"Missing parameter: Amount of clients that can connect without needing eggs (-c)\n"
 #define ERROR_MISSING_PARAM_TEAM	"Missing parameter: Team names (Min. 1)(-n)\n"
 
-#define LOG_CLIENTS_LEFT		"There are %ld clients left on the server!\n"
-#define LOG_INCOMPLETE_COMMAND	"%ld: ERROR! The command sent by #%d [%d] isn't complete." \
+#define ERROR_INCOMPLETE_COMMAND	"%ld: ERROR! The command sent by #%d [%d] isn't complete." \
 	"Was it too long? Command received: %s"
+
+#define LOG_CLIENTS_LEFT		"There are %ld clients left on the server!\n"
 #define LOG_UNDEAD_CLIENT		"Client #%d is dead, but we are still receiving requests!\n"
 #define LOG_CONNEXION_EGG		"Connecting new client with egg #%d\n"
 #define LOG_CONNEXION_POSITION	"New player at position x: %d y: %d\n"
 #define LOG_REFUSED_CONNEXION	"%ld: Connexion refused for #%d [%d]\n"
 #define LOG_EGG_READY_TO_HATCH	"%ld: An egg is ready to hatch!\n"
 #define LOG_PLAYER_NEW_POSITION	"Player #%d is at position x:%d y:%d\n"
+#define LOG_TEAM_VICTORY		"Victory of team %s!\n"
+#define LOG_EGG_DEATH			"%ld: An egg died!\n"
+#define LOG_PLAYER_FORK			"#%d layed an egg with ID %d!\n"
+#define LOG_GENERATE_RESSOURCES	"%ld: Generating more ressources!\n"
+#define LOG_CLIENT_DEATH		"%ld: Client #%d died!\n"
+#define LOG_CLIENT_CONNEXION	"New client connected with ID #%d [%d]"
 
-
+#define PROCESS_CLEAN_CLIENTS	"Killing all clients...\n"
+#define PROCESS_SHUTDOWN_CLIENT	"Killing client [%d]"
+#define PROCESS_SHUTDOWN_SERVER	"Exiting server with signal : %d\n"
+#define PROCESS_START_SERVER	"Server start."
+#define PROCESS_CONNEXION_END	"Ending connexion to [%d]\n"
 #endif

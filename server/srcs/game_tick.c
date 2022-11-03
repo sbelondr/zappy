@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 10:34:19 by selver            #+#    #+#             */
-/*   Updated: 2022/07/11 10:22:24 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:47:22 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void	egg_tick(t_srv *srv, t_list *egg_list)
 			{
 				if (can_print(srv->param, LOG_INFO))
 				{
-					purple();
+					set_color(PURPLE, srv->param->flags);
 					printf(LOG_EGG_READY_TO_HATCH, srv->frame_nbr);
-					reset();
+					set_color(RESET, srv->param->flags);
 				}
 				send_to_all_moniteur(srv, moniteur_eht(egg));
 			}
@@ -140,7 +140,7 @@ void	game_tick(t_srv *srv)
 	{
 		if (can_print(srv->param, LOG_INFO))
 		{
-			printf("%ld:Generate more ressources!\n", srv->frame_nbr);
+			printf(LOG_GENERATE_RESSOURCES, srv->frame_nbr);
 		}
 		srv->param->generate_function(*srv->world);
 		send_to_all_moniteur(srv, moniteur_mct(srv->world));

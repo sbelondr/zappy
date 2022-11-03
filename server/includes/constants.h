@@ -6,18 +6,22 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:11:31 by selver            #+#    #+#             */
-/*   Updated: 2022/03/22 11:27:02 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:35:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
-#include "localized_strings_fr.h"
+#ifdef LANG_EN
+# include "localized_strings_en.h"
+#else
+# include "localized_strings_fr.h"
+#endif
+
 #include "license.h"
 
 #define BUFF_READ			2024
-
 
 #define MAX_HUNGER			126;
 
@@ -113,7 +117,6 @@ typedef enum	e_command_type
 	COMMAND_BAD_PARAMETER,
 	COMMAND_NBR
 }				t_command_type;
-
 
 typedef enum	e_orientation
 {

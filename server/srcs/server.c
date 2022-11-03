@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/05 10:59:38 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/11/03 10:47:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_srv **g_srv = NULL;
 
 void ft_quit(int sig)
 {
-	printf("Kill all clients\n");
+	printf(PROCESS_CLEAN_CLIENTS);
 	t_srv *srv = *g_srv;
 	int i = -1;
 	int sd;
@@ -29,9 +29,9 @@ void ft_quit(int sig)
 		sd = srv->client_sck[i].fd;
 		if (sd > 0)
 		{
-			red();
-			printf("Shutdown client: %d\n", srv->client_sck[i].fd);
-			reset();
+			set_color(RED, srv->param->flags);
+			printf(PROCESS_SHUTDOWN_CLIENT, srv->client_sck[i].fd);
+			set_color(RESET, srv->param->flags);
 			shutdown(sd, SHUT_WR);
 			if (close(sd))
 				perror("close");
@@ -41,7 +41,7 @@ void ft_quit(int sig)
 	free(srv->client_sck);
 	free(srv->id_clients);
 	free(*g_srv);
-	printf("Quit: %d", sig);
+	printf(PROCESS_SHUTDOWN_SERVER, sig);
 	exit(sig);
 }
 
@@ -92,9 +92,9 @@ int main(int ac, char **av)
 	g_srv = &srv;
 	setup_signal();
 	send_to_all_moniteur(srv, moniteur_mct(srv->world));
-	yellow();
-	printf("Launch srv\n");
-	reset();
+	set_color(YELLOW, srv->param->flags);
+	printf(PROCESS_START_SERVER);
+	set_color(RESET, srv->param->flags);
 
 	tmp_n_client_sck = srv->n_client_sck;
 	srv->client_sck[0].fd = srv->master_sck;

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:14:09 by selver            #+#    #+#             */
-/*   Updated: 2022/03/24 10:05:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 09:39:36 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,8 @@ t_param	parse_input(int ac, char **av)
 	bzero(&param, sizeof(t_param));
 	param.team_hard_limit = 500;
 	param.allowed_logs = LOG_RECEIVE | LOG_SEND | LOG_CONNEXION | LOG_ERROR;
-	param.generate_function = generate_ressource_standard;
-	param.generation_frequency = 1000;
+	param.generate_function = generate_ressource_uniform;
+	param.generation_frequency = 100;
 	param.flags |= FLAG_COLOR;
 	for (int i = 1; i < ac; i++)
 	{
@@ -139,7 +139,7 @@ t_param	parse_input(int ac, char **av)
 			usage(0);
 		else if (is_option(av[i], "-M", "--MIT"))
 		{
-			printf("%s\n", MIT_LICENSE);
+			printf(MIT_LICENSE);
 			exit(0);
 		}
 		else if (is_option(av[i], "-H", "--no-hunger"))

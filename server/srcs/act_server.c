@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:53 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/07/11 10:54:00 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:26:54 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ int	add_client(t_srv *srv)
 			ft_lstnew_no_copy(new_client(new_id), sizeof(t_client)));
 	if (can_print(srv->param, LOG_CONNEXION))
 	{
-		yellow();
-		printf("Add new client: %d\n", new_id);
-		reset();
+		set_color(YELLOW, srv->param->flags);
+		printf(LOG_CLIENT_CONNEXION, new_id, new_sd);
+		set_color(RESET, srv->param->flags);
 	}
 	simple_send_no_free(srv, new_id, "BIENVENUE\n");
 	return (1);

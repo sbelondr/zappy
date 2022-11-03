@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/04/06 09:57:55 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/11/03 10:28:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	listen_client(t_srv *srv, int index)
 	}
 	else if (len_read == 0)
 	{
-		printf("Connection closed: %d\n", srv->client_sck[index].fd);
+		printf(PROCESS_CONNEXION_END, srv->client_sck[index].fd);
 		close_conn = 1;
 	}
 	if (close_conn)
