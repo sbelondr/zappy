@@ -248,8 +248,8 @@ func _hud_add_player(team: String, id_trantorien: String) -> void:
 	subchild1.set_text(0, id_trantorien)
 	var tr = list_player[id_trantorien]
 	tr.my_tree = subchild1
-	$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" \
-			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
+#	$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" \
+#			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
 
 func _hud_delete_player(id_trantorien: String) -> void:
 	var obj_player = list_player[id_trantorien].my_tree
@@ -260,23 +260,23 @@ func _hud_delete_player(id_trantorien: String) -> void:
 func _delete_all():
 	for egg in list_egg.values():
 		egg.queue_free()
-	list_egg = Dictionary()
-#		egg_die(x)
 	for player in list_player.values():
 		player.queue_free()
-	list_player = Dictionary()
-#		player_die(x)
 	for line in map:
 		for x in line:
 			$Terrain.remove_child(x)
-	map = []
 	for x in list_team.values():
 		var parent = x.get_parent()
 		parent.remove_child(x)
+	
+	# erase variables
+	map = []
+	list_egg = Dictionary()
+	list_player = Dictionary()
 	list_team = Dictionary()
+	
+	# update HUD
 	tree.update()
-#	for x in tree:
-		
 
 ###############################################################################
 # Signals
