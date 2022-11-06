@@ -15,16 +15,18 @@ func _ready():
 	client = StreamPeerTCP.new()
 
 func state_connection(new_status):
-	if new_status != _status:
+	if new_status != _status or new_status == client.STATUS_ERROR or new_status == client.STATUS_NONE:
 		_status = new_status
 		match _status:
 			client.STATUS_NONE:
+				set_process(false)
 				emit_signal("disconnected")
 			client.STATUS_CONNECTING:
 				print("Connecting to host.")
 			client.STATUS_CONNECTED:
 				emit_signal("connected")
 			client.STATUS_ERROR:
+				set_process(false)
 				emit_signal("error")
 
 func srv_send_msg():
@@ -49,9 +51,13 @@ func connect_to_server(ip, port):
 	print("Connecting to server: %s : %s" % [ip, str(port)])
 	client.connect_to_host(ip, port)
 	if client.is_connected_to_host():
+		print("am here")
 		client.set_no_delay(true)
 		wrapped_client = PacketPeerStream.new()
 		wrapped_client.set_stream_peer(client)
+	else:
+		print("erreur connect_to_server")
+		disconnect_from_server()
 
 func disconnect_from_server():
 	client.disconnect_from_host()

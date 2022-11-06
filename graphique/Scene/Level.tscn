@@ -47,8 +47,6 @@ script = ExtResource( 2 )
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0 )
 
-[node name="Timer" type="Timer" parent="."]
-
 [node name="Tween" type="Tween" parent="."]
 
 [node name="Terrain" type="Spatial" parent="."]
@@ -73,7 +71,6 @@ stream = ExtResource( 6 )
 autoplay = true
 
 [connection signal="input_event" from="StaticBody" to="StaticBody" method="_on_StaticBody_input_event"]
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="debug_me" from="HUD" to="." method="_on_HUD_debug_me"]
 [connection signal="mode_doom" from="HUD" to="." method="_on_HUD_mode_doom"]
 [connection signal="player_deselected" from="HUD" to="." method="_on_Tree_item_deselected"]

@@ -25,6 +25,7 @@ func _process(_delta):
 		line_edit.visible = Manager.line_edit_cheat_enabled
 		if line_edit.visible:
 			line_edit.grab_focus()
+			line_edit.text = ""
 	if panel.visible != Manager.hide_hud:
 		panel.visible = Manager.hide_hud
 		tree.visible = Manager.hide_hud
