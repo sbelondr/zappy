@@ -14,6 +14,8 @@ onready var CommandServer = load("res://Script/CommandServer.gd")
 
 var command_server
 
+var timer_value: int
+
 var _client: Client = Client.new()
 onready var level = get_node("World/Level")
 
@@ -35,6 +37,7 @@ func _ready():
 # warning-ignore:return_value_discarded
 	_client.connect("error", self, "_handle_client_error")
 	_client.connect_to_server(HOST, PORT)
+	Manager.connect("timer_changed", self, "edit_time")
 
 func _process(_delta):
 	if Input.is_action_just_pressed("+"):
@@ -46,6 +49,11 @@ func _process(_delta):
 	if Input.is_action_just_pressed("reload"):
 # warning-ignore:return_value_discarded
 		get_tree().reload_current_scene()
+
+func edit_time(value: float):
+	_client.send_var("sst %d" % int(value))
+	command_server.set_time(value)
+	$World/Level/HUD/SpinBox.value = value
 
 # Manage connection server
 

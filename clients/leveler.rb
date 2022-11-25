@@ -74,6 +74,12 @@ class Leveler < Client::Trantorien
       if quantity_of("PLAYER", vision) > 5 and can_do_ritual(vision, @level)
         puts "#{broadcast_prefix}Starting incantation !!"
         do_action "incantation"
+        do_action "incantation"
+        do_action "incantation"
+        do_action "incantation"
+        do_action "incantation"
+        do_action "incantation"
+        do_action "incantation"
       else
         puts "#{broadcast_prefix}Not enough to begin"
         puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision}/6 players!"
@@ -92,7 +98,7 @@ class Leveler < Client::Trantorien
       @mode = :survive
       puts "#{broadcast_prefix}Now trying to survive!"
     else
-    @mode = :foraging
+    @mode = :wait
     @communal_inventory = @inventory.dup
     @needed = get_ritual_cost new_level
     puts "#{broadcast_prefix}Incantation finished!!"

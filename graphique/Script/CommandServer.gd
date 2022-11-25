@@ -17,6 +17,9 @@ func inc_dec_time(is_inc: bool):
 	else:
 		TIME += 0.2
 
+func set_time(new_time):
+	TIME = 1.0 / int(new_time)
+
 func command_server(arr, client):
 	# generate map
 	if arr[0] == "msz":
@@ -34,7 +37,9 @@ func command_server(arr, client):
 		level.player_move(arr[1], position, int(arr[4]), TIME)
 	# set time
 	elif arr[0] == 'sgt':
-		TIME = 1.0 / int(arr[1])
+		Manager.set_timer_value(int(arr[1]))
+		set_time(arr[1])
+#		TIME = 1.0 / int(arr[1])
 	# add gem
 	elif arr[0] == 'bct':
 		level.map_add_gem(arr)

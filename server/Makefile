@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/11/03 10:35:07 by jayache          ###   ########.fr        #
+#    Updated: 2022/11/25 14:16:17 by sbelondr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ DEBUG = yes
 # LANG PARAM #
 # ---------- #
 
-LANG_FLAG = LANG_EN
+LANG_FLAG = LANG_FR
 
 # --------- #
 # Directory #

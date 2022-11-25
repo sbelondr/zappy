@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/11/03 10:47:58 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/25 16:27:36 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int main(int ac, char **av)
 	srv->last_frame_stamp = clock();
 	while (!end_server)
 	{
-		last_until = delta_to_clock_t(srv->param->time_delta);
+		last_until = delta_to_clock_t(srv->world->params.time_delta);
 		while (clock() - srv->last_frame_stamp < last_until)
 		{
 			if (poll(srv->client_sck, srv->n_client_sck, 0) < 0)

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/27 10:49:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/25 14:40:12 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*moniteur_seg(char *team_name)
 	char	*ret;
 	int		error;
 
-	error = asprintf(&ret, "seg %s",team_name);
+	error = asprintf(&ret, "seg %s\n",team_name);
 	if (error < 0)
 		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);

@@ -16,6 +16,8 @@ var map := []
 var g_x: int = 10
 var g_z: int = 10
 
+var is_game_over: bool = false
+
 # Texture
 const texture_block: PackedScene = preload("res://Texture/Ground/block.tscn")
 const trantorien: PackedScene = preload("res://Texture/Player/Trantorien.tscn")
@@ -105,7 +107,6 @@ func player_die(id_player: String) -> void:
 		var player = list_player[id_player]
 		player.dead()
 		_hud_delete_player(id_player)
-		player.queue_free()
 		list_player.erase(id_player)
 
 func player_kicked(id_player: String) -> void:
@@ -202,8 +203,10 @@ func egg_spawn(id_egg: String, id_player: String, position: Vector3) -> void:
 ###############################################################################
 
 func game_over(name_team: String) -> void:
-	$End/GameOver.get_node("team_win").text(name_team + " win !")
-	$End/GameOver.visible = true
+	if not is_game_over:
+		$End/GameOver.get_node("HBoxContainer/HBoxContainer/team").text = name_team
+		$End/GameOver.visible = true
+		is_game_over = true
 
 ###############################################################################
 # Private methods
@@ -303,7 +306,6 @@ func _on_HUD_mode_doom() -> void:
 
 func _on_HUD_debug_me(_id: String) -> void:
 	print("here")
-	_delete_all()
 
 func _on_Main_server_disconnect():
 	_delete_all()

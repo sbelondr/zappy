@@ -74,3 +74,4 @@ func send_var(msg):
 		var error = wrapped_client.get_packet_error()
 		if error != 0:
 			print("Error on packet put: %s" % error)
+

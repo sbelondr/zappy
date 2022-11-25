@@ -27,7 +27,7 @@ func _process(_delta):
 			line_edit.grab_focus()
 			line_edit.text = ""
 	if panel.visible != Manager.hide_hud:
-		panel.visible = Manager.hide_hud
+#		panel.visible = Manager.hide_hud
 		tree.visible = Manager.hide_hud
 
 func _on_Tree_item_selected():
@@ -46,6 +46,14 @@ func _on_LineEdit_text_entered(new_text):
 	print (val)
 	if new_text == 'Doom':
 		emit_signal("mode_doom")
-	elif val[0] == 'd':
+	elif val[0] == 'sst':
 		emit_signal("debug_me", val[1])
 	Manager.line_edit_cheat_enabled = false
+
+
+func _on_SpinBox_value_changed(value : float):
+	Manager.set_timer_value(int(value))
+
+func _on_timer_update(value: float):
+	$SpinBox.value = value
+#	$"/root/Manager".send_message("sgt %d" % value)

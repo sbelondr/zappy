@@ -161,7 +161,6 @@ func kicked(new_position: Vector3, time: float) -> void:
 func dead() -> void:
 	animPlayer.play("Death")
 # warning-ignore:return_value_discarded
-	animPlayer.connect("animation_finished", self, "_death_animation_finished")
 
 #Play the idle animation when nothing else is going on
 #Necessary to avoid doing stupid thing, also its a placeholder. PLEASE CALL THIS
@@ -218,6 +217,7 @@ func _ready():
 	team = ''
 	player_id = ''
 	highlighted = false
+	animPlayer.connect("animation_finished", self, "_death_animation_finished")
 	animPlayer.play("Idle")
 #	get_node('NodeHUD/HUDPlayer/info_player/GC_inventaire').visible = false
 	get_node("NodeHUD/HUDPlayer/info_player").visible = false
@@ -230,7 +230,7 @@ func _death_animation_finished(animation_name: String) -> void:
 	if animation_name == "Death":
 		queue_free()
 	elif animation_name == "Ponte":
-		animPlayer.play("Ponte loop")
+		animPlayer.play("Ponte")
 	else:
 		animPlayer.play("Idle")
 
