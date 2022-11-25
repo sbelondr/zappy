@@ -1,0 +1,14 @@
+[gd_resource type="AudioBusLayout" load_steps=3 format=2]
+
+[sub_resource type="AudioEffectEQ" id=3]
+resource_name = "EQ"
+
+[sub_resource type="AudioEffectFilter" id=4]
+resource_name = "Filter"
+
+[resource]
+bus/0/volume_db = 1.45601
+bus/0/effect/0/effect = SubResource( 3 )
+bus/0/effect/0/enabled = true
+bus/0/effect/1/effect = SubResource( 4 )
+bus/0/effect/1/enabled = true

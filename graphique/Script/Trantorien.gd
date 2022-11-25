@@ -28,6 +28,7 @@ var player_id: String
 var player_name: String
 var orientation: int
 var team: String
+var my_tree: Object
 
 onready var animPlayer : AnimationPlayer = get_node("AnimationPlayer")
 onready var tween : Tween = get_node("Tween")
@@ -107,7 +108,7 @@ func move(dest: Vector3, orientation_player: int, time: float) -> void:
 		tween.interpolate_property(self, "translation", translation, dest, time, Tween.TRANS_CUBIC)
 	# warning-ignore:return_value_discarded
 		tween.start()
-		animPlayer.queue("WalkCycle")
+		animPlayer.play("WalkCycle")
 	else:
 		translation = dest
 
@@ -139,12 +140,12 @@ func start_incantation() -> void:
 	var ritual_level := level
 	if level > 4:
 		ritual_level = 4
-	animPlayer.queue("Ritual%d" % ritual_level)
+	animPlayer.start("Ritual%d" % ritual_level)
 
 #Play the kick animation
 #JUST CALL THIS PLEASE
 func kick() -> void:
-	animPlayer.queue("Kick")
+	animPlayer.start("Kick")
 	
 #Is being kicked
 #Stop current animation (will play one later) and handle movement, PLEASE CALL THIS
@@ -200,13 +201,15 @@ func highlight_end():
 		get_node("NodeHUD/HUDPlayer/info_player").visible = false
 
 func _ready():
-	animPlayer.get_animation("WalkCycle").set_loop(true)
+#	animPlayer.get_animation("WalkCycle").set_loop(true)
 	animPlayer.get_animation("Ritual1").set_loop(true)
 	animPlayer.get_animation("Ritual2").set_loop(true)
 	animPlayer.get_animation("Ritual3").set_loop(true)
 	animPlayer.get_animation("Ritual4").set_loop(true)
-	animPlayer.get_animation("Pose").set_loop(true)
-	animPlayer.get_animation("Ponte loop").set_loop(true)
+#	animPlayer.get_animation("Pose").set_loop(true)
+#	animPlayer.get_animation("Ponte").set_loop(true)
+	animPlayer.get_animation("Idle").set_loop(true)
+	
 	current_rotation = rotation.y
 	goal_rotation = current_rotation
 	rotation_progress = 0
@@ -228,6 +231,8 @@ func _death_animation_finished(animation_name: String) -> void:
 		queue_free()
 	elif animation_name == "Ponte":
 		animPlayer.play("Ponte loop")
+	else:
+		animPlayer.play("Idle")
 
 func _process(delta: float):
 	rotation_progress = clamp(rotation_progress, 0, 1)

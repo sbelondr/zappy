@@ -6,6 +6,10 @@ const PORT: int = 8080
 const RECONNECT_TIMEOUT: float = 3.0
 const Client = preload("res://Script/Client.gd")
 
+signal server_disconnect()
+
+var disconnect_level: bool = false
+
 onready var CommandServer = load("res://Script/CommandServer.gd")
 
 var command_server
@@ -13,7 +17,12 @@ var command_server
 var _client: Client = Client.new()
 onready var level = get_node("World/Level")
 
+onready var timer: Timer = get_node("World/CanvasMain/Timer")
+onready var labelTimer: Label = get_node("World/CanvasMain/labTimer")
+onready var logs: RichTextLabel = get_node("World/CanvasMain/logs")
+
 func _ready():
+	
 	command_server = CommandServer.new(level)
 	# manage connection socket
 	add_child(_client)
@@ -51,14 +60,26 @@ func _handle_client_data(data: PoolByteArray) -> void:
 		command_server.command_server(arr, _client)
 
 func _connect_after_timeout(timeout: float) -> void:
-	yield(get_tree().create_timer(timeout), "timeout")
-	_client.connect_to_server(HOST, PORT)
+	logs.add_text("Dans timeout.\n")
+	emit_signal("server_disconnect")
+	timer.start(timeout)
+#	level.queue_free()
+#	level = "res://Scene/Level.tscn".instance()
+#	get_tree().reload_current_scene()
+#	timer.connect("timeout", labelTimer, "toggle_visibility")
+#	yield(get_tree().create_timer(timeout), "timeout")
 
 func _handle_client_disconnected() -> void:
 	print("Client disconnected from server.")
+	logs.add_text("Client disconnected from server.\n")
 	_connect_after_timeout(RECONNECT_TIMEOUT)
 
 func _handle_client_error() -> void:
 	print("Client error.")
+	logs.add_text("Client error.\n")
 	_connect_after_timeout(RECONNECT_TIMEOUT)
 
+func _on_Timer_timeout():
+	logs.add_text("Fin timeout\n")
+	timer.stop()
+	_client.connect_to_server(HOST, PORT)

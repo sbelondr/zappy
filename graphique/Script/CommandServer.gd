@@ -24,13 +24,13 @@ func command_server(arr, client):
 	# new player
 	elif arr[0] == 'pnw':
 		if arr[6] != 'GRAPHIC' and arr[6] != '(null)':
-			var position: Vector3 = Vector3(int(arr[2]), 0.5, int(arr[3]))
+			var position: Vector3 = Vector3(int(arr[2]), 1, int(arr[3]))
 			level.player_add_new(arr[1], position, int(arr[4]), int(arr[5]), arr[6], \
 					TIME)
 			client.send_var("pin " + arr[1])
 	# move player
 	elif arr[0] == 'ppo':
-		var position = Vector3(int(arr[2]), 0.5, int(arr[3]))
+		var position = Vector3(int(arr[2]), 1, int(arr[3]))
 		level.player_move(arr[1], position, int(arr[4]), TIME)
 	# set time
 	elif arr[0] == 'sgt':
