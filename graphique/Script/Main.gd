@@ -17,7 +17,12 @@ var command_server
 var _client: Client = Client.new()
 onready var level = get_node("World/Level")
 
+onready var timer: Timer = get_node("World/CanvasMain/Timer")
+onready var labelTimer: Label = get_node("World/CanvasMain/labTimer")
+onready var logs: RichTextLabel = get_node("World/CanvasMain/logs")
+
 func _ready():
+	
 	command_server = CommandServer.new(level)
 	# manage connection socket
 	add_child(_client)
@@ -53,10 +58,6 @@ func _handle_client_data(data: PoolByteArray) -> void:
 	for line in msg:
 		var arr : Array = line.split(' ')
 		command_server.command_server(arr, _client)
-
-onready var timer: Timer = get_node("World/CanvasMain/Timer")
-onready var labelTimer: Label = get_node("World/CanvasMain/labTimer")
-onready var logs: RichTextLabel = get_node("World/CanvasMain/logs")
 
 func _connect_after_timeout(timeout: float) -> void:
 	logs.add_text("Dans timeout.\n")

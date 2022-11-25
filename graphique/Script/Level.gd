@@ -259,7 +259,7 @@ func _hud_delete_player(id_trantorien: String) -> void:
 
 func _delete_all():
 	for egg in list_egg.values():
-		egg.queue_free()
+		egg[0].queue_free()
 	for player in list_player.values():
 		player.queue_free()
 	for line in map:
