@@ -53,7 +53,7 @@ func _process(_delta):
 func edit_time(value: float):
 	_client.send_var("sst %d" % int(value))
 	command_server.set_time(value)
-	$World/Level/HUD/SpinBox.value = value
+	$World/Level/HUD/HBoxContainer/SpinBox.value = value
 
 # Manage connection server
 

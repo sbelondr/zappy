@@ -105,6 +105,7 @@ func move(dest: Vector3, orientation_player: int, time: float) -> void:
 		and is_interpolate(translation.y, dest.y) \
 		and is_interpolate(translation.z, dest.z):
 	# warning-ignore:return_value_discarded
+		print(dest)
 		tween.interpolate_property(self, "translation", translation, dest, time, Tween.TRANS_CUBIC)
 	# warning-ignore:return_value_discarded
 		tween.start()
@@ -114,7 +115,7 @@ func move(dest: Vector3, orientation_player: int, time: float) -> void:
 
 #Handle fork animation and fade into fork loop, PLEASE CALL THIS
 func fork_start() -> void:
-	animPlayer.queue("Ponte")
+	animPlayer.play("Ponte")
 
 #Handles animation end, PLEASE CALL THIS
 func fork_end() -> void:

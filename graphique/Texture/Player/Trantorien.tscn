@@ -279,7 +279,7 @@ margin_top = 145.0
 margin_right = 388.0
 margin_bottom = 177.0
 theme = SubResource( 5 )
-max_value = 6.0
+max_value = 8.0
 percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
