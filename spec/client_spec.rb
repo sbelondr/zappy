@@ -142,7 +142,7 @@ RSpec.describe 'Checking if we can do the ritual', :ritual do
     end
     it ': level 3' do 
       @tester.puts 'set bct 5 5 0 2 0 1 0 2 0'
-      @tester.gets
+      expect(@tester.gets).to eq("ok\n")
       6.times do |i|
         vision = @clients[i].do_action "voir"
         expect(@clients[i].can_do_ritual vision, 3).to eq(true)

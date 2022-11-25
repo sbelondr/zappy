@@ -22,7 +22,9 @@ const trantorien: PackedScene = preload("res://Texture/Player/Trantorien.tscn")
 const egg: PackedScene = preload("res://Texture/Egg/Egg.tscn");
 
 # HUD
-onready var tree = $HUD/Tree
+onready var tree: Tree = $HUD/Tree
+onready var camera: Camera = get_node("Camera")
+
 var root_tree;
 
 # color teams for the HUD
@@ -84,8 +86,8 @@ func hud_message_server(msg: String) -> void:
 	$HUD/logs.text = "Message server: " + msg
 
 func hud_add_team(id_team: String) -> void:
-	$HUD/Panel/VBoxContainer/teams.bbcode_text += "\n[color=" + \
-			color[cnt_color % 7] + "]" + id_team + "[/color]"
+#	$HUD/Panel/VBoxContainer/teams.bbcode_text += "\n[color=" + \
+#			color[cnt_color % 7] + "]" + id_team + "[/color]"
 	var child1: TreeItem = tree.create_item(root_tree)
 	cnt_color += 1
 	child1.set_text(0, id_team)
@@ -102,6 +104,8 @@ func player_die(id_player: String) -> void:
 	if id_player in list_player:
 		var player = list_player[id_player]
 		player.dead()
+		_hud_delete_player(id_player)
+		player.queue_free()
 		list_player.erase(id_player)
 
 func player_kicked(id_player: String) -> void:
@@ -228,20 +232,51 @@ func _set_map(x: int, z: int) -> void:
 #	g_x: size x
 #	g_y: size y
 func _set_camera() -> void:
-	get_node("Camera").h_offset = g_x / 2.0
-	get_node("Camera").v_offset = g_z / 2.0
-	get_node("Camera").fov = g_x * 2.0
+	camera.h_offset = g_x / 2.0
+	camera.v_offset = g_z / 2.0
+	camera.fov = g_x * 2.0
 
 # Add user in the tree HUD
 # Args:
 #	teams: team of player
 #	id_trantorien: new player to add
 func _hud_add_player(team: String, id_trantorien: String) -> void:
+	if not team in list_team:
+		hud_add_team(team)
 	var obj_team = list_team[team]
 	var subchild1 = tree.create_item(obj_team)
 	subchild1.set_text(0, id_trantorien)
-	$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" \
-			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
+	var tr = list_player[id_trantorien]
+	tr.my_tree = subchild1
+#	$HUD/Panel/VBoxContainer/players.bbcode_text += '\n' + "\n[color=" \
+#			+ color[cnt_color % 7] + "]" + id_trantorien + "[/color]"
+
+func _hud_delete_player(id_trantorien: String) -> void:
+	var obj_player = list_player[id_trantorien].my_tree
+	var parent = obj_player.get_parent()
+	parent.remove_child(obj_player)
+	tree.update()
+
+func _delete_all():
+	for egg in list_egg.values():
+		egg[0].queue_free()
+	for player in list_player.values():
+		player.queue_free()
+	for line in map:
+		for x in line:
+			$Terrain.remove_child(x)
+	for x in list_team.values():
+		var parent = x.get_parent()
+		parent.remove_child(x)
+	
+	# erase variables
+	map = []
+	list_egg = Dictionary()
+	list_player = Dictionary()
+	list_team = Dictionary()
+	
+	# update HUD
+	tree.update()
 
 ###############################################################################
 # Signals
@@ -250,7 +285,7 @@ func _hud_add_player(team: String, id_trantorien: String) -> void:
 func _on_Tree_item_deselected(_id: String) -> void:
 	for player in list_player:
 		list_player[player].highlight_end()
-	$Camera.make_current()
+	camera.make_current()
 
 func _on_Tree_item_selected(id: String) -> void:
 	if not id in list_player:
@@ -261,7 +296,14 @@ func _on_Tree_item_selected(id: String) -> void:
 			list_player[player].highlight_end()
 	var status = list_player[id].highlight()
 	if not status:
-		$Camera.make_current()
+		camera.make_current()
 
 func _on_HUD_mode_doom() -> void:
 	get_node("AudioStreamPlayer").playing = true
+
+func _on_HUD_debug_me(_id: String) -> void:
+	print("here")
+	_delete_all()
+
+func _on_Main_server_disconnect():
+	_delete_all()

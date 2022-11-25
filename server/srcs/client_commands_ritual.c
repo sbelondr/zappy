@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 09:43:16 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 13:17:55 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 09:33:16 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ static int	is_enough_for_ritual(int level, int players, int *objs)
 	for (int i = 0; i < 7; ++i)
 	{
 		if (objs[i] < required[i])
+		{
 			return (0);
+		}
 	}
 	return (required[7] <= players);
 }
@@ -54,6 +56,31 @@ static void	substract_from_ritual(int level, int *objs)
 	cost = get_ritual_data(level);
 	for (int i = 0; i < 7; ++i)
 		objs[i] -= cost[i];
+}
+
+int		game_is_won(t_srv *srv)
+{
+	t_list	*current_team;
+	t_list	*current_player;
+	t_client	*player;
+	int		gods;
+
+	current_team = srv->param->team_list;
+	while (current_team)
+	{
+		current_player = ((t_team*)current_team->content)->team_clients;
+		gods = 0;
+		while (current_player)
+		{
+			player = current_player->content;
+			gods += player->lvl == 8;
+			current_player = current_player->next;
+		}
+		if (gods >= 6)
+			return (1);
+		current_team = current_team->next;
+	}
+	return (0);
 }
 
 char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
@@ -109,5 +136,10 @@ char	*ritual(t_srv *srv, t_world_state *world, t_client *player)
 		current = current->next;
 	}
 	send_to_all_moniteur(srv, moniteur_bct(srv->world, player->p_x, player->p_y));
+	if (game_is_won(srv))
+	{
+	   send_to_all_moniteur(srv, moniteur_seg(player->team_name));
+	   printf(LOG_TEAM_VICTORY, player->team_name);
+	}
 	return (msg);
 }

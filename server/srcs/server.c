@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 22:58:32 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/22 09:10:47 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:47:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,23 @@
 
 static t_srv **g_srv = NULL;
 
-void	ft_arraydel(char ***line)
-{
-	int	i;
-
-	i = -1;
-	if (*line)
-	{
-		while ((*line)[++i])
-			free((*line)[i]);
-		free(*line);
-		*line = NULL;
-	}
-}
-
 void ft_quit(int sig)
 {
-	printf("Kill all clients\n");
+	printf(PROCESS_CLEAN_CLIENTS);
 	t_srv *srv = *g_srv;
 	int i = -1;
 	int sd;
 
 	if (srv->param->replay_fd)
 		close(srv->param->replay_fd);
-	while (srv && ++i < srv->param->allowed_clients_amount)
+	while (srv && ++i < srv->n_client_sck)
 	{
 		sd = srv->client_sck[i].fd;
 		if (sd > 0)
 		{
-			red();
-			printf("Shutdown client: %d\n", srv->client_sck[i].fd);
-			reset();
+			set_color(RED, srv->param->flags);
+			printf(PROCESS_SHUTDOWN_CLIENT, srv->client_sck[i].fd);
+			set_color(RESET, srv->param->flags);
 			shutdown(sd, SHUT_WR);
 			if (close(sd))
 				perror("close");
@@ -53,28 +39,31 @@ void ft_quit(int sig)
 		}
 	}
 	free(srv->client_sck);
-	if (close(srv->master_sck))
-		perror("close");
+	free(srv->id_clients);
 	free(*g_srv);
-	printf("Quit: %d", sig);
+	printf(PROCESS_SHUTDOWN_SERVER, sig);
 	exit(sig);
 }
 
-//Returns timeval timeout for select
-struct timeval	time_left(struct timeval limit)
+void	compress_client_sck(t_srv *srv)
 {
-	struct timeval current;
-	struct timeval ret;
-
-	gettimeofday(&current, NULL);
-	ret.tv_sec = 0;
-	ret.tv_usec = 0;
-	if (timercmp(&current, &limit, >) > 0)
-		return (ret);
-	timersub(&limit, &current, &ret);
-	if (ret.tv_sec > 1000)
-		timerclear(&ret);
-	return (ret);
+	if (srv->compress_socket)
+	{
+		srv->compress_socket = 0;
+		for (int i = 0; i < srv->n_client_sck; i++)
+		{
+			if (srv->client_sck[i].fd == -1)
+			{
+				for (int j = i; j < srv->n_client_sck; j++)
+				{
+					srv->client_sck[j].fd = srv->client_sck[j + 1].fd;
+					srv->id_clients[j] = srv->id_clients[j + 1];
+				}
+				--i;
+				--srv->n_client_sck;
+			}
+		}
+	}
 }
 
 /*
@@ -86,8 +75,7 @@ int main(int ac, char **av)
 	t_srv			*srv;
 	t_world_state	st;
 	t_param			param;
-	int				timeout;// = (1000);
-	int				rc;
+	clock_t			last_until;
 	int				tmp_n_client_sck;
 	int				end_server = 0;
 
@@ -104,36 +92,37 @@ int main(int ac, char **av)
 	g_srv = &srv;
 	setup_signal();
 	send_to_all_moniteur(srv, moniteur_mct(srv->world));
-	yellow();
-	printf("Launch srv\n");
-	reset();
-	timeout = delta_to_time(srv->param->time_delta);
+	set_color(YELLOW, srv->param->flags);
+	printf(PROCESS_START_SERVER);
+	set_color(RESET, srv->param->flags);
 
 	tmp_n_client_sck = srv->n_client_sck;
 	srv->client_sck[0].fd = srv->master_sck;
 	srv->client_sck[0].events = POLLIN;
+	srv->last_frame_stamp = clock();
 	while (!end_server)
 	{
-//		printf("Waiting on poll() srv->n_client_sck = %d ...\n", srv->n_client_sck);
-		rc = poll(srv->client_sck, srv->n_client_sck, timeout);
-		if (rc < 0)
+		last_until = delta_to_clock_t(srv->param->time_delta);
+		while (clock() - srv->last_frame_stamp < last_until)
 		{
-			dprintf(STDERR_FILENO, "poll() failled\n");
-			break ;
-		}
-		tmp_n_client_sck = srv->n_client_sck;
-		for (int i = 0; i < tmp_n_client_sck; i++)
-		{
-			// check if there is no action with this socket
-			if (srv->client_sck[i].revents == 0 \
-					|| srv->client_sck[i].revents != POLLIN)
-				continue ;
-			if (srv->client_sck[i].fd == srv->master_sck)
+			if (poll(srv->client_sck, srv->n_client_sck, 0) < 0)
 			{
-				if (!add_client(srv)) break ;
+				perror("poll");
+				exit(EXIT_FAILURE);
 			}
-			else
-				listen_client(srv, i);
+			tmp_n_client_sck = srv->n_client_sck;
+			for (int i = 0; i < tmp_n_client_sck; i++)
+			{
+				// check if there is no action with this socket
+				if (srv->client_sck[i].revents == 0 \
+						|| srv->client_sck[i].revents != POLLIN)
+					continue ;
+				if (srv->client_sck[i].fd == srv->master_sck)
+					add_client(srv);
+				else
+					listen_client(srv, i);
+			}
+			compress_client_sck(srv);
 		}
 		game_tick(srv);
 	}

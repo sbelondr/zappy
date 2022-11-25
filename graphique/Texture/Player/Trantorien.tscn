@@ -44,10 +44,14 @@ font_data = ExtResource( 7 )
 viewport_path = NodePath("Viewport")
 
 [node name="Marvin" instance=ExtResource( 3 )]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0.541376, 0 )
 script = ExtResource( 6 )
 
+[node name="Armature" parent="." index="0"]
+transform = Transform( 2.05041, 0, 0, 0, 2.05041, 0, 0, 0, 2.05041, -0.03, 0, 0 )
+
 [node name="Empty" parent="." index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.116, 0, 0.19 )
 visible = false
 
 [node name="Plane" parent="." index="2"]
@@ -67,9 +71,6 @@ shape = SubResource( 1 )
 
 [node name="NodeHUD" type="Control" parent="." index="7"]
 theme = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HUDPlayer" type="CanvasLayer" parent="NodeHUD" index="0"]
 

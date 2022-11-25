@@ -10,16 +10,32 @@ class Leveler < Client::Trantorien
     @king = true 
     @king_id = @self_id.to_i
     @with_king = true 
-    @mode = :foraging
+    @mode = :stockpile
     @communal_inventory = [0, 0, 0, 0, 0, 0, 0]
     @needed = get_ritual_cost(1)
     @uptospeed = false
-    @possible_mode = [:foraging, :converging, :wait]
+    @possible_mode = [:foraging, :converging, :wait, :stockpile, :survive]
+  end
+
+  def survive
+    gather_item "nourriture"
+    do_action "avance"
+  end
+
+  def stockpile
+    gather_item "nourriture"
+    do_action "avance"
+    if @food > 10000
+      @mode = :foraging
+      puts "#{broadcast_prefix}FINISHED STOCKPILING FOOD!"
+    else
+      puts "#{broadcast_prefix}Stockpiling food, currently #{@food}/10000"
+    end
   end
 
   def foraging
     puts "#{broadcast_prefix}Currently foraging!!"
-    gather_item "FOOD"
+    gather_item "nourriture"
     1..6.times do |i|
       if @communal_inventory[i] < @needed[i]
         item_name = id_to_item_name i
@@ -42,9 +58,6 @@ class Leveler < Client::Trantorien
         pose_tout
         puts "#{broadcast_prefix}with king"
         listen true
-        if @uptospeed
-          prendre_tout
-        end
       else
         if @goal != [0, 0]
           puts  "#{broadcast_prefix}moving towards king"
@@ -63,7 +76,8 @@ class Leveler < Client::Trantorien
         do_action "incantation"
       else
         puts "#{broadcast_prefix}Not enough to begin"
-        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision}/5 players!"
+        puts "#{broadcast_prefix}There is only #{quantity_of "PLAYER", vision}/6 players!"
+        puts "Or we can't do the ritual."
       end
     end
   end
@@ -74,11 +88,16 @@ class Leveler < Client::Trantorien
   end
 
   def on_ritual_completed(new_level)
+    if new_level == 8
+      @mode = :survive
+      puts "#{broadcast_prefix}Now trying to survive!"
+    else
     @mode = :foraging
     @communal_inventory = @inventory.dup
     @needed = get_ritual_cost new_level
     puts "#{broadcast_prefix}Incantation finished!!"
     puts "Inventory: #{@communal_inventory}, needed: #{@needed}"
+    end
   end
 
   def pose_tout
@@ -89,19 +108,6 @@ class Leveler < Client::Trantorien
     end
   end
 
-  def prendre_tout
-    vision = do_action("voir").split(',')[0]
-    vision.slice!(0)
-    items = vision.split.filter {|a| a != "PLAYER"} 
-    while items.size > 0
-      item = current.split(" ").sample
-      prendre item
-      vision = do_action("voir"),split(',')[0]
-      vision.slice!(0)
-      items = current.split.filter {|a| a != "PLAYER"} 
-    end
-  end
-
   def take_decision
     if @mode == :foraging
       foraging
@@ -109,6 +115,10 @@ class Leveler < Client::Trantorien
       converging
     elsif @mode == :wait
       listen true
+    elsif @mode == :survive
+      survive
+    elsif @mode == :stockpile
+      stockpile
     else
       puts "FATAL ERROR"
     end
@@ -133,7 +143,7 @@ class Leveler < Client::Trantorien
     info = msg.split(':')
     id = info[0].to_i
     if (info[1].to_i != @level)
-      puts "#{broadcast_prefix}ignored a broadcast because it wasnt my level"
+      #puts "#{broadcast_prefix}ignored a broadcast because it wasnt my level"
       return
     end
     if id > @king_id
@@ -167,6 +177,7 @@ class Leveler < Client::Trantorien
   end
 
   def starter
+    do_action "fork"
     broadcast "HELLO WORLD"
   end
 end

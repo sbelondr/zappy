@@ -16,13 +16,18 @@ module Client
       @level = 1
       @inventory = [0, 0, 0, 0, 0, 0, 0]
       @socket = TCPSocket.new ip, port 
-      @socket.recv(99)
-      @socket.puts @team_name 
-      data = @socket.gets
-      if data[0].to_i == 0
+      ready = IO.select([@socket], nil, nil, 1)
+      if not ready
         @dead = true
+      else
+        @socket.recv(99)
+        @socket.puts @team_name 
+        data = @socket.gets
+        if data[0].to_i == 0
+          @dead = true
+        end
+        @socket.gets
       end
-      @socket.gets
     end
 
     def dead?
@@ -37,9 +42,9 @@ module Client
       do_action "broadcast #{broadcast_prefix}#{message}"
     end
 
-  def broadcast_prefix
-    "#{@self_id}"
-  end
+    def broadcast_prefix
+      "#{@self_id}"
+    end
 
     def voir
       do_action "voir"
@@ -61,7 +66,7 @@ module Client
     def pickup(item)
       ret = do_action("prendre #{item}")
       if ret == "ok"
-        if item == "FOOD"
+        if item == "nourriture"
           @food += 126
         else
           @inventory[item_name_to_id(item)] += 1
@@ -85,7 +90,7 @@ module Client
         false
       end
     end
-    
+
     def process
       starter if not @dead
       while not @dead
@@ -94,7 +99,7 @@ module Client
     end
 
     def starter 
-      puts "Override me!"
+      #Override me!
     end
 
     def inventory
@@ -114,18 +119,17 @@ module Client
 
 
     def item_name_to_id(item_name)
-      item_name = item_name.upcase
-      return 0 if item_name == "FOOD"
-      return 1 if item_name == "LINEMATE"
-      return 2 if item_name == "DERAUMERE"
-      return 3 if item_name == "SIBUR"
-      return 4 if item_name == "MENDIANE"
-      return 5 if item_name == "PHIRAS"
-      return 6 if item_name == "THYSTAME"
+      return 0 if item_name == "nourriture"
+      return 1 if item_name == "linemate"
+      return 2 if item_name == "deraumere"
+      return 3 if item_name == "sibur"
+      return 4 if item_name == "mendiane"
+      return 5 if item_name == "phiras"
+      return 6 if item_name == "thystame"
     end
 
     def id_to_item_name(id)
-      return ["FOOD", "LINEMATE", "DERAUMERE", "SIBUR", "MENDIANE", "PHIRAS", "THYSTAME"][id]
+      return ["nourriture", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"][id]
     end
 
     #Do an action, blocking till it gets an answer
@@ -166,14 +170,14 @@ module Client
 
     def can_do_ritual(vision, level)
       cost = get_ritual_cost level
-      ret = quantity_of("FOOD", vision) >= cost[0]
-      ret &&= quantity_of("LINEMATE", vision) >= cost[1]
-      ret &&= quantity_of("DERAUMERE", vision) >= cost[2]
-      ret &&= quantity_of("SIBUR", vision) >= cost[3]
-      ret &&= quantity_of("MENDIANE", vision) >= cost[4]
-      ret &&= quantity_of("PHIRAS", vision) >= cost[5]
-      ret &&= quantity_of("THYSTAME", vision) >= cost[6]
-      ret &&= quantity_of("PLAYER", vision) >= (cost[7] - 1)
+      ret = quantity_of("nourriture", vision) >= cost[0]
+      ret &&= quantity_of("linemate", vision) >= cost[1]
+      ret &&= quantity_of("deraumere", vision) >= cost[2]
+      ret &&= quantity_of("sibur", vision) >= cost[3]
+      ret &&= quantity_of("mendiane", vision) >= cost[4]
+      ret &&= quantity_of("phiras", vision) >= cost[5]
+      ret &&= quantity_of("thystame", vision) >= cost[6]
+      ret &&= quantity_of("player", vision) >= (cost[7] - 1)
       ret
     end
 
@@ -272,7 +276,7 @@ module Client
       return [1, -1] if index == 6
       return [1, 0] if index == 7
       return [1, 1] if index == 8
-      puts "ERROR: invalid index: #{index}" 
+      STDERR.puts "ERROR: invalid index: #{index}" 
       nil
     end
 
@@ -315,8 +319,10 @@ module Client
         threads << Thread.new { tt.process } 
       end
       sleep options[:delay]
+      puts "-----------------"
     end
     threads.each { |thr| thr.join }
+    puts "Mystheeeere"
   end
 
   def self.parse
@@ -324,15 +330,15 @@ module Client
     OptionParser.new do |parser|
       parser.banner = "Usage: #{File.basename($0)} -t team [-p port] [-h hostname] [-d delay]"
 
-      parser.on("-t", "--t TEAM", String, "Player team")
+      parser.on("-t", "--team TEAM", String, "Player team")
       parser.on("-d", "--delay SECONDS", Float, "Attempt connecting each SECONDS seconds. Defaults to 1. Can take decimal values.")
-      parser.on("-p", "--port PORT", Int, "Port number, 8080 by default")
-      parser.on("-h", "--hostname HOST", Int, "Hostname, localhost by default")
+      parser.on("-p", "--port PORT", Integer, "Port number, 8080 by default")
+      parser.on("-h", "--hostname HOST", Integer, "Hostname, localhost by default")
       parser.on("-h", "--help", "Display this help") { puts parser; exit }
 
     end.parse!(into: options)
     if options[:team].nil?
-      exit
+      abort "Missing team name"
     end
     options 
   end

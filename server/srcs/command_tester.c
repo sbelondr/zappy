@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 08:39:43 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 10:02:52 by jayache          ###   ########.fr       */
+/*   Updated: 2022/04/05 09:55:07 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,7 @@ static void	parse_pdi(t_srv *srv, t_client *tester, char *command)
 		simple_send_no_free(srv, tester->id, "ok\n");
 	}
 	else if (!strcmp("self", command))
-	{
 		client_exit(srv, tester->id);
-	}
 	else
 	{
 		target_id = atoi(command);

@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/27 13:51:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/08 09:29:01 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 09:39:00 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	string_to_res_id(char *res_name)
 	else
 	{
 		res = -1;
-		printf("ERROR: Unknown ressource name\n");
+		printf(ERROR_UNKNOWN_RESSOURCE, res_name);
 	}
 	return (res);
 }

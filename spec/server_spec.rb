@@ -122,11 +122,11 @@ RSpec.describe 'Using the TESTER' do
       expect(putget @tester, 'get sgt').to eq("sgt 50\n")
     end
     it 'can set the allowed clients at start amount of the server' do
-      expect(putget @tester, 'set tac 50').to eq("ok\n")
+      expect(putget @tester, 'set tac 50').to eq("tac 50\n")
       expect(putget @tester, 'get tac').to eq("tac 50\n")
     end
     it 'can set the maximum amount of clients allowed per team on the server' do
-      expect(putget @tester, 'set mac 50').to eq("ok\n")
+      expect(putget @tester, 'set mac 50').to eq("mac 50\n")
       expect(putget @tester, 'get mac').to eq("mac 50\n")
     end
     it 'can set items on the ground' do

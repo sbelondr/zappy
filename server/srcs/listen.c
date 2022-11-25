@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:58:11 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/20 11:15:39 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/11/03 10:28:58 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,33 @@
 /*
  * listen message receive
  */
-void listen_client(t_srv *srv, int index)
+int	listen_client(t_srv *srv, int index)
 {
 	char	buffer[SIZE_BUF];
 	int		close_conn = 0;
-	int		len_read = 0;
+	int		len_read;
 
 	bzero(buffer, SIZE_BUF);
 	len_read = recv(srv->client_sck[index].fd, buffer, SIZE_BUF, 0);
 	if (len_read > 0)
 		client_sent_data(srv, buffer, len_read, index); 
-	if (len_read < 0)
+	else if (len_read < 0)
 	{
-		dprintf(STDERR_FILENO, "error\n");
+		perror("recv");
 		close_conn = 1;
 	}
-	if (len_read == 0)
+	else if (len_read == 0)
 	{
-		printf("Connection closed: %d\n", index);
+		printf(PROCESS_CONNEXION_END, srv->client_sck[index].fd);
 		close_conn = 1;
 	}
 	if (close_conn)
 	{
-		close(srv->client_sck[index].fd);
-		srv->client_sck[index].fd = -1;
+		if (is_special_team_member(get_client_by_id(srv, srv->id_clients[index])))
+			client_exit(srv, srv->id_clients[index]);
+		else
+			kill_player(srv, get_client_by_id(srv, srv->id_clients[index]));
+		return (0);
 	}
+	return (1);
 }

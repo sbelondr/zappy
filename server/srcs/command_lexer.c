@@ -6,7 +6,7 @@
 /*   By: jayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 08:15:57 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/22 09:39:59 by jayache          ###   ########.fr       */
+/*   Updated: 2022/04/05 09:55:34 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,25 +138,25 @@ static int is_command(const char *buff, const char *command)
 	return (!strncmp(buff, command, strlen(command)) && buff[strlen(command)] == ' ');
 }
 
-void	command_lexer(t_srv *srv, char *buf, int i)
+void	command_lexer(t_srv *srv, char *buf, int id)
 {
 	t_client	*c;
 	int			localized;
 
-	c = get_client_by_id(srv, i);
+	c = get_client_by_id(srv, id);
 	if (!c)
 	{
 		if (can_print(srv->param, LOG_ERROR))
 		{
 			set_color(RED, srv->param->flags);
-			printf(LOG_UNDEAD_CLIENT, i);
+			printf(LOG_UNDEAD_CLIENT, id);
 			set_color(RESET, srv->param->flags);
 		}
 		return ;
 	}
 	localized = use_localized_string(srv->param);
 	if (c->team_name == NULL)
-		connect_client(srv, buf, c, i);
+		connect_client(srv, buf, c, id);
 	else if (!strcmp(c->team_name, GRAPHIC_TEAM))
 		parse_command_moniteur(srv, c, buf);
 	else if (!strcmp(c->team_name, TESTER_TEAM))

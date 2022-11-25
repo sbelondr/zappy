@@ -1,0 +1,10 @@
+[gd_scene format=2]
+
+[node name="Settings" type="Node2D"]
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+visible = true
+margin_left = 578.0
+margin_top = 302.0
+margin_right = 1272.0
+margin_bottom = 723.0

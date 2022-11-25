@@ -6,7 +6,7 @@
 /*   By: jayache <jayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/06 10:10:19 by jayache           #+#    #+#             */
-/*   Updated: 2022/03/11 13:06:17 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/11/03 10:49:27 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 /*
-** MOVE A PLAYER IN A DIRECTION, TAKING WORLD LIMITS INTO ACCOUNT
-*/
+ ** MOVE A PLAYER IN A DIRECTION, TAKING WORLD LIMITS INTO ACCOUNT
+ */
 
 void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 {
@@ -43,16 +43,13 @@ void	move_player(t_world_state *world, t_client *target, t_orientation dir)
 	}
 	else
 	{
-		printf("ERROR: move_player!! dir = %d player = %d\n", dir, target->id);
+		printf(ERROR_INVALID_DIRECTION, dir, target->id);
+	}
+	if (can_print(&world->params, LOG_INFO))
+	{
+		set_color(PURPLE, world->params.flags);
+		printf(LOG_PLAYER_NEW_POSITION, target->id, target->p_x, target->p_y);
+		set_color(RESET, world->params.flags);
 	}
 }
 
-int	delta_to_time(int delta)
-{
-	int				ret;
-	double			time;
-
-	time = 1.0 / delta;
-	ret = time * 1000;
-	return (ret);
-}

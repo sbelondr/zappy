@@ -6,7 +6,7 @@
 #    By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 14:49:02 by sbelondr          #+#    #+#              #
-#    Updated: 2022/03/11 11:33:52 by jayache          ###   ########.fr        #
+#    Updated: 2022/11/03 10:35:07 by jayache          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,12 @@
 # ---------- #
 
 DEBUG = yes
+
+# ---------- #
+# LANG PARAM #
+# ---------- #
+
+LANG_FLAG = LANG_EN
 
 # --------- #
 # Directory #
@@ -36,9 +42,9 @@ VPATH = objs:\
 
 CC = gcc
 ifeq ($(DEBUG), yes)
-	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -g3  -fsanitize=address
+	CFLAGS = -D_GNU_SOURCE=1 -Wall -Wextra -g3 -D$(LANG_FLAG) #-fsanitize=address
 else
-	CFLAGS = -Wall -Wextra -Werror -O3
+	CFLAGS = -Wall -Wextra -Werror -O3 -D$(LANG_FLAG)
 endif
 CPPFLAGS = -I $(INCDIR) -I libft/ #COUCOU samuel ça c'est un peu moche non ???
 #Sam: Oui en effet
@@ -61,6 +67,7 @@ SRCS_NAMES = server.c\
 	gameplay.c\
 	client.c\
 	egg.c\
+	time.c\
 	localization_helper.c \
 	client_commands_movement.c\
 	client_commands_vision.c\

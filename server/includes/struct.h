@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/04 15:08:55 by selver            #+#    #+#             */
-/*   Updated: 2022/03/11 10:09:50 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/06/22 09:31:25 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,14 @@ typedef struct	s_srv
 	int						master_sck;
 	struct sockaddr_in		address;
 	int						addrlen;
-	struct pollfd	client_sck[200]; //int						*client_sck;
-	int				n_client_sck;
+	struct pollfd			*client_sck;
+	int						*id_clients;
+	int						n_client_sck;
+	int						compress_socket;
 	t_param					*param;
 	t_world_state			*world;
 	uint64_t				frame_nbr;
+	clock_t					last_frame_stamp;
 }				t_srv;
 
 typedef char*	(*t_game_action)(t_srv*, t_world_state*, t_client*);

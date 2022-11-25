@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 09:07:00 by selver            #+#    #+#             */
-/*   Updated: 2022/03/15 10:24:02 by jayache          ###   ########.fr       */
+/*   Updated: 2022/03/27 10:49:59 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,18 @@ char	*moniteur_msz(t_world_state *world)
 
 	p = world->params;
 	error = asprintf(&ret, "msz %d %d\n", p.world_width, p.world_height);
+	if (error < 0)
+		emergency_exit(__FILE__ ": Fatal: asprintf: ");
+	return (ret);
+}
+
+//Contenu d'une case de la carte 
+char	*moniteur_seg(char *team_name)
+{
+	char	*ret;
+	int		error;
+
+	error = asprintf(&ret, "seg %s",team_name);
 	if (error < 0)
 		emergency_exit(__FILE__ ": Fatal: asprintf: ");
 	return (ret);

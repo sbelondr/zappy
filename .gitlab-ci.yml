@@ -29,10 +29,11 @@ unit-test-job:   # This job runs in the test stage.
   dependencies:
     - build-job
   script:
+    - make -C server > /dev/null
     - ruby -v
     - bundle -v
     - bundle install --binstubs
-    - ./server/server -x 10 -y 10 -n TOTO  -p 8080 -c 6 -v -t 10000 -G 0 -H -s >/dev/null & 
+    - ./server/server -x 10 -y 10 -n TOTO  -p 8080 -c 7 -v -t 10000 -G 0 -H -s >/dev/null & 
     - bin/rspec -r rspec_junit_formatter --format RspecJunitFormatter -o tests.xml
     - pkill server
   artifacts:

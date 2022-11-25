@@ -6,7 +6,7 @@
 /*   By: sbelondr <sbelondr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 20:57:42 by sbelondr          #+#    #+#             */
-/*   Updated: 2022/03/22 09:34:06 by jayache          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:30:21 by jayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ void client_exit(t_srv *srv, int id)
 {
 	t_client	*client;
 	t_team		*team;
+	int			index;
 
-
+	index = search_client_index_by_id(srv, id);
 	client = get_client_by_id(srv, id);
 	ft_lstdelbyval(&srv->world->client_list, client, mcmp, mdel);
 	if (client->team_name && !is_special_team_member(client))
@@ -38,8 +39,16 @@ void client_exit(t_srv *srv, int id)
 		printf(LOG_CLIENTS_LEFT, ft_lst_size(srv->world->client_list));
 		set_color(RESET, srv->param->flags);
 	}
-	close(srv->client_sck[id].fd);
-	srv->client_sck[id].fd = -1;
+	if (index == -1)
+	{
+		dprintf(STDERR_FILENO, "index not found: %d\n", index);
+		return ;
+	}
+	if (close(srv->client_sck[index].fd) < 0)
+		perror("close");
+	srv->client_sck[index].fd = -1;
+	srv->id_clients[index] = -1;
+	srv->compress_socket = 1;
 }
 
 //Delete the newline on the string/cut the string via newline, returns the number of lines found
@@ -62,7 +71,7 @@ static int		delete_newline(char *buff)
 }
 
 
-void client_sent_data(t_srv *srv, char *buff, int valread, int i)
+void client_sent_data(t_srv *srv, char *buff, int valread, int index)
 {
 	int	commands;
 	int	offset;
@@ -75,7 +84,8 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 	if (commands == 0 && can_print(srv->param, LOG_ERROR))
 	{
 		set_color(RED, srv->param->flags);
-		printf(LOG_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[i].fd, i, buff);
+		printf(ERROR_INCOMPLETE_COMMAND, srv->frame_nbr, srv->client_sck[index].fd, \
+				index, buff);
 		set_color(RESET, srv->param->flags);
 	}
 	offset = 0;
@@ -84,11 +94,11 @@ void client_sent_data(t_srv *srv, char *buff, int valread, int i)
 		if (can_print(srv->param, LOG_RECEIVE))
 		{
 			set_color(GREEN, srv->param->flags);
-			printf("%ld: [%d] -> %s\n", srv->frame_nbr, srv->client_sck[i].fd, buff); 
+			printf("%ld: [%d] -> %s\n", srv->frame_nbr, \
+					srv->client_sck[index].fd, buff); 
 			set_color(RESET, srv->param->flags);
 		}
-		printf("%d\n", i);
-		command_lexer(srv, buff + offset, i);
+		command_lexer(srv, buff + offset, srv->id_clients[index]);
 		offset = strlen(buff) + 1;
 	}
 }

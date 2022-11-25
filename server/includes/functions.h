@@ -6,7 +6,7 @@
 /*   By: selver <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:20:26 by selver            #+#    #+#             */
-/*   Updated: 2022/03/20 11:11:36 by sbelondr         ###   ########.fr       */
+/*   Updated: 2022/04/05 10:55:21 by sbelondr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,10 @@ int				asprintf(char **strp, const char *fmt, ...);
 /*
  * SETUP
  */
-
 void			setup_signal(void);
 void			ft_quit(int sig);
-//void			ft_add_new_client(t_srv *srv, fd_set *readfds);
 int				add_client(t_srv *srv);
+int				search_client_index_by_id(t_srv *srv, int id);
 int				ft_set_max_sd(t_srv *srv, fd_set *readfds);
 t_srv			*init_srv(t_param *param, t_world_state *st);
 
@@ -41,6 +40,7 @@ int				quantity_of_elements(int *square);
 void			game_tick(t_srv *srv);
 void			command_lexer(t_srv *srv, char *buf, int i);
 int				delta_to_time(int delta);
+clock_t			delta_to_clock_t(int delta);
 
 /*
  * GAME LOGIC
@@ -118,7 +118,7 @@ int			use_localized_string(t_param *param);
 void			parse_command_set(t_srv *srv, t_client *tester, char *command);
 void			client_exit(t_srv *srv, int id);
 void			client_sent_data(t_srv *srv, char *buff, int valread, int i);
-void			listen_client(t_srv *srv, int index);
+int				listen_client(t_srv *srv, int index);
 void			simple_send(t_srv *srv, int id, char *msg);
 void			simple_send_no_free(t_srv *srv, int id, char const *msg);
 
@@ -135,6 +135,7 @@ void			generate_ressource_uniform(t_world_state world);
 
 char			*moniteur_msz(t_world_state *world);
 char			*moniteur_bct(t_world_state *world, int x, int y);
+char			*moniteur_seg(char *team_name);
 char			*moniteur_mct(t_world_state *world);
 char			*moniteur_sgt(t_world_state *world);
 char			*moniteur_tna(t_world_state *world);
