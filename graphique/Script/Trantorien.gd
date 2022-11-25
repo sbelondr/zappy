@@ -159,7 +159,7 @@ func kicked(new_position: Vector3, time: float) -> void:
 #Play the death animation
 #Handle deleting the character AFTER the animation finished, PLEASE CALL THIS
 func dead() -> void:
-	animPlayer.queue("Death")
+	animPlayer.play("Death")
 # warning-ignore:return_value_discarded
 	animPlayer.connect("animation_finished", self, "_death_animation_finished")
 
